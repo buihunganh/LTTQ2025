@@ -97,14 +97,14 @@
             this.lblMenuHeader.Location = new System.Drawing.Point(16, 8);
             this.lblMenuHeader.Margin = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.lblMenuHeader.Name = "lblMenuHeader";
-            this.lblMenuHeader.Size = new System.Drawing.Size(87, 21);
+            this.lblMenuHeader.Size = new System.Drawing.Size(73, 17);
             this.lblMenuHeader.TabIndex = 8;
             this.lblMenuHeader.Text = "Chức năng";
             // 
             // panelAccent
             // 
             this.panelAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(90)))), ((int)(((byte)(79)))));
-            this.panelAccent.Location = new System.Drawing.Point(16, 35);
+            this.panelAccent.Location = new System.Drawing.Point(16, 31);
             this.panelAccent.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.panelAccent.Name = "panelAccent";
             this.panelAccent.Size = new System.Drawing.Size(40, 3);
@@ -119,7 +119,7 @@
             this.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDashboard.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
             this.btnDashboard.ForeColor = System.Drawing.Color.White;
-            this.btnDashboard.Location = new System.Drawing.Point(16, 50);
+            this.btnDashboard.Location = new System.Drawing.Point(16, 46);
             this.btnDashboard.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.btnDashboard.Name = "btnDashboard";
             this.btnDashboard.Size = new System.Drawing.Size(228, 42);
@@ -135,7 +135,7 @@
             this.btnProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProduct.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnProduct.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnProduct.Location = new System.Drawing.Point(16, 108);
+            this.btnProduct.Location = new System.Drawing.Point(16, 104);
             this.btnProduct.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnProduct.Name = "btnProduct";
             this.btnProduct.Size = new System.Drawing.Size(228, 38);
@@ -151,7 +151,7 @@
             this.btnInventory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInventory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInventory.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnInventory.Location = new System.Drawing.Point(16, 162);
+            this.btnInventory.Location = new System.Drawing.Point(16, 158);
             this.btnInventory.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnInventory.Name = "btnInventory";
             this.btnInventory.Size = new System.Drawing.Size(228, 38);
@@ -167,7 +167,7 @@
             this.btnPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnPos.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnPos.Location = new System.Drawing.Point(16, 216);
+            this.btnPos.Location = new System.Drawing.Point(16, 212);
             this.btnPos.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnPos.Name = "btnPos";
             this.btnPos.Size = new System.Drawing.Size(228, 38);
@@ -183,7 +183,7 @@
             this.btnInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInvoice.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInvoice.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnInvoice.Location = new System.Drawing.Point(16, 270);
+            this.btnInvoice.Location = new System.Drawing.Point(16, 266);
             this.btnInvoice.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnInvoice.Name = "btnInvoice";
             this.btnInvoice.Size = new System.Drawing.Size(228, 38);
@@ -199,7 +199,7 @@
             this.btnCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCustomer.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnCustomer.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnCustomer.Location = new System.Drawing.Point(16, 324);
+            this.btnCustomer.Location = new System.Drawing.Point(16, 320);
             this.btnCustomer.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnCustomer.Name = "btnCustomer";
             this.btnCustomer.Size = new System.Drawing.Size(228, 38);
@@ -215,7 +215,7 @@
             this.btnStaff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStaff.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnStaff.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnStaff.Location = new System.Drawing.Point(16, 378);
+            this.btnStaff.Location = new System.Drawing.Point(16, 374);
             this.btnStaff.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnStaff.Name = "btnStaff";
             this.btnStaff.Size = new System.Drawing.Size(228, 38);
@@ -223,6 +223,7 @@
             this.btnStaff.Text = "Quản lý nhân viên";
             this.btnStaff.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnStaff.UseVisualStyleBackColor = true;
+            this.btnStaff.Click += new System.EventHandler(this.btnStaff_Click);
             // 
             // btnReport
             // 
@@ -231,7 +232,7 @@
             this.btnReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReport.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnReport.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnReport.Location = new System.Drawing.Point(16, 432);
+            this.btnReport.Location = new System.Drawing.Point(16, 428);
             this.btnReport.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnReport.Name = "btnReport";
             this.btnReport.Size = new System.Drawing.Size(228, 38);
@@ -274,9 +275,9 @@
             this.lblRole.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRole.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblRole.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRole.Location = new System.Drawing.Point(16, 41);
+            this.lblRole.Location = new System.Drawing.Point(16, 36);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(112, 20);
+            this.lblRole.Size = new System.Drawing.Size(89, 15);
             this.lblRole.TabIndex = 1;
             this.lblRole.Text = "Vai trò: Quản trị";
             // 
@@ -289,7 +290,7 @@
             this.lblUser.Location = new System.Drawing.Point(16, 16);
             this.lblUser.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(191, 25);
+            this.lblUser.Size = new System.Drawing.Size(148, 20);
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Người dùng: Admin";
             // 
@@ -310,7 +311,7 @@
             this.lblBrand.ForeColor = System.Drawing.Color.White;
             this.lblBrand.Location = new System.Drawing.Point(16, 20);
             this.lblBrand.Name = "lblBrand";
-            this.lblBrand.Size = new System.Drawing.Size(221, 41);
+            this.lblBrand.Size = new System.Drawing.Size(178, 32);
             this.lblBrand.TabIndex = 0;
             this.lblBrand.Text = "ABDDT Admin";
             // 
@@ -333,7 +334,7 @@
             this.lblContentSubtitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblContentSubtitle.Location = new System.Drawing.Point(36, 94);
             this.lblContentSubtitle.Name = "lblContentSubtitle";
-            this.lblContentSubtitle.Size = new System.Drawing.Size(611, 25);
+            this.lblContentSubtitle.Size = new System.Drawing.Size(480, 20);
             this.lblContentSubtitle.TabIndex = 1;
             this.lblContentSubtitle.Text = "Chọn một chức năng ở menu bên trái để bắt đầu làm việc với hệ thống.";
             // 
@@ -344,13 +345,13 @@
             this.lblContentTitle.ForeColor = System.Drawing.Color.White;
             this.lblContentTitle.Location = new System.Drawing.Point(32, 32);
             this.lblContentTitle.Name = "lblContentTitle";
-            this.lblContentTitle.Size = new System.Drawing.Size(303, 50);
+            this.lblContentTitle.Size = new System.Drawing.Size(246, 41);
             this.lblContentTitle.TabIndex = 0;
             this.lblContentTitle.Text = "Bảng điều khiển";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1200, 600);

@@ -1,43 +1,50 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using BTL_LTTQ.BLL;
 using BTL_LTTQ.DAL;
+using BTL_LTTQ.GUI;
+using System;
+using System.Windows.Forms;
 
 namespace BTL_LTTQ
 {
     public partial class frmMain : Form
     {
-        private readonly LoginResult _currentUser;
-
-        public frmMain() : this(null)
-        {
-        }
-
-        public frmMain(LoginResult user)
+        public frmMain()
         {
             InitializeComponent();
-            _currentUser = user;
-            ApplyUserContext();
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            bool isAdmin = PhienDangNhap.NhanVienHienTai.IsAdmin;
+            string hoTen = PhienDangNhap.NhanVienHienTai.HoTen;
 
-        }
+            lblUser.Text = $"Người dùng: {hoTen}";
+            lblRole.Text = $"Vai trò: {(isAdmin ? "Quản trị" : "Nhân viên")}";
 
-        private void ApplyUserContext()
-        {
-            var displayName = _currentUser?.FullName ?? "Không xác định";
-            var roleLabel = _currentUser == null
-                ? "Vai trò: ---"
-                : $"Vai trò: {(_currentUser.IsAdmin ? "Quản trị" : "Nhân viên")}";
-
-            lblUser.Text = $"Người dùng: {displayName}";
-            lblRole.Text = roleLabel;
+            if (isAdmin == false)
+            {
+                btnProduct.Visible = false;
+                btnInventory.Visible = false;
+                btnStaff.Visible = false;
+                btnCustomer.Visible = false;
+                btnInvoice.Visible = false;
+            }
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            Close();
+            PhienDangNhap.DangXuat();
+
+            frmLogin fLogin = new frmLogin();
+            fLogin.Show();
+            this.Close();
+        }
+
+        private void btnStaff_Click(object sender, EventArgs e)
+        {
+            frnNhanVien fNhanVien = new frnNhanVien();
+
+            fNhanVien.Show();
         }
     }
 }

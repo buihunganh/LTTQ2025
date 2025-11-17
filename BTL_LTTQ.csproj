@@ -47,7 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\NhanVienBLL.cs" />
+    <Compile Include="BLL\PhienDangNhap.cs" />
     <Compile Include="DAL\DataProcesser.cs" />
+    <Compile Include="DAL\NhanVienDAL.cs" />
+    <Compile Include="DTO\NhanVienDTO.cs" />
     <Compile Include="GUI\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,6 +64,12 @@
     <Compile Include="GUI\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\frnNhanVien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frnNhanVien.Designer.cs">
+      <DependentUpon>frnNhanVien.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\frmLogin.resx">
@@ -67,6 +77,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frnNhanVien.resx">
+      <DependentUpon>frnNhanVien.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -91,9 +104,6 @@
     <None Include="GUI\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
-    <Folder Include="DTO\" />
     <Folder Include="Resources\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
