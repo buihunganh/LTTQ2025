@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using BTL_LTTQ.DTO;
 
 namespace BTL_LTTQ.DAL
 {
@@ -108,14 +109,6 @@ namespace BTL_LTTQ.DAL
         public void Dispose()
         {
         }
-    }
-
-    public class LoginResult
-    {
-        public int EmployeeId { get; set; }
-        public string Username { get; set; }
-        public string FullName { get; set; }
-        public bool IsAdmin { get; set; }
     }
 }
 

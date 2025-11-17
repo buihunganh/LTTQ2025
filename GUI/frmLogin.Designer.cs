@@ -214,7 +214,6 @@
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Đăng nhập - ABDDT";
-            this.Load += new System.EventHandler(this.frmLogin_Load);
             this.panelBrand.ResumeLayout(false);
             this.panelBrand.PerformLayout();
             this.panelLogin.ResumeLayout(false);

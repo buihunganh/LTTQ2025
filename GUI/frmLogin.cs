@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using BTL_LTTQ.DAL;
+using BTL_LTTQ.DTO;
 
 namespace BTL_LTTQ
 {
@@ -12,13 +14,9 @@ namespace BTL_LTTQ
         public frmLogin()
         {
             InitializeComponent();
-            _dataProcesser = new DataProcesser();
+            _dataProcesser = IsInDesignMode() ? null : new DataProcesser();
         }
 
-        private void frmLogin_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -30,6 +28,11 @@ namespace BTL_LTTQ
                 MessageBox.Show("Vui lòng nhập đầy đủ tên tài khoản và mật khẩu.", "Thiếu thông tin",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsername.Focus();
+                return;
+            }
+
+            if (_dataProcesser == null)
+            {
                 return;
             }
 
@@ -103,8 +106,17 @@ namespace BTL_LTTQ
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            _dataProcesser.Dispose();
+            _dataProcesser?.Dispose();
             base.OnFormClosed(e);
+        }
+
+        /// <summary>
+        /// Kiểm tra xem form có đang chạy trong Visual Studio Designer không
+        /// </summary>
+        private static bool IsInDesignMode()
+        {
+            return LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
+                   Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }
