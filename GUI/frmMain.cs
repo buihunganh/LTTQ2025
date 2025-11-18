@@ -30,6 +30,27 @@ namespace BTL_LTTQ
                 btnInvoice.Visible = false;
             }
         }
+        private Form currentFormChild;
+
+        private void OpenChildForm(Form childForm)
+        {
+            if (currentFormChild != null)
+            {
+                currentFormChild.Close();
+            }
+
+            currentFormChild = childForm;
+
+            childForm.TopLevel = false; 
+            childForm.FormBorderStyle = FormBorderStyle.None; 
+            childForm.Dock = DockStyle.Fill; 
+           
+            panelContent.Controls.Add(childForm);
+            panelContent.Tag = childForm;
+
+            childForm.BringToFront();
+            childForm.Show();
+        }
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
@@ -42,9 +63,7 @@ namespace BTL_LTTQ
 
         private void btnStaff_Click(object sender, EventArgs e)
         {
-            frnNhanVien fNhanVien = new frnNhanVien();
-
-            fNhanVien.Show();
+            OpenChildForm(new frnNhanVien());
         }
     }
 }

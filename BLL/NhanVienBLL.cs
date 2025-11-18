@@ -1,12 +1,7 @@
-﻿using BTL_LTTQ.DAL;
-using BTL_LTTQ.DTO; 
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using BTL_LTTQ.DAL;
+using BTL_LTTQ.DTO;
 
 namespace BTL_LTTQ.BLL
 {
@@ -14,70 +9,76 @@ namespace BTL_LTTQ.BLL
     {
         private NhanVienDAL dalNhanVien = new NhanVienDAL();
 
-        public bool KiemTraDangNhap(string taiKhoan, string matKhau)
+        // 1. Lấy danh sách
+        public DataTable GetNhanVienList()
         {
-            if (string.IsNullOrEmpty(taiKhoan) || string.IsNullOrEmpty(matKhau))
+            return dalNhanVien.GetAllNhanVien();
+        }
+
+        // 2. TÌM KIẾM (MỚI)
+        public DataTable FindNhanVien(string keyword)
+        {
+            // Nếu từ khóa rỗng thì lấy hết danh sách
+            if (string.IsNullOrWhiteSpace(keyword))
             {
-                return false;
+                return dalNhanVien.GetAllNhanVien();
             }
+            return dalNhanVien.SearchNhanVien(keyword);
+        }
 
-            NhanVienDTO nv = dalNhanVien.CheckLogin(taiKhoan, matKhau);
+        // 3. Tạo nhân viên
+        public bool CreateNhanVien(string hoTen, string taiKhoan, string matKhau, bool isAdmin, string sdt, string email, string diaChi, DateTime ngayVaoLam)
+        {
+            if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan)) return false;
 
+            NhanVienDTO nv = new NhanVienDTO
+            {
+                HoTen = hoTen,
+                TaiKhoan = taiKhoan,
+                MatKhau = matKhau,
+                IsAdmin = isAdmin,
+                TrangThai = true,
+                SoDienThoai = sdt,
+                Email = email,
+                DiaChi = diaChi,
+                NgayVaoLam = ngayVaoLam
+            };
+            return dalNhanVien.AddNhanVien(nv);
+        }
+
+        // 4. Sửa nhân viên
+        public bool EditNhanVien(int maNV, string hoTen, bool isAdmin, bool trangThai, string sdt, string email, string diaChi, DateTime ngayVaoLam)
+        {
+            NhanVienDTO nv = new NhanVienDTO
+            {
+                MaNV = maNV,
+                HoTen = hoTen,
+                IsAdmin = isAdmin,
+                TrangThai = trangThai,
+                SoDienThoai = sdt,
+                Email = email,
+                DiaChi = diaChi,
+                NgayVaoLam = ngayVaoLam
+            };
+            return dalNhanVien.UpdateNhanVien(nv);
+        }
+
+        // 5. Xóa nhân viên
+        public bool DeleteNhanVien(int maNV)
+        {
+            return dalNhanVien.DisableNhanVien(maNV);
+        }
+
+        // 6. Login (Giữ nguyên)
+        public bool KiemTraDangNhap(string u, string p)
+        {
+            NhanVienDTO nv = dalNhanVien.CheckLogin(u, p);
             if (nv != null)
             {
                 PhienDangNhap.DangNhap(nv);
                 return true;
             }
             return false;
-        }
-
-        public DataTable GetNhanVienList()
-        {
-            return dalNhanVien.GetAllNhanVien();
-        }
-
-        public bool CreateNhanVien(string hoTen, string taiKhoan, string matKhau, bool isAdmin)
-        {
-            if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan) || string.IsNullOrEmpty(matKhau))
-            {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
-                return false;
-            }
-
-            NhanVienDTO nv = new NhanVienDTO
-            {
-                HoTen = hoTen,
-                TaiKhoan = taiKhoan,
-                MatKhau = matKhau, 
-                IsAdmin = isAdmin,
-                TrangThai = true 
-            };
-
-            return dalNhanVien.AddNhanVien(nv);
-        }
-
-        public bool EditNhanVien(int maNV, string hoTen, bool isAdmin, bool trangThai)
-        {
-            if (string.IsNullOrEmpty(hoTen))
-            {
-                MessageBox.Show("Họ tên không được để trống.");
-                return false;
-            }
-
-            NhanVienDTO nv = new NhanVienDTO
-            {
-                MaNV = maNV,
-                HoTen = hoTen,
-                IsAdmin = isAdmin,
-                TrangThai = trangThai
-            };
-
-            return dalNhanVien.UpdateNhanVien(nv);
-        }
-
-        public bool DeleteNhanVien(int maNV)
-        {
-            return dalNhanVien.DisableNhanVien(maNV);
         }
     }
 }

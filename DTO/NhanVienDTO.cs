@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BTL_LTTQ.DTO 
+namespace BTL_LTTQ.DTO
 {
     public class NhanVienDTO
     {
@@ -14,5 +10,9 @@ namespace BTL_LTTQ.DTO
         public string MatKhau { get; set; }
         public bool IsAdmin { get; set; }
         public bool TrangThai { get; set; }
+        public string SoDienThoai { get; set; }
+        public string Email { get; set; }
+        public string DiaChi { get; set; }
+        public DateTime? NgayVaoLam { get; set; }
     }
 }
