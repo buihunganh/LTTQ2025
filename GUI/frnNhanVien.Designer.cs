@@ -46,6 +46,7 @@
             this.lblHoTen = new System.Windows.Forms.Label();
             this.txtMaNV = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.btnXuatFile = new System.Windows.Forms.Button();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhanVien)).BeginInit();
             this.grpFilter.SuspendLayout();
@@ -64,7 +65,7 @@
             this.panelRoot.Controls.Add(this.lblTitle);
             this.panelRoot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelRoot.Location = new System.Drawing.Point(0, 0);
-            this.panelRoot.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panelRoot.Margin = new System.Windows.Forms.Padding(2);
             this.panelRoot.Name = "panelRoot";
             this.panelRoot.Padding = new System.Windows.Forms.Padding(18, 20, 18, 20);
             this.panelRoot.Size = new System.Drawing.Size(984, 585);
@@ -79,7 +80,7 @@
             this.dgvNhanVien.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvNhanVien.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvNhanVien.Location = new System.Drawing.Point(9, 334);
-            this.dgvNhanVien.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvNhanVien.Margin = new System.Windows.Forms.Padding(2);
             this.dgvNhanVien.Name = "dgvNhanVien";
             this.dgvNhanVien.ReadOnly = true;
             this.dgvNhanVien.RowHeadersVisible = false;
@@ -99,9 +100,9 @@
             this.grpFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.grpFilter.ForeColor = System.Drawing.Color.Gainsboro;
             this.grpFilter.Location = new System.Drawing.Point(9, 251);
-            this.grpFilter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.grpFilter.Margin = new System.Windows.Forms.Padding(2);
             this.grpFilter.Name = "grpFilter";
-            this.grpFilter.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.grpFilter.Padding = new System.Windows.Forms.Padding(2);
             this.grpFilter.Size = new System.Drawing.Size(802, 79);
             this.grpFilter.TabIndex = 3;
             this.grpFilter.TabStop = false;
@@ -110,7 +111,7 @@
             // txtSearch
             // 
             this.txtSearch.Location = new System.Drawing.Point(14, 42);
-            this.txtSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(2);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(529, 23);
             this.txtSearch.TabIndex = 1;
@@ -131,12 +132,13 @@
             this.panelButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelButtons.BackColor = System.Drawing.Color.Transparent;
+            this.panelButtons.Controls.Add(this.btnXuatFile);
             this.panelButtons.Controls.Add(this.btnLamMoi);
             this.panelButtons.Controls.Add(this.btnXoa);
             this.panelButtons.Controls.Add(this.btnLuu);
             this.panelButtons.Controls.Add(this.btnThem);
             this.panelButtons.Location = new System.Drawing.Point(816, 53);
-            this.panelButtons.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panelButtons.Margin = new System.Windows.Forms.Padding(2);
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Size = new System.Drawing.Size(150, 495);
             this.panelButtons.TabIndex = 2;
@@ -144,7 +146,7 @@
             // btnLamMoi
             // 
             this.btnLamMoi.Location = new System.Drawing.Point(8, 168);
-            this.btnLamMoi.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLamMoi.Margin = new System.Windows.Forms.Padding(2);
             this.btnLamMoi.Name = "btnLamMoi";
             this.btnLamMoi.Size = new System.Drawing.Size(134, 37);
             this.btnLamMoi.TabIndex = 3;
@@ -155,7 +157,7 @@
             // btnXoa
             // 
             this.btnXoa.Location = new System.Drawing.Point(8, 125);
-            this.btnXoa.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnXoa.Margin = new System.Windows.Forms.Padding(2);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(134, 37);
             this.btnXoa.TabIndex = 2;
@@ -166,7 +168,7 @@
             // btnLuu
             // 
             this.btnLuu.Location = new System.Drawing.Point(8, 82);
-            this.btnLuu.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLuu.Margin = new System.Windows.Forms.Padding(2);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(134, 37);
             this.btnLuu.TabIndex = 1;
@@ -177,7 +179,7 @@
             // btnThem
             // 
             this.btnThem.Location = new System.Drawing.Point(8, 39);
-            this.btnThem.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnThem.Margin = new System.Windows.Forms.Padding(2);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(134, 37);
             this.btnThem.TabIndex = 0;
@@ -208,7 +210,7 @@
             this.panelProductInfo.Controls.Add(this.lblHoTen);
             this.panelProductInfo.Controls.Add(this.txtMaNV);
             this.panelProductInfo.Location = new System.Drawing.Point(18, 53);
-            this.panelProductInfo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panelProductInfo.Margin = new System.Windows.Forms.Padding(2);
             this.panelProductInfo.Name = "panelProductInfo";
             this.panelProductInfo.Size = new System.Drawing.Size(780, 205);
             this.panelProductInfo.TabIndex = 1;
@@ -217,7 +219,7 @@
             // 
             this.chkIsAdmin.AutoSize = true;
             this.chkIsAdmin.Location = new System.Drawing.Point(322, 135);
-            this.chkIsAdmin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkIsAdmin.Margin = new System.Windows.Forms.Padding(2);
             this.chkIsAdmin.Name = "chkIsAdmin";
             this.chkIsAdmin.Size = new System.Drawing.Size(116, 17);
             this.chkIsAdmin.TabIndex = 17;
@@ -227,7 +229,7 @@
             // 
             this.chkTrangThai.AutoSize = true;
             this.chkTrangThai.Location = new System.Drawing.Point(322, 102);
-            this.chkTrangThai.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkTrangThai.Margin = new System.Windows.Forms.Padding(2);
             this.chkTrangThai.Name = "chkTrangThai";
             this.chkTrangThai.Size = new System.Drawing.Size(104, 17);
             this.chkTrangThai.TabIndex = 16;
@@ -236,7 +238,7 @@
             // dtpNgayVaoLam
             // 
             this.dtpNgayVaoLam.Location = new System.Drawing.Point(322, 68);
-            this.dtpNgayVaoLam.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtpNgayVaoLam.Margin = new System.Windows.Forms.Padding(2);
             this.dtpNgayVaoLam.Name = "dtpNgayVaoLam";
             this.dtpNgayVaoLam.Size = new System.Drawing.Size(211, 20);
             this.dtpNgayVaoLam.TabIndex = 15;
@@ -254,7 +256,7 @@
             // txtDiaChi
             // 
             this.txtDiaChi.Location = new System.Drawing.Point(322, 21);
-            this.txtDiaChi.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtDiaChi.Margin = new System.Windows.Forms.Padding(2);
             this.txtDiaChi.Name = "txtDiaChi";
             this.txtDiaChi.Size = new System.Drawing.Size(211, 20);
             this.txtDiaChi.TabIndex = 13;
@@ -272,7 +274,7 @@
             // txtEmail
             // 
             this.txtEmail.Location = new System.Drawing.Point(15, 155);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(211, 20);
             this.txtEmail.TabIndex = 9;
@@ -290,7 +292,7 @@
             // txtSDT
             // 
             this.txtSDT.Location = new System.Drawing.Point(15, 110);
-            this.txtSDT.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSDT.Margin = new System.Windows.Forms.Padding(2);
             this.txtSDT.Name = "txtSDT";
             this.txtSDT.Size = new System.Drawing.Size(211, 20);
             this.txtSDT.TabIndex = 7;
@@ -308,7 +310,7 @@
             // txtMatKhau
             // 
             this.txtMatKhau.Location = new System.Drawing.Point(15, 68);
-            this.txtMatKhau.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMatKhau.Margin = new System.Windows.Forms.Padding(2);
             this.txtMatKhau.Name = "txtMatKhau";
             this.txtMatKhau.PasswordChar = '*';
             this.txtMatKhau.Size = new System.Drawing.Size(211, 20);
@@ -327,7 +329,7 @@
             // txtTaiKhoan
             // 
             this.txtTaiKhoan.Location = new System.Drawing.Point(15, 21);
-            this.txtTaiKhoan.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtTaiKhoan.Margin = new System.Windows.Forms.Padding(2);
             this.txtTaiKhoan.Name = "txtTaiKhoan";
             this.txtTaiKhoan.Size = new System.Drawing.Size(211, 20);
             this.txtTaiKhoan.TabIndex = 3;
@@ -345,7 +347,7 @@
             // txtHoTen
             // 
             this.txtHoTen.Location = new System.Drawing.Point(322, 178);
-            this.txtHoTen.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtHoTen.Margin = new System.Windows.Forms.Padding(2);
             this.txtHoTen.Name = "txtHoTen";
             this.txtHoTen.Size = new System.Drawing.Size(211, 20);
             this.txtHoTen.TabIndex = 21;
@@ -365,7 +367,7 @@
             this.txtMaNV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMaNV.Location = new System.Drawing.Point(488, -4);
-            this.txtMaNV.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMaNV.Margin = new System.Windows.Forms.Padding(2);
             this.txtMaNV.Name = "txtMaNV";
             this.txtMaNV.Size = new System.Drawing.Size(46, 20);
             this.txtMaNV.TabIndex = 99;
@@ -385,6 +387,17 @@
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản lý nhân viên";
             // 
+            // btnXuatFile
+            // 
+            this.btnXuatFile.Location = new System.Drawing.Point(8, 211);
+            this.btnXuatFile.Margin = new System.Windows.Forms.Padding(2);
+            this.btnXuatFile.Name = "btnXuatFile";
+            this.btnXuatFile.Size = new System.Drawing.Size(134, 37);
+            this.btnXuatFile.TabIndex = 4;
+            this.btnXuatFile.Text = "Xuất File";
+            this.btnXuatFile.UseVisualStyleBackColor = true;
+            this.btnXuatFile.Click += new System.EventHandler(this.btnXuatFile_Click);
+            // 
             // frnNhanVien
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -392,7 +405,7 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(984, 585);
             this.Controls.Add(this.panelRoot);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frnNhanVien";
             this.Text = "Quản lý nhân viên";
             this.Load += new System.EventHandler(this.frnNhanVien_Load);
@@ -441,5 +454,6 @@
         private System.Windows.Forms.TextBox txtHoTen;
         private System.Windows.Forms.Label lblHoTen;
         private System.Windows.Forms.TextBox txtMaNV;
+        private System.Windows.Forms.Button btnXuatFile;
     }
 }

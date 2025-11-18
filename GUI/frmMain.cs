@@ -2,6 +2,7 @@
 using BTL_LTTQ.DAL;
 using BTL_LTTQ.GUI;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace BTL_LTTQ
@@ -61,8 +62,29 @@ namespace BTL_LTTQ
             this.Close();
         }
 
+        private void SetActiveButton(Button btnActive)
+        {
+
+            Color defaultColor = Color.FromArgb(29, 32, 50);
+            Color activeColor = Color.FromArgb(45, 47, 72);
+
+            btnDashboard.BackColor = defaultColor;
+            btnProduct.BackColor = defaultColor;
+            btnInventory.BackColor = defaultColor;
+            btnPos.BackColor = defaultColor;
+            btnInvoice.BackColor = defaultColor;
+            btnCustomer.BackColor = defaultColor;
+            btnStaff.BackColor = defaultColor;
+            btnReport.BackColor = defaultColor;
+
+            if (btnActive != null)
+            {
+                btnActive.BackColor = activeColor;
+            }
+        }
         private void btnStaff_Click(object sender, EventArgs e)
         {
+            SetActiveButton(btnStaff);
             OpenChildForm(new frnNhanVien());
         }
     }
