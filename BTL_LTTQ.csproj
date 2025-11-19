@@ -48,11 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\ProductService.cs" />
     <Compile Include="BLL\ReportService.cs" />
     <Compile Include="DAL\DataProcesser.cs" />
     <Compile Include="DTO\DashboardSummary.cs" />
     <Compile Include="DTO\DashboardOverview.cs" />
     <Compile Include="DTO\LoginResult.cs" />
+    <Compile Include="DTO\SanPhamDTO.cs" />
     <Compile Include="GUI\frmReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +73,12 @@
     <Compile Include="GUI\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\frmSanpham.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmSanpham.Designer.cs">
+      <DependentUpon>frmSanpham.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\frmLogin.resx">
@@ -81,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmReport.resx">
       <DependentUpon>frmReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frmSanpham.resx">
+      <DependentUpon>frmSanpham.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -105,9 +116,6 @@
     <None Include="GUI\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
-    <Folder Include="DTO\" />
     <Folder Include="Resources\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

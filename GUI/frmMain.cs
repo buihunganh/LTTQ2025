@@ -63,6 +63,13 @@ namespace BTL_LTTQ
             if (sender is Button button)
             {
                 SetActiveMenuButton(button);
+                
+                // Xử lý click cho từng button
+                if (button == btnProduct)
+                {
+                    ShowContentForm(new frmSanpham());
+                }
+                // Có thể thêm các form khác ở đây
             }
         }
 

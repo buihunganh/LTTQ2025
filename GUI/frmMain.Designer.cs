@@ -87,7 +87,7 @@
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSidebar.Location = new System.Drawing.Point(0, 0);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Size = new System.Drawing.Size(260, 724);
+            this.panelSidebar.Size = new System.Drawing.Size(220, 724);
             this.panelSidebar.TabIndex = 0;
             // 
             // flowMenu
@@ -107,7 +107,7 @@
             this.flowMenu.Location = new System.Drawing.Point(0, 80);
             this.flowMenu.Name = "flowMenu";
             this.flowMenu.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
-            this.flowMenu.Size = new System.Drawing.Size(260, 524);
+            this.flowMenu.Size = new System.Drawing.Size(220, 524);
             this.flowMenu.TabIndex = 1;
             this.flowMenu.WrapContents = false;
             // 
@@ -144,7 +144,7 @@
             this.btnDashboard.Location = new System.Drawing.Point(16, 50);
             this.btnDashboard.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.btnDashboard.Name = "btnDashboard";
-            this.btnDashboard.Size = new System.Drawing.Size(228, 42);
+            this.btnDashboard.Size = new System.Drawing.Size(188, 42);
             this.btnDashboard.TabIndex = 0;
             this.btnDashboard.Text = "Bảng điều khiển";
             this.btnDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -161,7 +161,7 @@
             this.btnProduct.Location = new System.Drawing.Point(16, 108);
             this.btnProduct.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnProduct.Name = "btnProduct";
-            this.btnProduct.Size = new System.Drawing.Size(228, 38);
+            this.btnProduct.Size = new System.Drawing.Size(188, 38);
             this.btnProduct.TabIndex = 1;
             this.btnProduct.Text = "Quản lý sản phẩm";
             this.btnProduct.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -178,7 +178,7 @@
             this.btnInventory.Location = new System.Drawing.Point(16, 162);
             this.btnInventory.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnInventory.Name = "btnInventory";
-            this.btnInventory.Size = new System.Drawing.Size(228, 38);
+            this.btnInventory.Size = new System.Drawing.Size(188, 38);
             this.btnInventory.TabIndex = 2;
             this.btnInventory.Text = "Quản lý kho";
             this.btnInventory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -195,7 +195,7 @@
             this.btnPos.Location = new System.Drawing.Point(16, 216);
             this.btnPos.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnPos.Name = "btnPos";
-            this.btnPos.Size = new System.Drawing.Size(228, 38);
+            this.btnPos.Size = new System.Drawing.Size(188, 38);
             this.btnPos.TabIndex = 3;
             this.btnPos.Text = "Bán hàng (POS)";
             this.btnPos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -212,7 +212,7 @@
             this.btnInvoice.Location = new System.Drawing.Point(16, 270);
             this.btnInvoice.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnInvoice.Name = "btnInvoice";
-            this.btnInvoice.Size = new System.Drawing.Size(228, 38);
+            this.btnInvoice.Size = new System.Drawing.Size(188, 38);
             this.btnInvoice.TabIndex = 4;
             this.btnInvoice.Text = "Quản lý hóa đơn";
             this.btnInvoice.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -229,7 +229,7 @@
             this.btnCustomer.Location = new System.Drawing.Point(16, 324);
             this.btnCustomer.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnCustomer.Name = "btnCustomer";
-            this.btnCustomer.Size = new System.Drawing.Size(228, 38);
+            this.btnCustomer.Size = new System.Drawing.Size(188, 38);
             this.btnCustomer.TabIndex = 5;
             this.btnCustomer.Text = "Quản lý khách hàng";
             this.btnCustomer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -246,7 +246,7 @@
             this.btnStaff.Location = new System.Drawing.Point(16, 378);
             this.btnStaff.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnStaff.Name = "btnStaff";
-            this.btnStaff.Size = new System.Drawing.Size(228, 38);
+            this.btnStaff.Size = new System.Drawing.Size(188, 38);
             this.btnStaff.TabIndex = 6;
             this.btnStaff.Text = "Quản lý nhân viên";
             this.btnStaff.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -263,7 +263,7 @@
             this.btnReport.Location = new System.Drawing.Point(16, 432);
             this.btnReport.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnReport.Name = "btnReport";
-            this.btnReport.Size = new System.Drawing.Size(228, 38);
+            this.btnReport.Size = new System.Drawing.Size(188, 38);
             this.btnReport.TabIndex = 7;
             this.btnReport.Text = "Báo cáo thống kê";
             this.btnReport.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -279,7 +279,7 @@
             this.panelUserContext.Location = new System.Drawing.Point(0, 604);
             this.panelUserContext.Name = "panelUserContext";
             this.panelUserContext.Padding = new System.Windows.Forms.Padding(16);
-            this.panelUserContext.Size = new System.Drawing.Size(260, 120);
+            this.panelUserContext.Size = new System.Drawing.Size(220, 120);
             this.panelUserContext.TabIndex = 2;
             // 
             // btnLogout
@@ -330,7 +330,7 @@
             this.panelBrand.Location = new System.Drawing.Point(0, 0);
             this.panelBrand.Name = "panelBrand";
             this.panelBrand.Padding = new System.Windows.Forms.Padding(16);
-            this.panelBrand.Size = new System.Drawing.Size(260, 80);
+            this.panelBrand.Size = new System.Drawing.Size(220, 80);
             this.panelBrand.TabIndex = 0;
             // 
             // lblBrand
@@ -352,7 +352,7 @@
             this.panelContent.Controls.Add(this.lblContentSubtitle);
             this.panelContent.Controls.Add(this.lblContentTitle);
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(260, 0);
+            this.panelContent.Location = new System.Drawing.Point(220, 0);
             this.panelContent.Name = "panelContent";
             this.panelContent.Padding = new System.Windows.Forms.Padding(32);
             this.panelContent.Size = new System.Drawing.Size(1059, 724);
