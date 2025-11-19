@@ -239,5 +239,14 @@ namespace BTL_LTTQ
             // (Lưu ý: namespace BTL_LTTQ.GUI là nơi chứa form frmNhapHang)
             ShowContentForm(new BTL_LTTQ.GUI.frmNhapHang());
         }
+
+        private void btnBanHang_Click(object sender, EventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                SetActiveMenuButton(btn);
+            }
+            ShowContentForm(new BTL_LTTQ.GUI.frmBanHang());
+        }
     }
 }

@@ -200,7 +200,7 @@
             this.btnPos.Text = "Bán hàng (POS)";
             this.btnPos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnPos.UseVisualStyleBackColor = true;
-            this.btnPos.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnPos.Click += new System.EventHandler(this.btnBanHang_Click);
             // 
             // btnInvoice
             // 
