@@ -2,15 +2,17 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using BTL_LTTQ.DTO;
+using BTL_LTTQ.DTO; // Đảm bảo namespace này chứa class LoginResult
 
 namespace BTL_LTTQ.DAL
 {
     public class DataProcesser : IDisposable
     {
         private readonly string _connectionString;
+
         public DataProcesser()
         {
+            // Đọc chuỗi kết nối từ App.config
             var connectionSetting = ConfigurationManager.ConnectionStrings["StoreDb"];
             if (connectionSetting == null || string.IsNullOrWhiteSpace(connectionSetting.ConnectionString))
             {
@@ -20,6 +22,8 @@ namespace BTL_LTTQ.DAL
 
             _connectionString = connectionSetting.ConnectionString;
         }
+
+        // --- CÁC HÀM CƠ BẢN (SELECT, INSERT, UPDATE, DELETE) ---
 
         public DataTable ExecuteQuery(string query, CommandType commandType = CommandType.Text, params SqlParameter[] parameters)
         {
@@ -50,6 +54,8 @@ namespace BTL_LTTQ.DAL
                 return command.ExecuteScalar();
             }
         }
+
+        
 
         public LoginResult AuthenticateUser(string username, string password)
         {
@@ -84,6 +90,67 @@ namespace BTL_LTTQ.DAL
             }
         }
 
+        
+
+        public bool NhapHangTransaction(int maNCC, int maNV, decimal tongTien, DataTable dtChiTiet)
+        {
+            using (var connection = CreateConnection()) 
+            {
+                using (var transaction = connection.BeginTransaction()) 
+                {
+                    try
+                    {
+                        
+                        string sqlPhieu = @"INSERT INTO PhieuNhap(MaPhieuNhap, NgayNhap, MaNV, MaNCC, TongTien, TrangThai) 
+                                            VALUES (@MaCode, GETDATE(), @MaNV, @MaNCC, @TongTien, N'Đã nhập');
+                                            SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+                        SqlCommand cmdPhieu = new SqlCommand(sqlPhieu, connection, transaction);
+
+                        string maPhieuCode = "PN" + DateTime.Now.ToString("yyyyMMddHHmmss");
+
+                        cmdPhieu.Parameters.AddWithValue("@MaCode", maPhieuCode);
+                        cmdPhieu.Parameters.AddWithValue("@MaNV", maNV);
+                        cmdPhieu.Parameters.AddWithValue("@MaNCC", maNCC);
+                        cmdPhieu.Parameters.AddWithValue("@TongTien", tongTien);
+
+                        int maPN = (int)cmdPhieu.ExecuteScalar();
+
+                        
+                        foreach (DataRow r in dtChiTiet.Rows)
+                        {
+                            
+                            string sqlCT = @"INSERT INTO ChiTietPhieuNhap(MaPN, MaCTSP, SoLuong, GiaNhap, ThanhTien) 
+                                             VALUES (@MaPN, @MaCTSP, @SoLuong, @GiaNhap, @ThanhTien)";
+
+                            SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
+                            cmdCT.Parameters.AddWithValue("@MaPN", maPN);
+                            cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]); 
+                            cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
+                            cmdCT.Parameters.AddWithValue("@GiaNhap", r["GiaNhap"]);
+                            cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
+                            cmdCT.ExecuteNonQuery();
+
+                            string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL WHERE MaCTSP = @MaCTSP";
+                            SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
+                            cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
+                            cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                            cmdUpd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new Exception("Lỗi Transaction Nhập Hàng: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+
         private SqlConnection CreateConnection()
         {
             var connection = new SqlConnection(_connectionString);
@@ -111,4 +178,3 @@ namespace BTL_LTTQ.DAL
         }
     }
 }
-

@@ -223,5 +223,21 @@ namespace BTL_LTTQ
             public Font Font;
         }
 
+        private void panelRevenueToday_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnQuanLyKho_Click(object sender, EventArgs e)
+        {
+            if (sender is Button btn)
+            {
+                SetActiveMenuButton(btn);
+            }
+
+            // 2. Gọi form Nhập hàng hiện lên màn hình chính
+            // (Lưu ý: namespace BTL_LTTQ.GUI là nơi chứa form frmNhapHang)
+            ShowContentForm(new BTL_LTTQ.GUI.frmNhapHang());
+        }
     }
 }
