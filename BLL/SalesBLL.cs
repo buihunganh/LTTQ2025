@@ -22,7 +22,13 @@ namespace BTL_LTTQ.BLL
                 return dal.ExecuteQuery(sql);
             }
         }
-
+        public int QuickAddCustomer(string ten, string sdt)
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.ThemKhachHangNhanh(ten, sdt);
+            }
+        }
         // 2. Lấy danh sách khách hàng
         public DataTable GetKhachHang()
         {

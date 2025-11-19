@@ -55,7 +55,23 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        
+        // --- HÀM THÊM KHÁCH HÀNG NHANH ---
+        public int ThemKhachHangNhanh(string hoTen, string sdt)
+        {
+            string sql = @"INSERT INTO KhachHang(HoTen, SoDienThoai, DiemTichLuy, TrangThai) 
+                   VALUES (@Ten, @SDT, 0, 1);
+                   SELECT CAST(SCOPE_IDENTITY() AS INT);";
+         
+
+            using (var connection = CreateConnection())
+            using (var command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@Ten", hoTen);
+                command.Parameters.AddWithValue("@SDT", sdt);
+
+                return (int)command.ExecuteScalar(); 
+            }
+        }
 
         public LoginResult AuthenticateUser(string username, string password)
         {
