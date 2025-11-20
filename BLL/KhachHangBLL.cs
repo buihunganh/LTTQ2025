@@ -14,12 +14,39 @@ namespace BTL_LTTQ.BLL
         private KhachHangDAL dal = new KhachHangDAL();
 
         public DataTable GetList() => dal.GetAllKhachHang();
-        public DataTable Search(string keyword) => dal.SearchKhachHang(keyword);
-
-        public bool Add(string ten, string sdt)
+        public DataTable Search(string keyword, string rank)
         {
-            if (string.IsNullOrWhiteSpace(ten) || string.IsNullOrWhiteSpace(sdt)) return false;
-            return dal.AddKhachHang(new KhachHangDTO { HoTen = ten, SoDienThoai = sdt });
+            return dal.SearchKhachHang(keyword, rank);
+        }
+
+        public bool Add(string ten, string sdt, decimal soTienMoi)
+        {
+            KhachHangDTO khachCu = dal.GetKhachHangByInfo(ten, sdt);
+
+            if (khachCu != null)
+            {
+
+                decimal tongTienMoi = khachCu.TongChiTieu + soTienMoi;
+                string hangMoi = TinhHangThanhVien(tongTienMoi);
+                khachCu.TongChiTieu = tongTienMoi;
+                khachCu.HangThanhVien = hangMoi;
+                return dal.UpdateKhachHang(khachCu);
+            }
+            else
+            {
+
+                string hangThanhVien = TinhHangThanhVien(soTienMoi);
+
+                KhachHangDTO khMoi = new KhachHangDTO
+                {
+                    HoTen = ten,
+                    SoDienThoai = sdt,
+                    TongChiTieu = soTienMoi,
+                    HangThanhVien = hangThanhVien
+                };
+
+                return dal.AddKhachHang(khMoi);
+            }
         }
 
         public bool Edit(int ma, string ten, string sdt)
@@ -31,9 +58,10 @@ namespace BTL_LTTQ.BLL
 
         public string TinhHangThanhVien(decimal tongTien)
         {
-            if (tongTien >= 10000000) return "Gold";  
-            if (tongTien >= 5000000) return "Silver";  
-            return "Member";
+            if (tongTien >= 20000000) return "Kim cương";
+            if (tongTien >= 10000000) return "Vàng";  
+            if (tongTien >= 5000000) return "Bạc";  
+            return "Thành viên";
         }
     }
 }
