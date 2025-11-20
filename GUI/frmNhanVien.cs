@@ -8,11 +8,11 @@ using ClosedXML.Excel;
 
 namespace BTL_LTTQ.GUI
 {
-    public partial class frnNhanVien : Form
+    public partial class frmNhanVien : Form
     {
         private NhanVienBLL bllNhanVien = new NhanVienBLL();
 
-        public frnNhanVien()
+        public frmNhanVien()
         {
             InitializeComponent();
             ApplyDashboardTemplate();

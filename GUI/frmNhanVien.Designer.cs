@@ -1,6 +1,6 @@
 ﻿namespace BTL_LTTQ.GUI
 {
-    partial class frnNhanVien
+    partial class frmNhanVien
     {
         private System.ComponentModel.IContainer components = null;
 

@@ -85,7 +85,7 @@ namespace BTL_LTTQ
         private void btnStaff_Click(object sender, EventArgs e)
         {
             SetActiveButton(btnStaff);
-            OpenChildForm(new frnNhanVien());
+            OpenChildForm(new frmNhanVien());
         }
 
         private void btnCustomer_Click(object sender, EventArgs e)

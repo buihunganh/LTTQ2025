@@ -123,11 +123,11 @@
     <Compile Include="GUI\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\frnNhanVien.cs">
+    <Compile Include="GUI\frmNhanVien.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\frnNhanVien.Designer.cs">
-      <DependentUpon>frnNhanVien.cs</DependentUpon>
+    <Compile Include="GUI\frmNhanVien.Designer.cs">
+      <DependentUpon>frmNhanVien.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,8 +140,8 @@
     <EmbeddedResource Include="GUI\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\frnNhanVien.resx">
-      <DependentUpon>frnNhanVien.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\frmNhanVien.resx">
+      <DependentUpon>frmNhanVien.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
