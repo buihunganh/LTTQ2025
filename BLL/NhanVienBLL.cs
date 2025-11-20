@@ -9,24 +9,16 @@ namespace BTL_LTTQ.BLL
     {
         private NhanVienDAL dalNhanVien = new NhanVienDAL();
 
-        // 1. Lấy danh sách
         public DataTable GetNhanVienList()
         {
             return dalNhanVien.GetAllNhanVien();
         }
 
-        // 2. TÌM KIẾM (MỚI)
-        public DataTable FindNhanVien(string keyword)
+        public DataTable FindNhanVien(string keyword, int status)
         {
-            // Nếu từ khóa rỗng thì lấy hết danh sách
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                return dalNhanVien.GetAllNhanVien();
-            }
-            return dalNhanVien.SearchNhanVien(keyword);
+            return dalNhanVien.SearchNhanVien(keyword, status);
         }
 
-        // 3. Tạo nhân viên
         public bool CreateNhanVien(string hoTen, string taiKhoan, string matKhau, bool isAdmin, string sdt, string email, string diaChi, DateTime ngayVaoLam)
         {
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan)) return false;

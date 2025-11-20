@@ -23,6 +23,7 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblSearch = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
+            this.btnXuatFile = new System.Windows.Forms.Button();
             this.btnLamMoi = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
             this.btnLuu = new System.Windows.Forms.Button();
@@ -46,7 +47,8 @@
             this.lblHoTen = new System.Windows.Forms.Label();
             this.txtMaNV = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnXuatFile = new System.Windows.Forms.Button();
+            this.cmbLocTrangThai = new System.Windows.Forms.ComboBox();
+            this.lblLoc = new System.Windows.Forms.Label();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhanVien)).BeginInit();
             this.grpFilter.SuspendLayout();
@@ -95,6 +97,8 @@
             this.grpFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpFilter.BackColor = System.Drawing.Color.Transparent;
+            this.grpFilter.Controls.Add(this.lblLoc);
+            this.grpFilter.Controls.Add(this.cmbLocTrangThai);
             this.grpFilter.Controls.Add(this.txtSearch);
             this.grpFilter.Controls.Add(this.lblSearch);
             this.grpFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -113,7 +117,7 @@
             this.txtSearch.Location = new System.Drawing.Point(14, 42);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(529, 23);
+            this.txtSearch.Size = new System.Drawing.Size(306, 23);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
@@ -142,6 +146,17 @@
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Size = new System.Drawing.Size(150, 495);
             this.panelButtons.TabIndex = 2;
+            // 
+            // btnXuatFile
+            // 
+            this.btnXuatFile.Location = new System.Drawing.Point(8, 211);
+            this.btnXuatFile.Margin = new System.Windows.Forms.Padding(2);
+            this.btnXuatFile.Name = "btnXuatFile";
+            this.btnXuatFile.Size = new System.Drawing.Size(134, 37);
+            this.btnXuatFile.TabIndex = 4;
+            this.btnXuatFile.Text = "Xuất File";
+            this.btnXuatFile.UseVisualStyleBackColor = true;
+            this.btnXuatFile.Click += new System.EventHandler(this.btnXuatFile_Click);
             // 
             // btnLamMoi
             // 
@@ -218,7 +233,7 @@
             // chkIsAdmin
             // 
             this.chkIsAdmin.AutoSize = true;
-            this.chkIsAdmin.Location = new System.Drawing.Point(322, 135);
+            this.chkIsAdmin.Location = new System.Drawing.Point(322, 179);
             this.chkIsAdmin.Margin = new System.Windows.Forms.Padding(2);
             this.chkIsAdmin.Name = "chkIsAdmin";
             this.chkIsAdmin.Size = new System.Drawing.Size(116, 17);
@@ -228,7 +243,7 @@
             // chkTrangThai
             // 
             this.chkTrangThai.AutoSize = true;
-            this.chkTrangThai.Location = new System.Drawing.Point(322, 102);
+            this.chkTrangThai.Location = new System.Drawing.Point(322, 146);
             this.chkTrangThai.Margin = new System.Windows.Forms.Padding(2);
             this.chkTrangThai.Name = "chkTrangThai";
             this.chkTrangThai.Size = new System.Drawing.Size(104, 17);
@@ -346,7 +361,7 @@
             // 
             // txtHoTen
             // 
-            this.txtHoTen.Location = new System.Drawing.Point(322, 178);
+            this.txtHoTen.Location = new System.Drawing.Point(322, 110);
             this.txtHoTen.Margin = new System.Windows.Forms.Padding(2);
             this.txtHoTen.Name = "txtHoTen";
             this.txtHoTen.Size = new System.Drawing.Size(211, 20);
@@ -355,7 +370,7 @@
             // lblHoTen
             // 
             this.lblHoTen.AutoSize = true;
-            this.lblHoTen.Location = new System.Drawing.Point(322, 162);
+            this.lblHoTen.Location = new System.Drawing.Point(322, 94);
             this.lblHoTen.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHoTen.Name = "lblHoTen";
             this.lblHoTen.Size = new System.Drawing.Size(57, 13);
@@ -387,16 +402,23 @@
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản lý nhân viên";
             // 
-            // btnXuatFile
+            // cmbLocTrangThai
             // 
-            this.btnXuatFile.Location = new System.Drawing.Point(8, 211);
-            this.btnXuatFile.Margin = new System.Windows.Forms.Padding(2);
-            this.btnXuatFile.Name = "btnXuatFile";
-            this.btnXuatFile.Size = new System.Drawing.Size(134, 37);
-            this.btnXuatFile.TabIndex = 4;
-            this.btnXuatFile.Text = "Xuất File";
-            this.btnXuatFile.UseVisualStyleBackColor = true;
-            this.btnXuatFile.Click += new System.EventHandler(this.btnXuatFile_Click);
+            this.cmbLocTrangThai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLocTrangThai.FormattingEnabled = true;
+            this.cmbLocTrangThai.Location = new System.Drawing.Point(380, 42);
+            this.cmbLocTrangThai.Name = "cmbLocTrangThai";
+            this.cmbLocTrangThai.Size = new System.Drawing.Size(163, 23);
+            this.cmbLocTrangThai.TabIndex = 2;
+            // 
+            // lblLoc
+            // 
+            this.lblLoc.AutoSize = true;
+            this.lblLoc.Location = new System.Drawing.Point(380, 22);
+            this.lblLoc.Name = "lblLoc";
+            this.lblLoc.Size = new System.Drawing.Size(63, 15);
+            this.lblLoc.TabIndex = 3;
+            this.lblLoc.Text = "Trạng thái:";
             // 
             // frnNhanVien
             // 
@@ -455,5 +477,7 @@
         private System.Windows.Forms.Label lblHoTen;
         private System.Windows.Forms.TextBox txtMaNV;
         private System.Windows.Forms.Button btnXuatFile;
+        private System.Windows.Forms.Label lblLoc;
+        private System.Windows.Forms.ComboBox cmbLocTrangThai;
     }
 }

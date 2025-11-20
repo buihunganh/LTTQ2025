@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using BTL_LTTQ.DTO;
-using BTL_LTTQ.DAL; // Namespace chứa class DataProcesser của bạn
+using BTL_LTTQ.DAL; 
 
 namespace BTL_LTTQ.DAL
 {
@@ -9,24 +9,26 @@ namespace BTL_LTTQ.DAL
     {
         private DataProcesser db = new DataProcesser();
 
-        // 1. Lấy danh sách đầy đủ
         public DataTable GetAllNhanVien()
         {
             string sql = "SELECT MaNV, HoTen, TaiKhoan, IsAdmin, TrangThai, SoDienThoai, Email, DiaChi, NgayVaoLam FROM NhanVien";
             return db.ExecuteQuery(sql);
         }
 
-        // 2. TÌM KIẾM (MỚI)
-        public DataTable SearchNhanVien(string keyword)
+        public DataTable SearchNhanVien(string keyword, int status)
         {
-            // Tìm theo Họ Tên HOẶC Số Điện Thoại
             string sql = $@"SELECT MaNV, HoTen, TaiKhoan, IsAdmin, TrangThai, SoDienThoai, Email, DiaChi, NgayVaoLam 
-                            FROM NhanVien 
-                            WHERE HoTen LIKE N'%{keyword}%' OR SoDienThoai LIKE '%{keyword}%'";
+                    FROM NhanVien 
+                    WHERE (HoTen LIKE N'%{keyword}%' OR SoDienThoai LIKE '%{keyword}%')";
+
+            if (status != -1)
+            {
+                sql += $" AND TrangThai = {status}";
+            }
+
             return db.ExecuteQuery(sql);
         }
 
-        // 3. Thêm mới
         public bool AddNhanVien(NhanVienDTO nv)
         {
             string ngayVL = nv.NgayVaoLam.HasValue ? $"'{nv.NgayVaoLam.Value.ToString("yyyy-MM-dd")}'" : "NULL";
@@ -37,7 +39,6 @@ namespace BTL_LTTQ.DAL
             return db.ExecuteNonQuery(sql) > 0;
         }
 
-        // 4. Cập nhật
         public bool UpdateNhanVien(NhanVienDTO nv)
         {
             string ngayVL = nv.NgayVaoLam.HasValue ? $"'{nv.NgayVaoLam.Value.ToString("yyyy-MM-dd")}'" : "NULL";
@@ -55,14 +56,12 @@ namespace BTL_LTTQ.DAL
             return db.ExecuteNonQuery(sql) > 0;
         }
 
-        // 5. Xóa (Vô hiệu hóa)
         public bool DisableNhanVien(int maNV)
         {
             string sql = $"UPDATE NhanVien SET TrangThai = 0 WHERE MaNV = {maNV}";
             return db.ExecuteNonQuery(sql) > 0;
         }
 
-        // 6. Kiểm tra đăng nhập (Giữ nguyên)
         public NhanVienDTO CheckLogin(string taiKhoan, string matKhau)
         {
             string sql = $"SELECT * FROM NhanVien WHERE TaiKhoan = '{taiKhoan}' AND MatKhau = '{matKhau}' AND TrangThai = 1";
