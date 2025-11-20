@@ -236,7 +236,7 @@
             this.btnCustomer.Text = "Quản lý khách hàng";
             this.btnCustomer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCustomer.UseVisualStyleBackColor = true;
-            this.btnCustomer.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnCustomer.Click += new System.EventHandler(this.btnCustomer_Click);
             // 
             // btnStaff
             // 
@@ -253,7 +253,7 @@
             this.btnStaff.Text = "Quản lý nhân viên";
             this.btnStaff.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnStaff.UseVisualStyleBackColor = true;
-            this.btnStaff.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnStaff.Click += new System.EventHandler(this.btnStaff_Click);
             // 
             // btnReport
             // 

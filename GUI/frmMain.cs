@@ -216,6 +216,45 @@ namespace BTL_LTTQ
             button.Font = appearance.Font;
         }
 
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            ShowContentForm(new frmSettings(_currentUser));
+        }
+
+        private void btnCheckIn_Click(object sender, EventArgs e)
+        {
+            string currentTime = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+            MessageBox.Show(
+                $"✓ Check-in thành công!\nThời gian: {currentTime}",
+                "Chấm công - Vào làm",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
+
+        private void btnCheckOut_Click(object sender, EventArgs e)
+        {
+            string currentTime = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+            MessageBox.Show(
+                $"✓ Check-out thành công!\nThời gian: {currentTime}",
+                "Chấm công - Tan làm",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
+
+        private void btnCustomer_Click(object sender, EventArgs e)
+        {
+            SetActiveMenuButton(btnCustomer);
+            ShowContentForm(new GUI.frmKhachHang());
+        }
+
+        private void btnStaff_Click(object sender, EventArgs e)
+        {
+            SetActiveMenuButton(btnStaff);
+            ShowContentForm(new GUI.frnNhanVien());
+        }
+
         private struct ButtonAppearance
         {
             public Color BackColor;
