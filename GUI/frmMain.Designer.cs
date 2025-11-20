@@ -121,14 +121,14 @@
             this.lblMenuHeader.Location = new System.Drawing.Point(16, 8);
             this.lblMenuHeader.Margin = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.lblMenuHeader.Name = "lblMenuHeader";
-            this.lblMenuHeader.Size = new System.Drawing.Size(87, 21);
+            this.lblMenuHeader.Size = new System.Drawing.Size(73, 17);
             this.lblMenuHeader.TabIndex = 8;
             this.lblMenuHeader.Text = "Chức năng";
             // 
             // panelAccent
             // 
             this.panelAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(90)))), ((int)(((byte)(79)))));
-            this.panelAccent.Location = new System.Drawing.Point(16, 35);
+            this.panelAccent.Location = new System.Drawing.Point(16, 31);
             this.panelAccent.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.panelAccent.Name = "panelAccent";
             this.panelAccent.Size = new System.Drawing.Size(40, 3);
@@ -143,7 +143,7 @@
             this.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDashboard.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
             this.btnDashboard.ForeColor = System.Drawing.Color.White;
-            this.btnDashboard.Location = new System.Drawing.Point(16, 50);
+            this.btnDashboard.Location = new System.Drawing.Point(16, 46);
             this.btnDashboard.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.btnDashboard.Name = "btnDashboard";
             this.btnDashboard.Size = new System.Drawing.Size(228, 42);
@@ -160,7 +160,7 @@
             this.btnProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProduct.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnProduct.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnProduct.Location = new System.Drawing.Point(16, 108);
+            this.btnProduct.Location = new System.Drawing.Point(16, 104);
             this.btnProduct.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnProduct.Name = "btnProduct";
             this.btnProduct.Size = new System.Drawing.Size(228, 38);
@@ -177,7 +177,7 @@
             this.btnInventory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInventory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInventory.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnInventory.Location = new System.Drawing.Point(16, 162);
+            this.btnInventory.Location = new System.Drawing.Point(16, 158);
             this.btnInventory.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnInventory.Name = "btnInventory";
             this.btnInventory.Size = new System.Drawing.Size(228, 38);
@@ -185,7 +185,7 @@
             this.btnInventory.Text = "Quản lý kho";
             this.btnInventory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnInventory.UseVisualStyleBackColor = true;
-            this.btnInventory.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnInventory.Click += new System.EventHandler(this.btnQuanLyKho_Click);
             // 
             // btnPos
             // 
@@ -194,7 +194,7 @@
             this.btnPos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPos.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnPos.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnPos.Location = new System.Drawing.Point(16, 216);
+            this.btnPos.Location = new System.Drawing.Point(16, 212);
             this.btnPos.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnPos.Name = "btnPos";
             this.btnPos.Size = new System.Drawing.Size(228, 38);
@@ -202,7 +202,7 @@
             this.btnPos.Text = "Bán hàng (POS)";
             this.btnPos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnPos.UseVisualStyleBackColor = true;
-            this.btnPos.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnPos.Click += new System.EventHandler(this.btnBanHang_Click);
             // 
             // btnInvoice
             // 
@@ -211,7 +211,7 @@
             this.btnInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnInvoice.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnInvoice.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnInvoice.Location = new System.Drawing.Point(16, 270);
+            this.btnInvoice.Location = new System.Drawing.Point(16, 266);
             this.btnInvoice.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnInvoice.Name = "btnInvoice";
             this.btnInvoice.Size = new System.Drawing.Size(228, 38);
@@ -228,7 +228,7 @@
             this.btnCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCustomer.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnCustomer.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnCustomer.Location = new System.Drawing.Point(16, 324);
+            this.btnCustomer.Location = new System.Drawing.Point(16, 320);
             this.btnCustomer.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnCustomer.Name = "btnCustomer";
             this.btnCustomer.Size = new System.Drawing.Size(228, 38);
@@ -245,7 +245,7 @@
             this.btnStaff.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStaff.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnStaff.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnStaff.Location = new System.Drawing.Point(16, 378);
+            this.btnStaff.Location = new System.Drawing.Point(16, 374);
             this.btnStaff.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnStaff.Name = "btnStaff";
             this.btnStaff.Size = new System.Drawing.Size(228, 38);
@@ -262,7 +262,7 @@
             this.btnReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReport.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnReport.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnReport.Location = new System.Drawing.Point(16, 432);
+            this.btnReport.Location = new System.Drawing.Point(16, 428);
             this.btnReport.Margin = new System.Windows.Forms.Padding(0, 8, 0, 8);
             this.btnReport.Name = "btnReport";
             this.btnReport.Size = new System.Drawing.Size(228, 38);
@@ -306,9 +306,9 @@
             this.lblRole.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRole.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblRole.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRole.Location = new System.Drawing.Point(16, 41);
+            this.lblRole.Location = new System.Drawing.Point(16, 36);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(112, 20);
+            this.lblRole.Size = new System.Drawing.Size(89, 15);
             this.lblRole.TabIndex = 1;
             this.lblRole.Text = "Vai trò: Quản trị";
             // 
@@ -321,7 +321,7 @@
             this.lblUser.Location = new System.Drawing.Point(16, 16);
             this.lblUser.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(191, 25);
+            this.lblUser.Size = new System.Drawing.Size(148, 20);
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Người dùng: Admin";
             // 
@@ -342,7 +342,7 @@
             this.lblBrand.ForeColor = System.Drawing.Color.White;
             this.lblBrand.Location = new System.Drawing.Point(16, 20);
             this.lblBrand.Name = "lblBrand";
-            this.lblBrand.Size = new System.Drawing.Size(221, 41);
+            this.lblBrand.Size = new System.Drawing.Size(178, 32);
             this.lblBrand.TabIndex = 0;
             this.lblBrand.Text = "ABDDT Admin";
             // 
@@ -400,7 +400,7 @@
             this.lblLowStockValue.Location = new System.Drawing.Point(16, 43);
             this.lblLowStockValue.MaximumSize = new System.Drawing.Size(180, 0);
             this.lblLowStockValue.Name = "lblLowStockValue";
-            this.lblLowStockValue.Size = new System.Drawing.Size(128, 28);
+            this.lblLowStockValue.Size = new System.Drawing.Size(103, 21);
             this.lblLowStockValue.TabIndex = 1;
             this.lblLowStockValue.Text = "Kho ổn định";
             // 
@@ -411,7 +411,7 @@
             this.lblLowStockTitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblLowStockTitle.Location = new System.Drawing.Point(16, 14);
             this.lblLowStockTitle.Name = "lblLowStockTitle";
-            this.lblLowStockTitle.Size = new System.Drawing.Size(152, 23);
+            this.lblLowStockTitle.Size = new System.Drawing.Size(127, 19);
             this.lblLowStockTitle.TabIndex = 0;
             this.lblLowStockTitle.Text = "Cảnh báo tồn kho";
             // 
@@ -437,7 +437,7 @@
             this.lblTopProductValue.Location = new System.Drawing.Point(16, 43);
             this.lblTopProductValue.MaximumSize = new System.Drawing.Size(180, 0);
             this.lblTopProductValue.Name = "lblTopProductValue";
-            this.lblTopProductValue.Size = new System.Drawing.Size(150, 28);
+            this.lblTopProductValue.Size = new System.Drawing.Size(121, 21);
             this.lblTopProductValue.TabIndex = 1;
             this.lblTopProductValue.Text = "Đang cập nhật";
             // 
@@ -448,7 +448,7 @@
             this.lblTopProductTitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblTopProductTitle.Location = new System.Drawing.Point(16, 14);
             this.lblTopProductTitle.Name = "lblTopProductTitle";
-            this.lblTopProductTitle.Size = new System.Drawing.Size(166, 23);
+            this.lblTopProductTitle.Size = new System.Drawing.Size(139, 19);
             this.lblTopProductTitle.TabIndex = 0;
             this.lblTopProductTitle.Text = "Sản phẩm bán chạy";
             // 
@@ -473,7 +473,7 @@
             this.lblOrdersTodayValue.ForeColor = System.Drawing.Color.White;
             this.lblOrdersTodayValue.Location = new System.Drawing.Point(16, 43);
             this.lblOrdersTodayValue.Name = "lblOrdersTodayValue";
-            this.lblOrdersTodayValue.Size = new System.Drawing.Size(35, 41);
+            this.lblOrdersTodayValue.Size = new System.Drawing.Size(28, 32);
             this.lblOrdersTodayValue.TabIndex = 1;
             this.lblOrdersTodayValue.Text = "0";
             // 
@@ -484,7 +484,7 @@
             this.lblOrdersTodayTitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblOrdersTodayTitle.Location = new System.Drawing.Point(16, 14);
             this.lblOrdersTodayTitle.Name = "lblOrdersTodayTitle";
-            this.lblOrdersTodayTitle.Size = new System.Drawing.Size(101, 23);
+            this.lblOrdersTodayTitle.Size = new System.Drawing.Size(85, 19);
             this.lblOrdersTodayTitle.TabIndex = 0;
             this.lblOrdersTodayTitle.Text = "Số hóa đơn";
             // 
@@ -501,6 +501,7 @@
             this.panelRevenueToday.Padding = new System.Windows.Forms.Padding(16);
             this.panelRevenueToday.Size = new System.Drawing.Size(228, 124);
             this.panelRevenueToday.TabIndex = 0;
+            this.panelRevenueToday.Paint += new System.Windows.Forms.PaintEventHandler(this.panelRevenueToday_Paint);
             // 
             // lblRevenueTodayValue
             // 
@@ -509,7 +510,7 @@
             this.lblRevenueTodayValue.ForeColor = System.Drawing.Color.White;
             this.lblRevenueTodayValue.Location = new System.Drawing.Point(16, 43);
             this.lblRevenueTodayValue.Name = "lblRevenueTodayValue";
-            this.lblRevenueTodayValue.Size = new System.Drawing.Size(62, 41);
+            this.lblRevenueTodayValue.Size = new System.Drawing.Size(50, 32);
             this.lblRevenueTodayValue.TabIndex = 1;
             this.lblRevenueTodayValue.Text = "0 đ";
             // 
@@ -520,7 +521,7 @@
             this.lblRevenueTodayTitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblRevenueTodayTitle.Location = new System.Drawing.Point(16, 14);
             this.lblRevenueTodayTitle.Name = "lblRevenueTodayTitle";
-            this.lblRevenueTodayTitle.Size = new System.Drawing.Size(157, 23);
+            this.lblRevenueTodayTitle.Size = new System.Drawing.Size(130, 19);
             this.lblRevenueTodayTitle.TabIndex = 0;
             this.lblRevenueTodayTitle.Text = "Tổng thu hôm nay";
             // 
@@ -546,7 +547,7 @@
             this.lblWorkingDate.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblWorkingDate.Location = new System.Drawing.Point(701, 17);
             this.lblWorkingDate.Name = "lblWorkingDate";
-            this.lblWorkingDate.Size = new System.Drawing.Size(245, 23);
+            this.lblWorkingDate.Size = new System.Drawing.Size(202, 19);
             this.lblWorkingDate.TabIndex = 1;
             this.lblWorkingDate.Text = "Ngày làm việc: 01/01/2025 (T2)";
             // 
@@ -557,7 +558,7 @@
             this.lblGreeting.ForeColor = System.Drawing.Color.White;
             this.lblGreeting.Location = new System.Drawing.Point(19, 14);
             this.lblGreeting.Name = "lblGreeting";
-            this.lblGreeting.Size = new System.Drawing.Size(174, 28);
+            this.lblGreeting.Size = new System.Drawing.Size(140, 21);
             this.lblGreeting.TabIndex = 0;
             this.lblGreeting.Text = "Xin chào, Admin!";
             // 
@@ -600,7 +601,7 @@
             this.lblContentSubtitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblContentSubtitle.Location = new System.Drawing.Point(36, 94);
             this.lblContentSubtitle.Name = "lblContentSubtitle";
-            this.lblContentSubtitle.Size = new System.Drawing.Size(790, 25);
+            this.lblContentSubtitle.Size = new System.Drawing.Size(620, 20);
             this.lblContentSubtitle.TabIndex = 1;
             this.lblContentSubtitle.Text = "Chào mừng đến với cửa hàng bán giày ABDDT!! Chúc bạn một ngày bán hàng hiệu quả n" +
     "ha!!";
@@ -612,13 +613,13 @@
             this.lblContentTitle.ForeColor = System.Drawing.Color.White;
             this.lblContentTitle.Location = new System.Drawing.Point(32, 32);
             this.lblContentTitle.Name = "lblContentTitle";
-            this.lblContentTitle.Size = new System.Drawing.Size(303, 50);
+            this.lblContentTitle.Size = new System.Drawing.Size(246, 41);
             this.lblContentTitle.TabIndex = 0;
             this.lblContentTitle.Text = "Bảng điều khiển";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1319, 724);
