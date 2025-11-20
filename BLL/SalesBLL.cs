@@ -29,6 +29,15 @@ namespace BTL_LTTQ.BLL
                 return dal.ThemKhachHangNhanh(ten, sdt);
             }
         }
+        public DataTable GetInvoiceDetail(int maHD)
+        {
+            using (var dal = new DataProcesser()) return dal.GetChiTietHoaDon(maHD);
+        }
+
+        public DataTable GetInvoiceGeneral(int maHD)
+        {
+            using (var dal = new DataProcesser()) return dal.GetThongTinChungHoaDon(maHD);
+        }
         // 2. Lấy danh sách khách hàng
         public DataTable GetKhachHang()
         {
@@ -38,11 +47,14 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        // 3. Lưu Hóa Đơn
-        public bool ThanhToan(int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
+        // Mở file SalesBLL.cs
+      
+
+        public int ThanhToan(int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())
             {
+                // Trả về int ID từ DAL
                 return dal.BanHangTransaction(maKH, maNV, tongTien, giamGia, thanhToan, dtChiTiet);
             }
         }

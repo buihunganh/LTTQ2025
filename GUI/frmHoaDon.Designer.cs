@@ -1,6 +1,6 @@
 ﻿namespace BTL_LTTQ.GUI
 {
-    partial class frmBanHang
+    partial class frmHoaDon
     {
         /// <summary>
         /// Required designer variable.
@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "frmBanHang";
-            this.ClientSize = new System.Drawing.Size(1000, 600);
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Text = "frmHoaDon";
         }
 
         #endregion

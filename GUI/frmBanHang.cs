@@ -10,18 +10,29 @@ namespace BTL_LTTQ.GUI
     {
         private SalesBLL _bll = new SalesBLL();
         private DataTable _dtGioHang;
-        private Button btnThemKH; // Nút thêm khách hàng
 
-        // --- Bảng màu giao diện Dark Mode ---
+        // --- Bảng màu ---
         private readonly Color COLOR_ROOT = Color.FromArgb(45, 47, 72);
         private readonly Color COLOR_CARD = Color.FromArgb(58, 60, 92);
         private readonly Color COLOR_ACCENT = Color.FromArgb(232, 90, 79);
-        private readonly Color COLOR_TEXT_MAIN = Color.White;
         private readonly Color COLOR_TEXT_SUB = Color.Gainsboro;
+
+        // Controls khai báo thủ công
+        private ComboBox cboSanPham;
+        private NumericUpDown numSoLuong;
+        private NumericUpDown numGiamGiaSP;
+        private Button btnAdd;
+        private DataGridView dgvGioHang;
+        private Button btnGoToInvoice;
 
         public frmBanHang()
         {
             InitializeComponent();
+
+            // --- THÊM DÒNG NÀY VÀO ĐỂ KÍCH HOẠT GIAO DIỆN ---
+            this.Load += frmBanHang_Load;
+            // -----------------------------------------------
+
             InitGioHang();
         }
 
@@ -32,236 +43,138 @@ namespace BTL_LTTQ.GUI
             _dtGioHang.Columns.Add("TenSP", typeof(string));
             _dtGioHang.Columns.Add("SoLuong", typeof(int));
             _dtGioHang.Columns.Add("DonGia", typeof(decimal));
+            _dtGioHang.Columns.Add("GiamGia", typeof(int));
             _dtGioHang.Columns.Add("ThanhTien", typeof(decimal));
 
+            if (dgvGioHang == null) dgvGioHang = new DataGridView();
             dgvGioHang.DataSource = _dtGioHang;
-            if (dgvGioHang.Columns["MaCTSP"] != null) dgvGioHang.Columns["MaCTSP"].Visible = false;
         }
 
         private void frmBanHang_Load(object sender, EventArgs e)
         {
-            try
-            {
-                SetupTheme();
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
-            }
+            SetupUI_Simple(); // Giao diện rút gọn
+            LoadData();
         }
 
         private void LoadData()
         {
-            // Load Sản phẩm
             cboSanPham.DataSource = _bll.GetSanPhamBanHang();
             cboSanPham.DisplayMember = "TenHienThi";
             cboSanPham.ValueMember = "MaCTSP";
-
-            // Load Khách hàng
-            cboKhachHang.DataSource = _bll.GetKhachHang();
-            cboKhachHang.DisplayMember = "HoTen";
-            cboKhachHang.ValueMember = "MaKH";
-            cboKhachHang.SelectedIndex = -1; // Mặc định chưa chọn ai
         }
 
-        // --- CẤU HÌNH GIAO DIỆN & NÚT THÊM KHÁCH ---
-        private void SetupTheme()
+        // --- GIAO DIỆN POS RÚT GỌN (CHỈ CÒN GIỎ HÀNG) ---
+        private void SetupUI_Simple()
         {
             this.BackColor = COLOR_ROOT;
-            panelLeft.BackColor = COLOR_CARD;
-            panelPayment.BackColor = COLOR_CARD;
 
-            foreach (Control c in panelLeft.Controls) if (c is Label) c.ForeColor = COLOR_TEXT_SUB;
-            foreach (Control c in panelPayment.Controls) if (c is Label) c.ForeColor = COLOR_TEXT_SUB;
+            // 1. PANEL TRÁI (Chọn hàng)
+            Panel pnlLeft = new Panel { Dock = DockStyle.Left, Width = 350, BackColor = COLOR_CARD, Padding = new Padding(20) };
+            this.Controls.Add(pnlLeft);
 
-            // Style Buttons
-            btnThanhToan.BackColor = Color.Green;
-            btnThanhToan.ForeColor = Color.White;
-            btnThanhToan.FlatStyle = FlatStyle.Flat;
-            btnThanhToan.FlatAppearance.BorderSize = 0;
+            CreateLabel(pnlLeft, "Chọn giày:", 20, 20);
+            cboSanPham = new ComboBox { Location = new Point(20, 45), Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
+            pnlLeft.Controls.Add(cboSanPham);
 
-            btnAdd.BackColor = COLOR_ACCENT;
-            btnAdd.ForeColor = Color.White;
-            btnAdd.FlatStyle = FlatStyle.Flat;
+            CreateLabel(pnlLeft, "Số lượng:", 20, 85);
+            numSoLuong = new NumericUpDown { Location = new Point(20, 110), Width = 300, Minimum = 1, Value = 1 };
+            pnlLeft.Controls.Add(numSoLuong);
+
+            CreateLabel(pnlLeft, "Giảm giá (%):", 20, 150);
+            numGiamGiaSP = new NumericUpDown { Location = new Point(20, 175), Width = 300, Maximum = 100, Minimum = 0 };
+            pnlLeft.Controls.Add(numGiamGiaSP);
+
+            btnAdd = new Button { Text = "THÊM VÀO GIỎ", Location = new Point(20, 230), Size = new Size(300, 50), BackColor = COLOR_ACCENT, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
             btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.Click += btnAdd_Click;
+            pnlLeft.Controls.Add(btnAdd);
 
-            // Style GridView
-            dgvGioHang.BackgroundColor = Color.FromArgb(55, 57, 82);
-            dgvGioHang.DefaultCellStyle.BackColor = Color.FromArgb(55, 57, 82);
-            dgvGioHang.DefaultCellStyle.ForeColor = COLOR_TEXT_SUB;
-            dgvGioHang.EnableHeadersVisualStyles = false;
+            // NÚT CHUYỂN TIẾP (TO VÀ NỔI BẬT)
+            btnGoToInvoice = new Button { Text = "TẠO HÓA ĐƠN >>", Location = new Point(20, 300), Size = new Size(300, 60), BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 12, FontStyle.Bold), Cursor = Cursors.Hand };
+            btnGoToInvoice.FlatAppearance.BorderSize = 0;
+            btnGoToInvoice.Click += btnGoToInvoice_Click;
+            pnlLeft.Controls.Add(btnGoToInvoice);
+
+            CreateLabel(pnlLeft, "* Kích đúp dòng để xóa", 20, 380, Color.Yellow);
+
+            // 2. GRID GIỎ HÀNG (Chiếm toàn bộ bên phải)
+            dgvGioHang = new DataGridView { Dock = DockStyle.Fill, BackgroundColor = Color.FromArgb(55, 57, 82), BorderStyle = BorderStyle.None, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, AllowUserToAddRows = false };
             dgvGioHang.ColumnHeadersDefaultCellStyle.BackColor = COLOR_ACCENT;
             dgvGioHang.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvGioHang.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvGioHang.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvGioHang.BorderStyle = BorderStyle.None;
+            dgvGioHang.DefaultCellStyle.BackColor = Color.FromArgb(55, 57, 82);
+            dgvGioHang.DefaultCellStyle.ForeColor = COLOR_TEXT_SUB;
+            dgvGioHang.CellDoubleClick += DgvGioHang_CellDoubleClick; // Sự kiện xóa
 
-            // --- TẠO NÚT (+) THÊM KHÁCH HÀNG ---
-            btnThemKH = new Button();
-            btnThemKH.Text = "+";
-            btnThemKH.Size = new Size(40, 28); // Chiều cao khớp với Combobox
-            btnThemKH.Location = new Point(cboKhachHang.Location.X + cboKhachHang.Width + 5, cboKhachHang.Location.Y);
-            btnThemKH.BackColor = COLOR_ACCENT;
-            btnThemKH.ForeColor = Color.White;
-            btnThemKH.FlatStyle = FlatStyle.Flat;
-            btnThemKH.FlatAppearance.BorderSize = 0;
-            btnThemKH.Click += BtnThemKH_Click;
+            this.Controls.Add(dgvGioHang);
 
-            panelPayment.Controls.Add(btnThemKH);
+            // Gán nguồn lại
+            dgvGioHang.DataSource = _dtGioHang;
+            if (dgvGioHang.Columns["MaCTSP"] != null) dgvGioHang.Columns["MaCTSP"].Visible = false;
         }
 
-        // --- XỬ LÝ THÊM KHÁCH HÀNG NHANH ---
-        private void BtnThemKH_Click(object sender, EventArgs e)
+        private void CreateLabel(Control p, string t, int x, int y, Color? c = null)
         {
-            Form f = new Form();
-            f.Text = "Thêm khách mới";
-            f.Size = new Size(350, 220);
-            f.StartPosition = FormStartPosition.CenterParent;
-            f.BackColor = COLOR_CARD;
-            f.ForeColor = COLOR_TEXT_MAIN;
-            f.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-
-            Label l1 = new Label() { Text = "Họ tên:", Location = new Point(20, 20), AutoSize = true };
-            TextBox t1 = new TextBox() { Location = new Point(20, 45), Width = 280 };
-
-            Label l2 = new Label() { Text = "Số điện thoại:", Location = new Point(20, 85), AutoSize = true };
-            TextBox t2 = new TextBox() { Location = new Point(20, 110), Width = 280 };
-
-            Button b = new Button() { Text = "LƯU KHÁCH HÀNG", Location = new Point(150, 145), Width = 150, Height = 35, DialogResult = DialogResult.OK, BackColor = COLOR_ACCENT, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            b.FlatAppearance.BorderSize = 0;
-
-            f.Controls.AddRange(new Control[] { l1, t1, l2, t2, b });
-            f.AcceptButton = b;
-
-            if (f.ShowDialog() == DialogResult.OK)
-            {
-                if (string.IsNullOrWhiteSpace(t1.Text)) return;
-                try
-                {
-                    int newID = _bll.QuickAddCustomer(t1.Text, t2.Text);
-                    // Load lại và chọn ngay
-                    cboKhachHang.DataSource = _bll.GetKhachHang();
-                    cboKhachHang.SelectedValue = newID;
-                    MessageBox.Show("Đã thêm: " + t1.Text);
-                }
-                catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
-            }
+            p.Controls.Add(new Label { Text = t, Location = new Point(x, y), AutoSize = true, ForeColor = c ?? COLOR_TEXT_SUB });
         }
 
-        // --- XỬ LÝ THÊM VÀO GIỎ ---
+        // --- LOGIC THÊM HÀNG ---
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (cboSanPham.SelectedValue == null) return;
 
             DataRowView drv = (DataRowView)cboSanPham.SelectedItem;
-            int soLuongTon = Convert.ToInt32(drv["SoLuongTon"]);
+            int tonKho = Convert.ToInt32(drv["SoLuongTon"]);
             decimal giaBan = Convert.ToDecimal(drv["GiaBan"]);
-            int soLuongMua = (int)numSoLuong.Value;
+            int slMua = (int)numSoLuong.Value;
+            int giamGia = (int)numGiamGiaSP.Value;
 
-            if (soLuongMua > soLuongTon)
-            {
-                MessageBox.Show($"Kho chỉ còn {soLuongTon} sản phẩm!", "Hết hàng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            if (slMua > tonKho) { MessageBox.Show($"Kho chỉ còn {tonKho}!"); return; }
 
-            // Check trùng sản phẩm trong giỏ
+            // Tính tiền từng món
+            decimal tienGiam = (giaBan * slMua) * giamGia / 100;
+            decimal thanhTien = (giaBan * slMua) - tienGiam;
+
+            // Check trùng
             foreach (DataRow r in _dtGioHang.Rows)
             {
                 if ((int)r["MaCTSP"] == (int)cboSanPham.SelectedValue)
                 {
-                    r["SoLuong"] = (int)r["SoLuong"] + soLuongMua;
-                    r["ThanhTien"] = (int)r["SoLuong"] * giaBan;
-                    CalculateTotals();
+                    r["SoLuong"] = (int)r["SoLuong"] + slMua;
+                    r["ThanhTien"] = (int)r["ThanhTien"] + thanhTien;
+                    // Lưu ý: Cộng dồn tiền thì % giảm giá của lần sau phải tính lại cẩn thận nếu khác % lần đầu.
+                    // Để đơn giản, ta cứ cộng dồn số lượng và tính lại tổng tiền theo giá mới nhất.
                     return;
                 }
             }
 
-            _dtGioHang.Rows.Add(cboSanPham.SelectedValue, cboSanPham.Text, soLuongMua, giaBan, soLuongMua * giaBan);
-            CalculateTotals();
+            _dtGioHang.Rows.Add(cboSanPham.SelectedValue, cboSanPham.Text, slMua, giaBan, giamGia, thanhTien);
+
+            // Reset nhập
+            numSoLuong.Value = 1;
+            numGiamGiaSP.Value = 0;
         }
 
-        // --- TÍNH TOÁN TIỀN ---
-        private void CalculateTotals()
+        // --- SỰ KIỆN XÓA DÒNG ---
+        private void DgvGioHang_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            decimal tongTienHang = 0;
-            foreach (DataRow r in _dtGioHang.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
-
-            decimal giamGiaPercent = numGiamGia.Value;
-            decimal tienGiam = tongTienHang * (giamGiaPercent / 100);
-            decimal phaiTra = tongTienHang - tienGiam;
-
-            lblTongTien.Text = tongTienHang.ToString("N0") + " VNĐ";
-            lblThanhToan.Text = phaiTra.ToString("N0") + " VNĐ";
-
-            if (!string.IsNullOrEmpty(txtTienKhach.Text)) CalculateChange();
+            if (e.RowIndex >= 0) _dtGioHang.Rows.RemoveAt(e.RowIndex);
         }
 
-        private void CalculateChange()
+        // --- CHUYỂN SANG FORM HÓA ĐƠN ---
+        private void btnGoToInvoice_Click(object sender, EventArgs e)
         {
-            if (decimal.TryParse(txtTienKhach.Text, out decimal tienKhach))
-            {
-                decimal phaiTra = decimal.Parse(lblThanhToan.Text.Replace(" VNĐ", "").Replace(",", "").Replace(".", ""));
-                lblTienThua.Text = (tienKhach - phaiTra).ToString("N0") + " VNĐ";
-            }
-            else
-            {
-                lblTienThua.Text = "0 VNĐ";
-            }
-        }
+            if (_dtGioHang.Rows.Count == 0) { MessageBox.Show("Giỏ hàng trống!"); return; }
 
-        private void txtTienKhach_TextChanged(object sender, EventArgs e) => CalculateChange();
-        private void SumTotal_Changed(object sender, EventArgs e) => CalculateTotals();
+            // Mở form Hóa Đơn và truyền Giỏ hàng sang
+            frmHoaDon f = new frmHoaDon(_dtGioHang);
+            f.ShowDialog();
 
-        // --- THANH TOÁN ---
-        private void btnThanhToan_Click(object sender, EventArgs e)
-        {
-            if (_dtGioHang.Rows.Count == 0)
+            // Nếu bên kia Lưu thành công (DialogResult = OK) thì xóa giỏ hàng
+            if (f.DialogResult == DialogResult.OK)
             {
-                MessageBox.Show("Giỏ hàng đang trống!", "Thông báo");
-                return;
-            }
-
-            // 1. Kiểm tra chọn khách hàng (FIX LỖI NULL)
-            if (cboKhachHang.SelectedValue == null)
-            {
-                MessageBox.Show("Vui lòng chọn khách hàng trước!", "Yêu cầu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cboKhachHang.Focus();
-                return;
-            }
-
-            decimal tienKhach = 0;
-            decimal phaiTra = decimal.Parse(lblThanhToan.Text.Replace(" VNĐ", "").Replace(",", "").Replace(".", ""));
-
-            if (!decimal.TryParse(txtTienKhach.Text, out tienKhach) || tienKhach < phaiTra)
-            {
-                MessageBox.Show("Tiền khách đưa không đủ!", "Thông báo");
-                return;
-            }
-
-            try
-            {
-                int maKH = Convert.ToInt32(cboKhachHang.SelectedValue); // Đã safe check ở trên
-                int maNV = 1; // Lấy từ Session User (Tạm fix cứng)
-                decimal tongTien = decimal.Parse(lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "").Replace(".", ""));
-                decimal giamGia = tongTien - phaiTra;
-
-                bool result = _bll.ThanhToan(maKH, maNV, tongTien, giamGia, phaiTra, _dtGioHang);
-                if (result)
-                {
-                    MessageBox.Show("Thanh toán thành công! Đang in hóa đơn...", "Thành công");
-                    // Reset form
-                    _dtGioHang.Clear();
-                    lblTongTien.Text = "0 VNĐ";
-                    lblThanhToan.Text = "0 VNĐ";
-                    txtTienKhach.Text = "";
-                    lblTienThua.Text = "0 VNĐ";
-                    cboSanPham.SelectedIndex = -1;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi thanh toán: " + ex.Message);
+                _dtGioHang.Rows.Clear();
+                cboSanPham.SelectedIndex = -1;
+                numSoLuong.Value = 1;
             }
         }
     }
