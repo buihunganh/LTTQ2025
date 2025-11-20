@@ -41,7 +41,7 @@
             this.btnStaff = new System.Windows.Forms.Button();
             this.btnReport = new System.Windows.Forms.Button();
             this.panelUserContext = new System.Windows.Forms.Panel();
-            this.btnLogout = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.lblRole = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
             this.panelBrand = new System.Windows.Forms.Panel();
@@ -63,6 +63,8 @@
             this.panelGreeting = new System.Windows.Forms.Panel();
             this.lblWorkingDate = new System.Windows.Forms.Label();
             this.lblGreeting = new System.Windows.Forms.Label();
+            this.btnCheckIn = new System.Windows.Forms.Button();
+            this.btnCheckOut = new System.Windows.Forms.Button();
             this.lblContentSubtitle = new System.Windows.Forms.Label();
             this.lblContentTitle = new System.Windows.Forms.Label();
             this.panelSidebar.SuspendLayout();
@@ -272,7 +274,7 @@
             // 
             // panelUserContext
             // 
-            this.panelUserContext.Controls.Add(this.btnLogout);
+            this.panelUserContext.Controls.Add(this.btnSettings);
             this.panelUserContext.Controls.Add(this.lblRole);
             this.panelUserContext.Controls.Add(this.lblUser);
             this.panelUserContext.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -282,21 +284,21 @@
             this.panelUserContext.Size = new System.Drawing.Size(260, 120);
             this.panelUserContext.TabIndex = 2;
             // 
-            // btnLogout
+            // btnSettings
             // 
-            this.btnLogout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(90)))), ((int)(((byte)(79)))));
-            this.btnLogout.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnLogout.FlatAppearance.BorderSize = 0;
-            this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLogout.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            this.btnLogout.ForeColor = System.Drawing.Color.White;
-            this.btnLogout.Location = new System.Drawing.Point(16, 74);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(228, 30);
-            this.btnLogout.TabIndex = 2;
-            this.btnLogout.Text = "Đăng xuất";
-            this.btnLogout.UseVisualStyleBackColor = false;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(106)))), ((int)(((byte)(148)))));
+            this.btnSettings.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            this.btnSettings.ForeColor = System.Drawing.Color.White;
+            this.btnSettings.Location = new System.Drawing.Point(16, 74);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(228, 30);
+            this.btnSettings.TabIndex = 2;
+            this.btnSettings.Text = "⚙ Cài đặt";
+            this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
             // lblRole
             // 
@@ -526,6 +528,8 @@
             // 
             this.panelGreeting.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(56)))), ((int)(((byte)(82)))));
             this.panelGreeting.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelGreeting.Controls.Add(this.btnCheckOut);
+            this.panelGreeting.Controls.Add(this.btnCheckIn);
             this.panelGreeting.Controls.Add(this.lblWorkingDate);
             this.panelGreeting.Controls.Add(this.lblGreeting);
             this.panelGreeting.Location = new System.Drawing.Point(36, 150);
@@ -556,6 +560,38 @@
             this.lblGreeting.Size = new System.Drawing.Size(174, 28);
             this.lblGreeting.TabIndex = 0;
             this.lblGreeting.Text = "Xin chào, Admin!";
+            // 
+            // btnCheckIn
+            // 
+            this.btnCheckIn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCheckIn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.btnCheckIn.FlatAppearance.BorderSize = 0;
+            this.btnCheckIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCheckIn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnCheckIn.ForeColor = System.Drawing.Color.White;
+            this.btnCheckIn.Location = new System.Drawing.Point(470, 10);
+            this.btnCheckIn.Name = "btnCheckIn";
+            this.btnCheckIn.Size = new System.Drawing.Size(110, 36);
+            this.btnCheckIn.TabIndex = 2;
+            this.btnCheckIn.Text = "✓ Check In";
+            this.btnCheckIn.UseVisualStyleBackColor = false;
+            this.btnCheckIn.Click += new System.EventHandler(this.btnCheckIn_Click);
+            // 
+            // btnCheckOut
+            // 
+            this.btnCheckOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCheckOut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(67)))), ((int)(((byte)(54)))));
+            this.btnCheckOut.FlatAppearance.BorderSize = 0;
+            this.btnCheckOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCheckOut.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnCheckOut.ForeColor = System.Drawing.Color.White;
+            this.btnCheckOut.Location = new System.Drawing.Point(590, 10);
+            this.btnCheckOut.Name = "btnCheckOut";
+            this.btnCheckOut.Size = new System.Drawing.Size(110, 36);
+            this.btnCheckOut.TabIndex = 3;
+            this.btnCheckOut.Text = "✕ Check Out";
+            this.btnCheckOut.UseVisualStyleBackColor = false;
+            this.btnCheckOut.Click += new System.EventHandler(this.btnCheckOut_Click);
             // 
             // lblContentSubtitle
             // 
@@ -634,22 +670,24 @@
         private System.Windows.Forms.Button btnStaff;
         private System.Windows.Forms.Button btnReport;
         private System.Windows.Forms.Panel panelUserContext;
-        private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Label lblRole;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Panel panelContent;
-        private System.Windows.Forms.Label lblContentTitle;
-        private System.Windows.Forms.Label lblContentSubtitle;
-        private System.Windows.Forms.Panel panelGreeting;
-        private System.Windows.Forms.Label lblGreeting;
-        private System.Windows.Forms.Label lblWorkingDate;
         private System.Windows.Forms.TableLayoutPanel panelDashboard;
-        private System.Windows.Forms.Panel panelRevenueToday;
-        private System.Windows.Forms.Label lblRevenueTodayValue;
-        private System.Windows.Forms.Label lblRevenueTodayTitle;
         private System.Windows.Forms.Panel panelOrdersToday;
         private System.Windows.Forms.Label lblOrdersTodayValue;
         private System.Windows.Forms.Label lblOrdersTodayTitle;
+        private System.Windows.Forms.Panel panelRevenueToday;
+        private System.Windows.Forms.Label lblRevenueTodayValue;
+        private System.Windows.Forms.Label lblRevenueTodayTitle;
+        private System.Windows.Forms.Panel panelGreeting;
+        private System.Windows.Forms.Label lblWorkingDate;
+        private System.Windows.Forms.Label lblGreeting;
+        private System.Windows.Forms.Button btnCheckIn;
+        private System.Windows.Forms.Button btnCheckOut;
+        private System.Windows.Forms.Label lblContentSubtitle;
+        private System.Windows.Forms.Label lblContentTitle;
         private System.Windows.Forms.Panel panelTopProduct;
         private System.Windows.Forms.Label lblTopProductValue;
         private System.Windows.Forms.Label lblTopProductTitle;

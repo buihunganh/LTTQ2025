@@ -49,9 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\ReportService.cs" />
+    <Compile Include="BLL\UserService.cs" />
     <Compile Include="DAL\DataProcesser.cs" />
     <Compile Include="DTO\DashboardSummary.cs" />
     <Compile Include="DTO\DashboardOverview.cs" />
+    <Compile Include="DTO\EmployeeProfile.cs" />
     <Compile Include="DTO\LoginResult.cs" />
     <Compile Include="GUI\frmReport.cs">
       <SubType>Form</SubType>
@@ -71,6 +73,12 @@
     <Compile Include="GUI\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\frmSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmSettings.Designer.cs">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\frmLogin.resx">
@@ -81,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmReport.resx">
       <DependentUpon>frmReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frmSettings.resx">
+      <DependentUpon>frmSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -105,10 +116,7 @@
     <None Include="GUI\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
-    <Folder Include="DTO\" />
-    <Folder Include="Resources\Images\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
