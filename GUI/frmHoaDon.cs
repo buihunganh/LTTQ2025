@@ -12,7 +12,7 @@ namespace BTL_LTTQ.GUI
         private SalesBLL _bll = new SalesBLL();
         private BTL_LTTQ.DTO.LoginResult _currentUser;
 
-        // Biến toàn cục
+        // Business variables
         private string _maHDString = "";
         private string _ngayBan = "";
         private string _tenNV = "";
@@ -24,23 +24,14 @@ namespace BTL_LTTQ.GUI
 
         private DataTable _dtChiTiet;
         private int _idHoaDonVuaLuu = 0;
-
-        // Controls
-        private TextBox txtMaHD, txtNgayBan, txtNhanVien, txtDiaChi, txtSDT;
-        private ComboBox cboKhachHang;
-        private Label lblTongTien;
-        private NumericUpDown numGiamGia;
-        private Button btnThemKhach, btnLuu, btnIn, btnHuy, btnSua;
-        private DataGridView dgvChiTiet;
         private bool _isEditMode = false;
 
+        // Constructor for new invoice from POS
         public frmHoaDon(DataTable gioHangTuPOS, BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
             InitializeComponent();
             _currentUser = currentUser;
             _dtChiTiet = gioHangTuPOS.Copy();
-
-            SetupFullUI();
 
             string datePart = DateTime.Now.ToString("ddMMyyyy");
             int sequence = GetNextInvoiceSequence(datePart);
@@ -61,6 +52,8 @@ namespace BTL_LTTQ.GUI
             LoadInitData(isViewOnly: false);
             CalculateTotal();
         }
+
+        // Constructor for viewing existing invoice
         public frmHoaDon(int maHD, BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
             InitializeComponent();
@@ -83,12 +76,8 @@ namespace BTL_LTTQ.GUI
             }
 
             _dtChiTiet = dtChiTiet;
-
-            SetupFullUI();
             LoadInitData(isViewOnly: true);
         }
-
-        private void frmHoaDon_Load(object sender, EventArgs e) { }
 
         private int GetNextInvoiceSequence(string datePart)
         {
@@ -137,7 +126,7 @@ namespace BTL_LTTQ.GUI
                     numGiamGia.Enabled = false;
                     dgvChiTiet.ReadOnly = true;
 
-                    // Chỉ admin mới được sửa và hủy hóa đơn
+                    // Only admin can edit and cancel invoices
                     bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
                     btnSua.Visible = isAdmin;
                     btnHuy.Enabled = isAdmin;
@@ -179,6 +168,18 @@ namespace BTL_LTTQ.GUI
                 txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString()) 
                     ? drv["DiaChi"].ToString() 
                     : "Khách tại quầy";
+            }
+        }
+
+        private void txtSDTInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                TextBox txtBox = sender as TextBox;
+                if (txtBox != null)
+                {
+                    TimHoacThemKhachTheoSDT(txtBox.Text.Trim());
+                }
             }
         }
 
@@ -256,6 +257,11 @@ namespace BTL_LTTQ.GUI
                 }
                 catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
             }
+        }
+
+        private void numGiamGia_ValueChanged(object sender, EventArgs e)
+        {
+            CalculateTotal();
         }
 
         private void BtnLuu_Click(object sender, EventArgs e)
@@ -360,6 +366,7 @@ namespace BTL_LTTQ.GUI
                         cboKhachHang.Enabled = false;
                         numGiamGia.Enabled = false;
                         txtMaHD.Text = "HD" + _idHoaDonVuaLuu;
+                        this.DialogResult = DialogResult.OK;
                     }
                 }
             }
@@ -410,6 +417,7 @@ namespace BTL_LTTQ.GUI
                         int row = rowStart + 1;
                         foreach (DataGridViewRow dgvRow in dgvChiTiet.Rows)
                         {
+                            if (dgvRow.IsNewRow) continue;
                             worksheet.Cell(row, 1).Value = dgvRow.Cells["TenSP"].Value?.ToString();
                             worksheet.Cell(row, 2).Value = Convert.ToInt32(dgvRow.Cells["SoLuong"].Value);
                             worksheet.Cell(row, 3).Value = Convert.ToDecimal(dgvRow.Cells["DonGia"].Value);
@@ -440,94 +448,9 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        private void SetupFullUI()
-        {
-            this.Text = "HÓA ĐƠN BÁN HÀNG";
-            this.Size = new Size(900, 750);
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(45, 47, 72);
-            this.ForeColor = Color.White;
-
-            Label title = new Label { Text = "HÓA ĐƠN BÁN HÀNG", Font = new Font("Segoe UI", 24, FontStyle.Bold), ForeColor = Color.OrangeRed, Dock = DockStyle.Top, Height = 60, TextAlign = ContentAlignment.MiddleCenter };
-            this.Controls.Add(title);
-
-            GroupBox grpInfo = new GroupBox { Text = "Thông tin chung", Location = new Point(20, 70), Size = new Size(850, 210), ForeColor = Color.Gainsboro, Font = new Font("Segoe UI", 10) };
-            this.Controls.Add(grpInfo);
-
-            CreateLabel(grpInfo, "Mã hóa đơn:", 20, 35); txtMaHD = CreateTextBox(grpInfo, 120, 32, 200); txtMaHD.ReadOnly = true;
-            CreateLabel(grpInfo, "Ngày bán:", 20, 70); txtNgayBan = CreateTextBox(grpInfo, 120, 67, 200); txtNgayBan.ReadOnly = true;
-            CreateLabel(grpInfo, "Nhân viên:", 20, 105); txtNhanVien = CreateTextBox(grpInfo, 120, 102, 200); txtNhanVien.ReadOnly = true;
-
-            CreateLabel(grpInfo, "SĐT khách hàng:", 400, 35);
-            TextBox txtSDTInput = CreateTextBox(grpInfo, 520, 32, 180);
-            txtSDTInput.KeyDown += (s, e) => {
-                if (e.KeyCode == Keys.Enter)
-                {
-                    TimHoacThemKhachTheoSDT(txtSDTInput.Text.Trim());
-                }
-            };
-            grpInfo.Controls.Add(txtSDTInput);
-
-            CreateLabel(grpInfo, "Khách hàng:", 400, 70);
-            cboKhachHang = new ComboBox
-            {
-                Location = new Point(520, 67),
-                Width = 180,
-                DropDownStyle = ComboBoxStyle.DropDown,
-                AutoCompleteMode = AutoCompleteMode.SuggestAppend,
-                AutoCompleteSource = AutoCompleteSource.ListItems
-            };
-
-            cboKhachHang.SelectedIndexChanged += CboKhachHang_SelectedIndexChanged;
-            grpInfo.Controls.Add(cboKhachHang);
-
-            btnThemKhach = new Button { Text = "+", Location = new Point(710, 66), Size = new Size(30, 23), BackColor = Color.OrangeRed, FlatStyle = FlatStyle.Flat, ForeColor = Color.White };
-            btnThemKhach.Click += BtnThemKhach_Click;
-            grpInfo.Controls.Add(btnThemKhach);
-
-            CreateLabel(grpInfo, "SĐT:", 400, 105); txtSDT = CreateTextBox(grpInfo, 520, 102, 220);
-            CreateLabel(grpInfo, "Địa chỉ:", 400, 140); txtDiaChi = CreateTextBox(grpInfo, 520, 137, 220);
-
-            dgvChiTiet = new DataGridView { Location = new Point(20, 300), Size = new Size(850, 240), BackgroundColor = Color.FromArgb(58, 60, 92), BorderStyle = BorderStyle.None, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, AllowUserToAddRows = false, ReadOnly = true };
-            dgvChiTiet.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(232, 90, 79);
-            dgvChiTiet.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvChiTiet.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            dgvChiTiet.DefaultCellStyle.BackColor = Color.FromArgb(45, 47, 72);
-            dgvChiTiet.DefaultCellStyle.ForeColor = Color.White;
-            dgvChiTiet.EnableHeadersVisualStyles = false;
-            this.Controls.Add(dgvChiTiet);
-
-            Label lblGiam = new Label { Text = "Giảm giá (%):", Location = new Point(20, 550), AutoSize = true, Font = new Font("Segoe UI", 10) };
-            this.Controls.Add(lblGiam);
-            numGiamGia = new NumericUpDown { Location = new Point(120, 547), Width = 80, Font = new Font("Segoe UI", 10) };
-            numGiamGia.ValueChanged += (s, e) => CalculateTotal();
-            this.Controls.Add(numGiamGia);
-
-            lblTongTien = new Label { Text = "0 VNĐ", Font = new Font("Segoe UI", 18, FontStyle.Bold), ForeColor = Color.Yellow, Location = new Point(600, 550), AutoSize = true };
-            this.Controls.Add(lblTongTien);
-
-            int btnY = 600;
-            btnLuu = new Button { Text = "Lưu Hóa Đơn", Location = new Point(200, btnY), Size = new Size(130, 40), BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            btnLuu.Click += BtnLuu_Click;
-
-            btnSua = new Button { Text = "Sửa Hóa Đơn", Location = new Point(340, btnY), Size = new Size(130, 40), BackColor = Color.Blue, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Visible = false };
-            btnSua.Click += BtnSua_Click;
-
-            btnIn = new Button { Text = "In Hóa Đơn", Location = new Point(480, btnY), Size = new Size(130, 40), BackColor = Color.Orange, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Enabled = false };
-            btnIn.Click += BtnIn_Click;
-
-            btnHuy = new Button { Text = "Hủy / Đóng", Location = new Point(620, btnY), Size = new Size(130, 40), BackColor = Color.Gray, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            btnHuy.Click += BtnHuy_Click;
-
-            this.Controls.Add(btnLuu);
-            this.Controls.Add(btnSua);
-            this.Controls.Add(btnIn);
-            this.Controls.Add(btnHuy);
-        }
-
         private void BtnSua_Click(object sender, EventArgs e)
         {
-            // Kiểm tra quyền admin trước khi sửa hóa đơn
+            // Check admin permission before editing invoice
             bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
             if (!isAdmin)
             {
@@ -560,7 +483,7 @@ namespace BTL_LTTQ.GUI
         {
             if (_idHoaDonVuaLuu > 0)
             {
-                // Kiểm tra quyền admin trước khi hủy hóa đơn
+                // Check admin permission before canceling invoice
                 bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
                 if (!isAdmin)
                 {
@@ -598,8 +521,5 @@ namespace BTL_LTTQ.GUI
                 this.Close();
             }
         }
-
-        private void CreateLabel(Control p, string t, int x, int y) { p.Controls.Add(new Label { Text = t, Location = new Point(x, y), AutoSize = true }); }
-        private TextBox CreateTextBox(Control p, int x, int y, int w) { var t = new TextBox { Location = new Point(x, y), Width = w }; p.Controls.Add(t); return t; }
     }
 }
