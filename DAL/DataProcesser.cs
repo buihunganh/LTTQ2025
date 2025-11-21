@@ -336,7 +336,7 @@ namespace BTL_LTTQ.DAL
                 catch { transaction.Rollback(); throw; }
             }
         }
-        public DataTable TimKiemHoaDon(DateTime tuNgay, DateTime denNgay, string tenNV, string tenKH)
+        public DataTable TimKiemHoaDon(DateTime tuNgay, DateTime denNgay, string tenNV, string tenKH, string maHD = "")
         {
             string sql = @"SELECT hd.MaHD, hd.MaHoaDon, hd.NgayLap, 
                                   ISNULL(nv.HoTen, N'Không rõ') AS TenNhanVien, 
@@ -348,6 +348,7 @@ namespace BTL_LTTQ.DAL
                            WHERE (hd.NgayLap BETWEEN @From AND @To)
                              AND (@TenNV = '' OR nv.HoTen LIKE N'%' + @TenNV + '%')
                              AND (@TenKH = '' OR kh.HoTen LIKE N'%' + @TenKH + '%')
+                             AND (@MaHD = '' OR hd.MaHoaDon = @MaHD)
                            ORDER BY hd.NgayLap DESC";
 
             // Chuyển đổi ngày để lấy trọn vẹn khoảng thời gian (00:00:00 đến 23:59:59)
@@ -358,8 +359,61 @@ namespace BTL_LTTQ.DAL
                 new SqlParameter("@From", fromDate),
                 new SqlParameter("@To", toDate),
                 new SqlParameter("@TenNV", tenNV),
-                new SqlParameter("@TenKH", tenKH)
+                new SqlParameter("@TenKH", tenKH),
+                new SqlParameter("@MaHD", maHD)
             );
+        }
+        
+        // --- LẤY DANH SÁCH MÃ HÓA ĐƠN ---
+        public DataTable GetDanhSachMaHoaDon()
+        {
+            string sql = @"SELECT DISTINCT MaHoaDon 
+                           FROM HoaDon 
+                           ORDER BY MaHoaDon DESC";
+            return ExecuteQuery(sql);
+        }
+        
+        // --- HỦY HÓA ĐƠN VÀ HOÀN KHO ---
+        public bool HuyHoaDon(int maHD)
+        {
+            using (var connection = CreateConnection())
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    string sqlCheckStatus = "SELECT TrangThai FROM HoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdCheck = new SqlCommand(sqlCheckStatus, connection, transaction);
+                    cmdCheck.Parameters.AddWithValue("@MaHD", maHD);
+                    object currentStatus = cmdCheck.ExecuteScalar();
+                    
+                    if (currentStatus == null) throw new Exception("Không tìm thấy hóa đơn!");
+                    if (currentStatus.ToString() == "Đã hủy") throw new Exception("Hóa đơn này đã được hủy trước đó!");
+
+                    string sqlGetDetail = "SELECT MaCTSP, SoLuong FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdDetail = new SqlCommand(sqlGetDetail, connection, transaction);
+                    cmdDetail.Parameters.AddWithValue("@MaHD", maHD);
+                    DataTable dtDetail = new DataTable();
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmdDetail)) { adapter.Fill(dtDetail); }
+
+                    foreach (DataRow row in dtDetail.Rows)
+                    {
+                        string sqlRestoreStock = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
+                        SqlCommand cmdRestore = new SqlCommand(sqlRestoreStock, connection, transaction);
+                        cmdRestore.Parameters.AddWithValue("@SL", row["SoLuong"]);
+                        cmdRestore.Parameters.AddWithValue("@MaCTSP", row["MaCTSP"]);
+                        cmdRestore.ExecuteNonQuery();
+                    }
+
+                    string sqlUpdateStatus = "UPDATE HoaDon SET TrangThai = N'Đã hủy' WHERE MaHD = @MaHD";
+                    SqlCommand cmdUpdate = new SqlCommand(sqlUpdateStatus, connection, transaction);
+                    cmdUpdate.Parameters.AddWithValue("@MaHD", maHD);
+                    cmdUpdate.ExecuteNonQuery();
+
+                    transaction.Commit();
+                    return true;
+                }
+                catch { transaction.Rollback(); throw; }
+            }
         }
         public void Dispose() { }
     }

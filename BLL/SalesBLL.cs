@@ -60,11 +60,34 @@ namespace BTL_LTTQ.BLL
             }
         }
         // --- GỌI TÌM KIẾM ---
-        public DataTable FindInvoices(DateTime from, DateTime to, string nv, string kh)
+        public DataTable FindInvoices(DateTime from, DateTime to, string nv, string kh, string maHD = "")
         {
             using (var dal = new DataProcesser())
             {
-                return dal.TimKiemHoaDon(from, to, nv, kh);
+                return dal.TimKiemHoaDon(from, to, nv, kh, maHD);
+            }
+        }
+        
+        // --- LẤY DANH SÁCH MÃ HÓA ĐƠN ---
+        public DataTable GetInvoiceCodesList()
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.GetDanhSachMaHoaDon();
+            }
+        }
+        
+        // --- HỦY HÓA ĐƠN ---
+        /// <summary>
+        /// Hủy hóa đơn và hoàn kho
+        /// </summary>
+        /// <param name="maHD">Mã hóa đơn cần hủy</param>
+        /// <returns>True nếu hủy thành công</returns>
+        public bool CancelInvoice(int maHD)
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.HuyHoaDon(maHD);
             }
         }
     }
