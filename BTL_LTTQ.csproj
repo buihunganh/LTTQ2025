@@ -98,10 +98,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\InventoryBLL.cs" />
     <Compile Include="BLL\KhachHangBLL.cs" />
     <Compile Include="BLL\NhanVienBLL.cs" />
     <Compile Include="BLL\PhienDangNhap.cs" />
     <Compile Include="BLL\ReportService.cs" />
+    <Compile Include="BLL\SalesBLL.cs" />
     <Compile Include="BLL\UserService.cs" />
     <Compile Include="DAL\DataProcesser.cs" />
     <Compile Include="DAL\KhachHangDAL.cs" />
@@ -112,11 +114,29 @@
     <Compile Include="DTO\KhachHangDTO.cs" />
     <Compile Include="DTO\LoginResult.cs" />
     <Compile Include="DTO\NhanVienDTO.cs" />
+    <Compile Include="GUI\frmBanHang.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmBanHang.Designer.cs">
+      <DependentUpon>frmBanHang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\frmHoaDon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmHoaDon.Designer.cs">
+      <DependentUpon>frmHoaDon.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\frmKhachHang.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\frmKhachHang.Designer.cs">
       <DependentUpon>frmKhachHang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\frmMain.cs">
       <SubType>Form</SubType>
@@ -124,11 +144,11 @@
     <Compile Include="GUI\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\frmLogin.cs">
+    <Compile Include="GUI\frmNhapHang.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\frmLogin.Designer.cs">
-      <DependentUpon>frmLogin.cs</DependentUpon>
+    <Compile Include="GUI\frmNhapHang.Designer.cs">
+      <DependentUpon>frmNhapHang.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\frmReport.cs">
       <SubType>Form</SubType>
@@ -150,6 +170,9 @@
     </Compile>
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="GUI\frmBanHang.resx">
+      <DependentUpon>frmBanHang.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmKhachHang.resx">
       <DependentUpon>frmKhachHang.cs</DependentUpon>
     </EmbeddedResource>

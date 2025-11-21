@@ -121,7 +121,7 @@
             this.txtSearch.ForeColor = System.Drawing.Color.White;
             this.txtSearch.Location = new System.Drawing.Point(20, 40);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(400, 23);
+            this.txtSearch.Size = new System.Drawing.Size(400, 27);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
@@ -131,7 +131,7 @@
             this.lblSearch.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblSearch.Location = new System.Drawing.Point(20, 20);
             this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(143, 15);
+            this.lblSearch.Size = new System.Drawing.Size(177, 20);
             this.lblSearch.TabIndex = 0;
             this.lblSearch.Text = "Tìm kiếm (Tên hoặc SĐT):";
             // 
@@ -276,7 +276,7 @@
             this.lblHang.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblHang.Location = new System.Drawing.Point(350, 90);
             this.lblHang.Name = "lblHang";
-            this.lblHang.Size = new System.Drawing.Size(98, 15);
+            this.lblHang.Size = new System.Drawing.Size(120, 20);
             this.lblHang.TabIndex = 6;
             this.lblHang.Text = "Hạng thành viên:";
             // 
@@ -298,7 +298,7 @@
             this.lblChiTieu.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblChiTieu.Location = new System.Drawing.Point(20, 90);
             this.lblChiTieu.Name = "lblChiTieu";
-            this.lblChiTieu.Size = new System.Drawing.Size(115, 15);
+            this.lblChiTieu.Size = new System.Drawing.Size(143, 20);
             this.lblChiTieu.TabIndex = 4;
             this.lblChiTieu.Text = "Tổng chi tiêu (VND):";
             // 
@@ -319,7 +319,7 @@
             this.lblSDT.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblSDT.Location = new System.Drawing.Point(350, 20);
             this.lblSDT.Name = "lblSDT";
-            this.lblSDT.Size = new System.Drawing.Size(79, 15);
+            this.lblSDT.Size = new System.Drawing.Size(100, 20);
             this.lblSDT.TabIndex = 2;
             this.lblSDT.Text = "Số điện thoại:";
             // 
@@ -340,7 +340,7 @@
             this.lblHoTen.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblHoTen.Location = new System.Drawing.Point(20, 20);
             this.lblHoTen.Name = "lblHoTen";
-            this.lblHoTen.Size = new System.Drawing.Size(94, 15);
+            this.lblHoTen.Size = new System.Drawing.Size(114, 20);
             this.lblHoTen.TabIndex = 0;
             this.lblHoTen.Text = "Tên khách hàng:";
             // 
@@ -361,7 +361,7 @@
             this.lblTitle.Location = new System.Drawing.Point(24, 25);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblTitle.Size = new System.Drawing.Size(296, 57);
+            this.lblTitle.Size = new System.Drawing.Size(365, 66);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản lý khách hàng";
             // 

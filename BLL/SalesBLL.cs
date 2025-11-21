@@ -48,7 +48,7 @@ namespace BTL_LTTQ.BLL
         }
 
         // Mở file SalesBLL.cs
-      
+
 
         public int ThanhToan(int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
         {

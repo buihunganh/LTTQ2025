@@ -9,18 +9,33 @@ namespace BTL_LTTQ.DAL
     public class DataProcesser : IDisposable
     {
         private readonly string _connectionString;
+
         public DataProcesser()
         {
             var connectionSetting = ConfigurationManager.ConnectionStrings["StoreDb"];
             if (connectionSetting == null || string.IsNullOrWhiteSpace(connectionSetting.ConnectionString))
             {
-                throw new InvalidOperationException(
-                    "Không tìm thấy cấu hình chuỗi kết nối 'StoreDb' trong App.config.");
+                throw new InvalidOperationException("Không tìm thấy cấu hình chuỗi kết nối 'StoreDb' trong App.config.");
             }
-
             _connectionString = connectionSetting.ConnectionString;
         }
 
+        // --- CÁC HÀM HELPER CƠ BẢN ---
+        private SqlConnection CreateConnection()
+        {
+            var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            return connection;
+        }
+
+        private static SqlCommand BuildCommand(SqlConnection connection, string query, CommandType commandType, SqlParameter[] parameters)
+        {
+            var command = new SqlCommand(query, connection) { CommandType = commandType };
+            if (parameters != null && parameters.Length > 0) command.Parameters.AddRange(parameters);
+            return command;
+        }
+
+        // --- CÁC HÀM THỰC THI SQL ---
         public DataTable ExecuteQuery(string query, CommandType commandType = CommandType.Text, params SqlParameter[] parameters)
         {
             using (var connection = CreateConnection())
@@ -51,28 +66,19 @@ namespace BTL_LTTQ.DAL
             }
         }
 
+        // --- ĐĂNG NHẬP VÀ QUẢN LÝ TÀI KHOẢN ---
         public LoginResult AuthenticateUser(string username, string password)
         {
-            const string sql = @"
-                SELECT TOP 1 MaNV, HoTen, TaiKhoan, ISNULL(IsAdmin, 0) AS IsAdmin
-                FROM NhanVien
-                WHERE TaiKhoan = @username
-                      AND MatKhau = @password
-                      AND ISNULL(TrangThai, 1) = 1";
-
+            const string sql = @"SELECT TOP 1 MaNV, HoTen, TaiKhoan, ISNULL(IsAdmin, 0) AS IsAdmin 
+                                 FROM NhanVien WHERE TaiKhoan = @username AND MatKhau = @password AND ISNULL(TrangThai, 1) = 1";
             using (var connection = CreateConnection())
             using (var command = new SqlCommand(sql, connection))
             {
-                command.Parameters.Add("@username", SqlDbType.VarChar, 50).Value = username;
-                command.Parameters.Add("@password", SqlDbType.VarChar, 255).Value = password;
-
+                command.Parameters.AddWithValue("@username", username);
+                command.Parameters.AddWithValue("@password", password);
                 using (var reader = command.ExecuteReader(CommandBehavior.SingleRow))
                 {
-                    if (!reader.Read())
-                    {
-                        return null;
-                    }
-
+                    if (!reader.Read()) return null;
                     return new LoginResult
                     {
                         EmployeeId = reader.GetInt32(reader.GetOrdinal("MaNV")),
@@ -84,43 +90,13 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        private SqlConnection CreateConnection()
-        {
-            var connection = new SqlConnection(_connectionString);
-            connection.Open();
-            return connection;
-        }
-
-        private static SqlCommand BuildCommand(SqlConnection connection, string query, CommandType commandType, SqlParameter[] parameters)
-        {
-            var command = new SqlCommand(query, connection)
-            {
-                CommandType = commandType
-            };
-
-            if (parameters != null && parameters.Length > 0)
-            {
-                command.Parameters.AddRange(parameters);
-            }
-
-            return command;
-        }
-
         /// <summary>
         /// Đổi mật khẩu cho nhân viên
         /// </summary>
-        /// <param name="employeeId">ID nhân viên</param>
-        /// <param name="oldPassword">Mật khẩu cũ</param>
-        /// <param name="newPassword">Mật khẩu mới</param>
-        /// <returns>True nếu thành công, False nếu mật khẩu cũ không đúng</returns>
         public bool ChangePassword(int employeeId, string oldPassword, string newPassword)
         {
-            const string sql = @"
-                UPDATE NhanVien
-                SET MatKhau = @newPassword
-                WHERE MaNV = @employeeId
-                      AND MatKhau = @oldPassword
-                      AND ISNULL(TrangThai, 1) = 1";
+            const string sql = @"UPDATE NhanVien SET MatKhau = @newPassword
+                                 WHERE MaNV = @employeeId AND MatKhau = @oldPassword AND ISNULL(TrangThai, 1) = 1";
 
             var parameters = new[]
             {
@@ -138,11 +114,8 @@ namespace BTL_LTTQ.DAL
         /// </summary>
         public EmployeeProfile GetEmployeeProfile(int employeeId)
         {
-            const string sql = @"
-                SELECT MaNV, TaiKhoan, HoTen, SoDienThoai, Email, DiaChi, NgayVaoLam, AnhDaiDien, ISNULL(IsAdmin, 0) AS IsAdmin
-                FROM NhanVien
-                WHERE MaNV = @employeeId
-                      AND ISNULL(TrangThai, 1) = 1";
+            const string sql = @"SELECT MaNV, TaiKhoan, HoTen, SoDienThoai, Email, DiaChi, NgayVaoLam, AnhDaiDien, ISNULL(IsAdmin, 0) AS IsAdmin
+                                 FROM NhanVien WHERE MaNV = @employeeId AND ISNULL(TrangThai, 1) = 1";
 
             using (var connection = CreateConnection())
             using (var command = new SqlCommand(sql, connection))
@@ -151,10 +124,7 @@ namespace BTL_LTTQ.DAL
 
                 using (var reader = command.ExecuteReader(CommandBehavior.SingleRow))
                 {
-                    if (!reader.Read())
-                    {
-                        return null;
-                    }
+                    if (!reader.Read()) return null;
 
                     return new EmployeeProfile
                     {
@@ -177,15 +147,9 @@ namespace BTL_LTTQ.DAL
         /// </summary>
         public bool UpdateEmployeeProfile(int employeeId, string fullName, string phone, string email, string address, string avatarPath)
         {
-            const string sql = @"
-                UPDATE NhanVien
-                SET HoTen = @fullName,
-                    SoDienThoai = @phone,
-                    Email = @email,
-                    DiaChi = @address,
-                    AnhDaiDien = @avatarPath
-                WHERE MaNV = @employeeId
-                      AND ISNULL(TrangThai, 1) = 1";
+            const string sql = @"UPDATE NhanVien SET HoTen = @fullName, SoDienThoai = @phone, Email = @email, 
+                                 DiaChi = @address, AnhDaiDien = @avatarPath
+                                 WHERE MaNV = @employeeId AND ISNULL(TrangThai, 1) = 1";
 
             var parameters = new[]
             {
@@ -218,26 +182,151 @@ namespace BTL_LTTQ.DAL
 
         private bool EnsureAvatarColumnExists()
         {
-            const string sql = @"
-                IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[NhanVien]') AND name = 'AnhDaiDien')
-                BEGIN
-                    ALTER TABLE [dbo].[NhanVien] ADD [AnhDaiDien] NVARCHAR(255) NULL
-                END";
-
+            const string sql = @"IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[NhanVien]') AND name = 'AnhDaiDien')
+                                 BEGIN ALTER TABLE [dbo].[NhanVien] ADD [AnhDaiDien] NVARCHAR(255) NULL END";
             try
             {
                 ExecuteNonQuery(sql);
                 return true;
             }
-            catch
+            catch { return false; }
+        }
+
+        // --- THÊM KHÁCH HÀNG NHANH ---
+        public int ThemKhachHangNhanh(string hoTen, string sdt)
+        {
+            string sql = @"INSERT INTO KhachHang(HoTen, SoDienThoai, DiemTichLuy, TrangThai) 
+                           VALUES (@Ten, @SDT, 0, 1); SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            using (var connection = CreateConnection())
+            using (var command = new SqlCommand(sql, connection))
             {
-                return false;
+                command.Parameters.AddWithValue("@Ten", hoTen);
+                command.Parameters.AddWithValue("@SDT", sdt);
+                return (int)command.ExecuteScalar();
             }
         }
 
-        public void Dispose()
+        // --- LẤY CHI TIẾT HÓA ĐƠN ---
+        public DataTable GetChiTietHoaDon(int maHD)
         {
+            string sql = @"SELECT sp.TenGiay, sz.KichCo, ms.TenMau, cthd.SoLuong, cthd.DonGia, cthd.ThanhTien
+                           FROM ChiTietHoaDon cthd
+                           JOIN ChiTietSanPham ctsp ON cthd.MaCTSP = ctsp.MaCTSP
+                           JOIN SanPham sp ON ctsp.MaSP = sp.MaSP
+                           JOIN SizeGiay sz ON ctsp.MaSize = sz.MaSize
+                           JOIN MauSac ms ON ctsp.MaMau = ms.MaMau
+                           WHERE cthd.MaHD = @MaHD";
+            return ExecuteQuery(sql, CommandType.Text, new SqlParameter("@MaHD", maHD));
         }
+
+        // --- LẤY THÔNG TIN CHUNG HÓA ĐƠN ---
+        public DataTable GetThongTinChungHoaDon(int maHD)
+        {
+            string sql = @"SELECT hd.MaHoaDon, hd.NgayLap, hd.TongTien, hd.GiamGia, hd.ThanhToan, 
+                          ISNULL(nv.HoTen, N'Không xác định') AS NhanVien, 
+                          ISNULL(kh.HoTen, N'Khách lẻ') AS KhachHang, 
+                          ISNULL(kh.SoDienThoai, '') AS SoDienThoai, 
+                          ISNULL(kh.DiaChi, '') AS DiaChi
+                           FROM HoaDon hd
+                           LEFT JOIN NhanVien nv ON hd.MaNV = nv.MaNV
+                           LEFT JOIN KhachHang kh ON hd.MaKH = kh.MaKH
+                           WHERE hd.MaHD = @MaHD";
+            return ExecuteQuery(sql, CommandType.Text, new SqlParameter("@MaHD", maHD));
+        }
+
+        // --- TRANSACTION NHẬP HÀNG ---
+        public bool NhapHangTransaction(int maNCC, int maNV, decimal tongTien, DataTable dtChiTiet)
+        {
+            using (var connection = CreateConnection())
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    string sqlPhieu = @"INSERT INTO PhieuNhap(MaPhieuNhap, NgayNhap, MaNV, MaNCC, TongTien, TrangThai) 
+                                        VALUES (@MaCode, GETDATE(), @MaNV, @MaNCC, @TongTien, N'Đã nhập');
+                                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+                    SqlCommand cmdPhieu = new SqlCommand(sqlPhieu, connection, transaction);
+                    cmdPhieu.Parameters.AddWithValue("@MaCode", "PN" + DateTime.Now.ToString("yyyyMMddHHmmss"));
+                    cmdPhieu.Parameters.AddWithValue("@MaNV", maNV);
+                    cmdPhieu.Parameters.AddWithValue("@MaNCC", maNCC);
+                    cmdPhieu.Parameters.AddWithValue("@TongTien", tongTien);
+                    int maPN = (int)cmdPhieu.ExecuteScalar();
+
+                    foreach (DataRow r in dtChiTiet.Rows)
+                    {
+                        string sqlCT = @"INSERT INTO ChiTietPhieuNhap(MaPN, MaCTSP, SoLuong, GiaNhap, ThanhTien) 
+                                         VALUES (@MaPN, @MaCTSP, @SoLuong, @GiaNhap, @ThanhTien)";
+                        SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
+                        cmdCT.Parameters.AddWithValue("@MaPN", maPN);
+                        cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
+                        cmdCT.Parameters.AddWithValue("@GiaNhap", r["GiaNhap"]);
+                        cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
+                        cmdCT.ExecuteNonQuery();
+
+                        string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL WHERE MaCTSP = @MaCTSP";
+                        SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
+                        cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
+                        cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdUpd.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                    return true;
+                }
+                catch { transaction.Rollback(); throw; }
+            }
+        }
+
+        // --- TRANSACTION BÁN HÀNG ---
+        public int BanHangTransaction(int maKH, int maNV, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
+        {
+            using (var connection = CreateConnection())
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    string maHDCode = "HD" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string sqlHD = @"INSERT INTO HoaDon(MaHoaDon, NgayLap, MaNV, MaKH, MaKM, TongTien, GiamGia, ThanhToan, PhuongThucThanhToan, TrangThai) 
+                                     VALUES (@MaCode, GETDATE(), @MaNV, @MaKH, 1, @TongTien, 0, @ThanhToan, N'Tiền mặt', N'Hoàn thành');
+                                     SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+                    SqlCommand cmdHD = new SqlCommand(sqlHD, connection, transaction);
+                    cmdHD.Parameters.AddWithValue("@MaCode", maHDCode);
+                    cmdHD.Parameters.AddWithValue("@MaNV", maNV);
+                    cmdHD.Parameters.AddWithValue("@MaKH", maKH);
+                    cmdHD.Parameters.AddWithValue("@TongTien", tongTien);
+                    cmdHD.Parameters.AddWithValue("@ThanhToan", thanhToan);
+
+                    int newInvoiceID = Convert.ToInt32(cmdHD.ExecuteScalar());
+
+                    foreach (DataRow r in dtChiTiet.Rows)
+                    {
+                        string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien) 
+                                         VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien)";
+
+                        SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
+                        cmdCT.Parameters.AddWithValue("@MaHD", newInvoiceID);
+                        cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
+                        cmdCT.Parameters.AddWithValue("@DonGia", r["DonGia"]);
+                        cmdCT.Parameters.AddWithValue("@GiamGia", r["GiamGia"]);
+                        cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
+                        cmdCT.ExecuteNonQuery();
+
+                        string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon - @SL WHERE MaCTSP = @MaCTSP";
+                        SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
+                        cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
+                        cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdUpd.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                    return newInvoiceID;
+                }
+                catch { transaction.Rollback(); throw; }
+            }
+        }
+
+        public void Dispose() { }
     }
 }
-

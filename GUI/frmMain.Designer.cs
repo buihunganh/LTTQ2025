@@ -41,6 +41,7 @@
             this.btnStaff = new System.Windows.Forms.Button();
             this.btnReport = new System.Windows.Forms.Button();
             this.panelUserContext = new System.Windows.Forms.Panel();
+            this.picAvatar = new System.Windows.Forms.PictureBox();
             this.btnSettings = new System.Windows.Forms.Button();
             this.lblRole = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -70,6 +71,7 @@
             this.panelSidebar.SuspendLayout();
             this.flowMenu.SuspendLayout();
             this.panelUserContext.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).BeginInit();
             this.panelBrand.SuspendLayout();
             this.panelContent.SuspendLayout();
             this.panelDashboard.SuspendLayout();
@@ -109,7 +111,7 @@
             this.flowMenu.Location = new System.Drawing.Point(0, 80);
             this.flowMenu.Name = "flowMenu";
             this.flowMenu.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
-            this.flowMenu.Size = new System.Drawing.Size(260, 524);
+            this.flowMenu.Size = new System.Drawing.Size(260, 494);
             this.flowMenu.TabIndex = 1;
             this.flowMenu.WrapContents = false;
             // 
@@ -277,12 +279,22 @@
             this.panelUserContext.Controls.Add(this.btnSettings);
             this.panelUserContext.Controls.Add(this.lblRole);
             this.panelUserContext.Controls.Add(this.lblUser);
+            this.panelUserContext.Controls.Add(this.picAvatar);
             this.panelUserContext.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelUserContext.Location = new System.Drawing.Point(0, 604);
+            this.panelUserContext.Location = new System.Drawing.Point(0, 574);
             this.panelUserContext.Name = "panelUserContext";
             this.panelUserContext.Padding = new System.Windows.Forms.Padding(16);
-            this.panelUserContext.Size = new System.Drawing.Size(260, 120);
+            this.panelUserContext.Size = new System.Drawing.Size(260, 150);
             this.panelUserContext.TabIndex = 2;
+            // 
+            // picAvatar
+            // 
+            this.picAvatar.Location = new System.Drawing.Point(85, 10);
+            this.picAvatar.Name = "picAvatar";
+            this.picAvatar.Size = new System.Drawing.Size(90, 90);
+            this.picAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picAvatar.TabIndex = 3;
+            this.picAvatar.TabStop = false;
             // 
             // btnSettings
             // 
@@ -292,7 +304,7 @@
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSettings.Location = new System.Drawing.Point(16, 74);
+            this.btnSettings.Location = new System.Drawing.Point(16, 104);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(228, 30);
             this.btnSettings.TabIndex = 2;
@@ -302,28 +314,25 @@
             // 
             // lblRole
             // 
-            this.lblRole.AutoSize = true;
-            this.lblRole.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblRole.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblRole.Font = new System.Drawing.Font("Segoe UI", 8.5F);
             this.lblRole.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRole.Location = new System.Drawing.Point(16, 36);
+            this.lblRole.Location = new System.Drawing.Point(85, 123);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(89, 15);
+            this.lblRole.Size = new System.Drawing.Size(90, 15);
             this.lblRole.TabIndex = 1;
-            this.lblRole.Text = "Vai trò: Quản trị";
+            this.lblRole.Text = "Quản trị viên";
+            this.lblRole.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblUser
             // 
-            this.lblUser.AutoSize = true;
-            this.lblUser.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblUser.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblUser.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(16, 16);
-            this.lblUser.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
+            this.lblUser.Location = new System.Drawing.Point(85, 105);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(148, 20);
+            this.lblUser.Size = new System.Drawing.Size(90, 18);
             this.lblUser.TabIndex = 0;
-            this.lblUser.Text = "Người dùng: Admin";
+            this.lblUser.Text = "Admin";
+            this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelBrand
             // 
@@ -635,7 +644,7 @@
             this.flowMenu.ResumeLayout(false);
             this.flowMenu.PerformLayout();
             this.panelUserContext.ResumeLayout(false);
-            this.panelUserContext.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).EndInit();
             this.panelBrand.ResumeLayout(false);
             this.panelBrand.PerformLayout();
             this.panelContent.ResumeLayout(false);
@@ -673,6 +682,7 @@
         private System.Windows.Forms.Panel panelUserContext;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Label lblRole;
+        private System.Windows.Forms.PictureBox picAvatar;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Panel panelContent;
         private System.Windows.Forms.TableLayoutPanel panelDashboard;

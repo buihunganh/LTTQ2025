@@ -24,21 +24,94 @@ namespace BTL_LTTQ
         {
             InitializeComponent();
             _currentUser = user;
+            SetupAvatarCircular(); // Setup avatar hình tròn
             ApplyUserContext();
             ConfigureMenuButtons();
             _reportService = IsInDesignMode() ? null : new ReportService();
         }
 
+        private void SetupAvatarCircular()
+        {
+            // Tạo hình tròn cho avatar
+            if (picAvatar != null)
+            {
+                picAvatar.Paint += (s, e) =>
+                {
+                    using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+                    {
+                        path.AddEllipse(0, 0, picAvatar.Width - 1, picAvatar.Height - 1);
+                        picAvatar.Region = new Region(path);
+
+                        // Vẽ viền
+                        e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        using (var pen = new Pen(Color.FromArgb(232, 90, 79), 3))
+                        {
+                            e.Graphics.DrawEllipse(pen, 1, 1, picAvatar.Width - 3, picAvatar.Height - 3);
+                        }
+                    }
+                };
+
+                // Tạo avatar mặc định với chữ cái đầu tên người dùng
+                CreateDefaultAvatar();
+            }
+        }
+
+        private void CreateDefaultAvatar()
+        {
+            if (picAvatar == null) return;
+
+            int size = picAvatar.Width;
+            Bitmap bitmap = new Bitmap(size, size);
+
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                // Gradient background
+                using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                    new Rectangle(0, 0, size, size),
+                    Color.FromArgb(102, 106, 148),
+                    Color.FromArgb(58, 60, 92),
+                    45f))
+                {
+                    g.FillEllipse(brush, 0, 0, size, size);
+                }
+
+                // Chữ cái đầu của tên
+                string initial = "A"; // Mặc định
+                if (_currentUser != null && !string.IsNullOrEmpty(_currentUser.FullName))
+                {
+                    var parts = _currentUser.FullName.Trim().Split(' ');
+                    initial = parts.Length > 0 ? parts[parts.Length - 1].Substring(0, 1).ToUpper() : "A";
+                }
+
+                using (var font = new Font("Segoe UI", size / 2.5f, FontStyle.Bold))
+                using (var brush = new SolidBrush(Color.White))
+                {
+                    var format = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    g.DrawString(initial, font, brush, size / 2f, size / 2f, format);
+                }
+            }
+
+            picAvatar.Image = bitmap;
+        }
 
         private void ApplyUserContext()
         {
             var displayName = _currentUser?.FullName ?? "Không xác định";
             var roleLabel = _currentUser == null
-                ? "Vai trò: ---"
-                : $"Vai trò: {(_currentUser.IsAdmin ? "Quản trị" : "Nhân viên")}";
+                ? "---"
+                : $"{(_currentUser.IsAdmin ? "Quản trị viên" : "Nhân viên")}";
 
-            lblUser.Text = $"Người dùng: {displayName}";
+            lblUser.Text = displayName;
             lblRole.Text = roleLabel;
+
+            // Cập nhật avatar
+            CreateDefaultAvatar();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
