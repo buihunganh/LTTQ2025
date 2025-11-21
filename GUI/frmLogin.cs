@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Windows.Forms;
 using BTL_LTTQ.DAL;
 using BTL_LTTQ.DTO;
@@ -9,12 +10,11 @@ namespace BTL_LTTQ
 {
     public partial class frmLogin : Form
     {
-        private readonly DataProcesser _dataProcesser;
+        private DataProcesser _dataProcesser;
 
         public frmLogin()
         {
             InitializeComponent();
-            _dataProcesser = IsInDesignMode() ? null : new DataProcesser();
         }
 
 
@@ -31,13 +31,9 @@ namespace BTL_LTTQ
                 return;
             }
 
-            if (_dataProcesser == null)
-            {
-                return;
-            }
-
             try
             {
+                EnsureDataProcesser();
                 ToggleInputs(false);
                 var loginResult = _dataProcesser.AuthenticateUser(username, password);
                 if (loginResult == null)
@@ -110,13 +106,12 @@ namespace BTL_LTTQ
             base.OnFormClosed(e);
         }
 
-        /// <summary>
-        /// Kiểm tra xem form có đang chạy trong Visual Studio Designer không
-        /// </summary>
-        private static bool IsInDesignMode()
+        private void EnsureDataProcesser()
         {
-            return LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
-                   Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (_dataProcesser == null)
+            {
+                _dataProcesser = new DataProcesser();
+            }
         }
     }
 }

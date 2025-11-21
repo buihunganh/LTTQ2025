@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
 using ClosedXML.Excel;
@@ -10,9 +12,22 @@ namespace BTL_LTTQ.GUI
     {
         private KhachHangBLL bll = new KhachHangBLL();
 
+        private readonly Color COLOR_BG = Color.FromArgb(45, 47, 72);
+        private readonly Color COLOR_CARD = Color.FromArgb(58, 60, 92);
+        private readonly Color COLOR_INPUT = Color.FromArgb(34, 37, 57);
+        private readonly Color COLOR_ACCENT = Color.FromArgb(255, 111, 97);
+        private readonly Color COLOR_SUCCESS = Color.FromArgb(0, 176, 155);
+        private readonly Color COLOR_INFO = Color.FromArgb(86, 127, 232);
+        private readonly Color COLOR_WARNING = Color.FromArgb(255, 173, 92);
+        private readonly Color COLOR_DANGER = Color.FromArgb(232, 90, 79);
+        private readonly Color COLOR_SECONDARY = Color.FromArgb(78, 80, 120);
+        private readonly Color COLOR_TEXT = Color.White;
+        private readonly Color COLOR_SUBTEXT = Color.Gainsboro;
+
         public frmKhachHang()
         {
             InitializeComponent();
+            ApplyModernTheme();
             InitFilter(); 
         }
 
@@ -159,5 +174,101 @@ namespace BTL_LTTQ.GUI
         {
 
         }
+
+        #region UI Helpers
+        private void ApplyModernTheme()
+        {
+            this.DoubleBuffered = true;
+            this.Font = new Font("Century Gothic", 10F, FontStyle.Regular);
+
+            panelRoot.BackColor = COLOR_BG;
+            panelRoot.Padding = new Padding(32, 28, 32, 32);
+
+            lblTitle.Font = new Font("Century Gothic", 24F, FontStyle.Bold);
+            lblTitle.ForeColor = COLOR_ACCENT;
+            lblTitle.Padding = new Padding(0, 0, 0, 20);
+
+            panelInfo.BackColor = COLOR_CARD;
+            panelInfo.Padding = new Padding(24);
+            panelInfo.BorderStyle = BorderStyle.None;
+
+            panelButtons.BackColor = Color.FromArgb(49, 51, 78);
+            panelButtons.Padding = new Padding(12, 24, 12, 24);
+
+            grpFilter.BackColor = COLOR_CARD;
+            grpFilter.ForeColor = COLOR_SUBTEXT;
+            grpFilter.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            grpFilter.Padding = new Padding(18, 20, 18, 15);
+
+            StyleTextBox(txtHoTen);
+            StyleTextBox(txtSDT);
+            StyleTextBox(txtChiTieu, true);
+            StyleTextBox(txtHang, true);
+            StyleTextBox(txtSearch);
+
+            StyleCombo(cmbLocHang);
+
+            StyleButton(btnThem, "➕  Thêm khách", COLOR_ACCENT);
+            StyleButton(btnLuu, "💾  Lưu thay đổi", COLOR_INFO);
+            StyleButton(btnXoa, "🗑  Xóa khách", COLOR_DANGER);
+            StyleButton(btnLamMoi, "⟳  Làm mới", COLOR_SECONDARY);
+            StyleButton(btnXuatFile, "📤  Xuất Excel", COLOR_WARNING);
+            StyleButton(btnLichSu, "📜  Lịch sử mua hàng", COLOR_SUCCESS, 220);
+
+            StyleDataGridView();
+        }
+
+        private void StyleTextBox(TextBox txt, bool isReadOnly = false)
+        {
+            txt.BackColor = COLOR_INPUT;
+            txt.ForeColor = COLOR_TEXT;
+            txt.BorderStyle = BorderStyle.FixedSingle;
+            txt.Font = new Font("Century Gothic", 10F, FontStyle.Regular);
+            txt.ReadOnly = isReadOnly;
+            txt.Margin = new Padding(0, 6, 0, 6);
+            txt.Padding = new Padding(6, 4, 6, 4);
+        }
+
+        private void StyleCombo(ComboBox combo)
+        {
+            combo.FlatStyle = FlatStyle.Flat;
+            combo.BackColor = COLOR_INPUT;
+            combo.ForeColor = COLOR_TEXT;
+            combo.Font = new Font("Century Gothic", 10F, FontStyle.Regular);
+            combo.DropDownStyle = ComboBoxStyle.DropDownList;
+        }
+
+        private void StyleButton(Button button, string text, Color color, int width = 180)
+        {
+            button.Text = text;
+            button.Width = width;
+            button.Height = 44;
+            button.BackColor = color;
+            button.ForeColor = Color.White;
+            button.Font = new Font("Century Gothic", 10F, FontStyle.Bold);
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Cursor = Cursors.Hand;
+            button.Margin = new Padding(0, 6, 0, 6);
+            button.Padding = new Padding(8, 4, 8, 4);
+        }
+
+        private void StyleDataGridView()
+        {
+            dgvKhachHang.BackgroundColor = COLOR_CARD;
+            dgvKhachHang.BorderStyle = BorderStyle.None;
+            dgvKhachHang.EnableHeadersVisualStyles = false;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.BackColor = COLOR_ACCENT;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.ForeColor = COLOR_TEXT;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 10.5F, FontStyle.Bold);
+            dgvKhachHang.ColumnHeadersHeight = 48;
+            dgvKhachHang.DefaultCellStyle.BackColor = COLOR_BG;
+            dgvKhachHang.DefaultCellStyle.ForeColor = COLOR_TEXT;
+            dgvKhachHang.DefaultCellStyle.SelectionBackColor = Color.FromArgb(78, 80, 110);
+            dgvKhachHang.DefaultCellStyle.SelectionForeColor = COLOR_TEXT;
+            dgvKhachHang.RowTemplate.Height = 42;
+            dgvKhachHang.GridColor = Color.FromArgb(70, 72, 105);
+        }
+        #endregion
     }
 }

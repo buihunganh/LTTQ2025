@@ -84,14 +84,42 @@ namespace BTL_LTTQ.GUI
             numGiamGiaSP = new NumericUpDown { Location = new Point(20, 175), Width = 300, Maximum = 100, Minimum = 0 };
             pnlLeft.Controls.Add(numGiamGiaSP);
 
-            btnAdd = new Button { Text = "THÊM VÀO GIỎ", Location = new Point(20, 230), Size = new Size(300, 50), BackColor = COLOR_ACCENT, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            btnAdd = new Button
+            {
+                Text = "🛒  THÊM VÀO GIỎ",
+                Location = new Point(20, 230),
+                Size = new Size(300, 55),
+                BackColor = COLOR_ACCENT,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Padding = new Padding(6, 0, 6, 0),
+                Cursor = Cursors.Hand
+            };
             btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.FlatAppearance.MouseOverBackColor = ControlPaint.Light(COLOR_ACCENT, .15f);
+            btnAdd.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(COLOR_ACCENT, .05f);
             btnAdd.Click += btnAdd_Click;
             pnlLeft.Controls.Add(btnAdd);
 
             // NÚT CHUYỂN TIẾP (TO VÀ NỔI BẬT)
-            btnGoToInvoice = new Button { Text = "TẠO HÓA ĐƠN >>", Location = new Point(20, 300), Size = new Size(300, 60), BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 12, FontStyle.Bold), Cursor = Cursors.Hand };
+            btnGoToInvoice = new Button
+            {
+                Text = "🧾  TẠO HÓA ĐƠN",
+                Location = new Point(20, 305),
+                Size = new Size(300, 65),
+                BackColor = Color.ForestGreen,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold),
+                Cursor = Cursors.Hand,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Padding = new Padding(6, 0, 6, 0)
+            };
             btnGoToInvoice.FlatAppearance.BorderSize = 0;
+            btnGoToInvoice.FlatAppearance.MouseOverBackColor = ControlPaint.Light(Color.ForestGreen, .2f);
+            btnGoToInvoice.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(Color.ForestGreen, .1f);
             btnGoToInvoice.Click += btnGoToInvoice_Click;
             pnlLeft.Controls.Add(btnGoToInvoice);
 

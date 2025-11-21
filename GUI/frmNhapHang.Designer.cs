@@ -14,6 +14,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabNhapHang = new System.Windows.Forms.TabPage();
+            this.dgvChiTietNhap = new System.Windows.Forms.DataGridView();
             this.panelInput = new System.Windows.Forms.Panel();
             this.btnLuu = new System.Windows.Forms.Button();
             this.lblTongTien = new System.Windows.Forms.Label();
@@ -27,20 +28,24 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cboNhaCungCap = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.dgvChiTietNhap = new System.Windows.Forms.DataGridView();
             this.tabBaoCao = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
             this.dgvLichSu = new System.Windows.Forms.DataGridView();
-            this.label5 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.dgvCanhBao = new System.Windows.Forms.DataGridView();
-
-            // --- Styling Variables ---
-            System.Drawing.Color backColor = System.Drawing.Color.FromArgb(22, 24, 45);
-            System.Drawing.Color panelColor = System.Drawing.Color.FromArgb(43, 46, 75);
-            System.Drawing.Color btnColor = System.Drawing.Color.FromArgb(232, 90, 79);
-            System.Drawing.Color textColor = System.Drawing.Color.Gainsboro;
-
-            // --- TabControl ---
+            this.label5 = new System.Windows.Forms.Label();
+            this.tabControl1.SuspendLayout();
+            this.tabNhapHang.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvChiTietNhap)).BeginInit();
+            this.panelInput.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numGiaNhap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSoLuong)).BeginInit();
+            this.tabBaoCao.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLichSu)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCanhBao)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // tabControl1
+            // 
             this.tabControl1.Controls.Add(this.tabNhapHang);
             this.tabControl1.Controls.Add(this.tabBaoCao);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -50,16 +55,34 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1000, 600);
             this.tabControl1.TabIndex = 0;
-
-            // --- Tab Nhap Hang ---
-            this.tabNhapHang.BackColor = backColor;
+            // 
+            // tabNhapHang
+            // 
+            this.tabNhapHang.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(24)))), ((int)(((byte)(45)))));
             this.tabNhapHang.Controls.Add(this.dgvChiTietNhap);
             this.tabNhapHang.Controls.Add(this.panelInput);
+            this.tabNhapHang.Location = new System.Drawing.Point(4, 32);
+            this.tabNhapHang.Name = "tabNhapHang";
+            this.tabNhapHang.Size = new System.Drawing.Size(992, 564);
+            this.tabNhapHang.TabIndex = 0;
             this.tabNhapHang.Text = "Nhập Hàng Mới";
-            this.tabNhapHang.Location = new System.Drawing.Point(4, 30);
-
-            // --- Panel Input (Left) ---
-            this.panelInput.BackColor = panelColor;
+            // 
+            // dgvChiTietNhap
+            // 
+            this.dgvChiTietNhap.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvChiTietNhap.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(24)))), ((int)(((byte)(45)))));
+            this.dgvChiTietNhap.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvChiTietNhap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvChiTietNhap.Location = new System.Drawing.Point(320, 0);
+            this.dgvChiTietNhap.Name = "dgvChiTietNhap";
+            this.dgvChiTietNhap.RowHeadersWidth = 51;
+            this.dgvChiTietNhap.Size = new System.Drawing.Size(672, 564);
+            this.dgvChiTietNhap.TabIndex = 0;
+            this.dgvChiTietNhap.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChiTietNhap_CellContentClick);
+            // 
+            // panelInput
+            // 
+            this.panelInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(46)))), ((int)(((byte)(75)))));
             this.panelInput.Controls.Add(this.btnLuu);
             this.panelInput.Controls.Add(this.lblTongTien);
             this.panelInput.Controls.Add(this.label6);
@@ -73,82 +96,190 @@
             this.panelInput.Controls.Add(this.cboNhaCungCap);
             this.panelInput.Controls.Add(this.label1);
             this.panelInput.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelInput.ForeColor = textColor;
-            this.panelInput.Size = new System.Drawing.Size(320, 566);
-
-            // Controls setup
-            this.label1.AutoSize = true; this.label1.Location = new System.Drawing.Point(20, 20); this.label1.Text = "Nhà cung cấp:";
-            this.cboNhaCungCap.Location = new System.Drawing.Point(24, 45); this.cboNhaCungCap.Size = new System.Drawing.Size(270, 28);
-
-            this.label2.AutoSize = true; this.label2.Location = new System.Drawing.Point(20, 90); this.label2.Text = "Chọn Sản phẩm:";
-            this.cboSanPham.Location = new System.Drawing.Point(24, 115); this.cboSanPham.Size = new System.Drawing.Size(270, 28);
-            this.cboSanPham.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-
-            this.label3.AutoSize = true; this.label3.Location = new System.Drawing.Point(20, 160); this.label3.Text = "Số lượng nhập:";
-            this.numSoLuong.Location = new System.Drawing.Point(24, 185); this.numSoLuong.Size = new System.Drawing.Size(270, 28);
-
-            this.label4.AutoSize = true; this.label4.Location = new System.Drawing.Point(20, 230); this.label4.Text = "Giá nhập:";
-            this.numGiaNhap.Location = new System.Drawing.Point(24, 255); this.numGiaNhap.Size = new System.Drawing.Size(270, 28); this.numGiaNhap.Maximum = 100000000;
-
-            this.btnThem.BackColor = System.Drawing.Color.Teal;
-            this.btnThem.ForeColor = System.Drawing.Color.White;
-            this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnThem.Location = new System.Drawing.Point(24, 310);
-            this.btnThem.Size = new System.Drawing.Size(270, 40);
-            this.btnThem.Text = "+ Thêm vào danh sách";
-            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
-
-            this.label6.AutoSize = true; this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(20, 380); this.label6.Text = "Tổng tiền nhập:";
-
-            this.lblTongTien.AutoSize = true; this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTongTien.ForeColor = System.Drawing.Color.Yellow;
-            this.lblTongTien.Location = new System.Drawing.Point(20, 410); this.lblTongTien.Text = "0 VNĐ";
-
-            this.btnLuu.BackColor = btnColor;
-            this.btnLuu.ForeColor = System.Drawing.Color.White;
+            this.panelInput.ForeColor = System.Drawing.Color.Gainsboro;
+            this.panelInput.Location = new System.Drawing.Point(0, 0);
+            this.panelInput.Name = "panelInput";
+            this.panelInput.Size = new System.Drawing.Size(320, 564);
+            this.panelInput.TabIndex = 1;
+            // 
+            // btnLuu
+            // 
+            this.btnLuu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(90)))), ((int)(((byte)(79)))));
             this.btnLuu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLuu.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnLuu.ForeColor = System.Drawing.Color.White;
             this.btnLuu.Location = new System.Drawing.Point(24, 470);
+            this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(270, 50);
+            this.btnLuu.TabIndex = 0;
             this.btnLuu.Text = "LƯU PHIẾU NHẬP";
+            this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
-
-            this.dgvChiTietNhap.BackgroundColor = backColor;
-            this.dgvChiTietNhap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvChiTietNhap.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvChiTietNhap.Location = new System.Drawing.Point(320, 0);
-            this.dgvChiTietNhap.Size = new System.Drawing.Size(680, 566);
-            this.dgvChiTietNhap.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-
-            // --- Tab Bao Cao ---
-            this.tabBaoCao.BackColor = backColor;
+            // 
+            // lblTongTien
+            // 
+            this.lblTongTien.AutoSize = true;
+            this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTongTien.ForeColor = System.Drawing.Color.Yellow;
+            this.lblTongTien.Location = new System.Drawing.Point(20, 410);
+            this.lblTongTien.Name = "lblTongTien";
+            this.lblTongTien.Size = new System.Drawing.Size(99, 37);
+            this.lblTongTien.TabIndex = 1;
+            this.lblTongTien.Text = "0 VNĐ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.label6.Location = new System.Drawing.Point(20, 380);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(161, 28);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Tổng tiền nhập:";
+            // 
+            // btnThem
+            // 
+            this.btnThem.BackColor = System.Drawing.Color.Teal;
+            this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnThem.ForeColor = System.Drawing.Color.White;
+            this.btnThem.Location = new System.Drawing.Point(24, 310);
+            this.btnThem.Name = "btnThem";
+            this.btnThem.Size = new System.Drawing.Size(270, 40);
+            this.btnThem.TabIndex = 3;
+            this.btnThem.Text = "+ Thêm vào danh sách";
+            this.btnThem.UseVisualStyleBackColor = false;
+            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
+            // 
+            // numGiaNhap
+            // 
+            this.numGiaNhap.Location = new System.Drawing.Point(24, 255);
+            this.numGiaNhap.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numGiaNhap.Name = "numGiaNhap";
+            this.numGiaNhap.Size = new System.Drawing.Size(270, 30);
+            this.numGiaNhap.TabIndex = 4;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(20, 230);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(83, 23);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Giá nhập:";
+            // 
+            // numSoLuong
+            // 
+            this.numSoLuong.Location = new System.Drawing.Point(24, 185);
+            this.numSoLuong.Name = "numSoLuong";
+            this.numSoLuong.Size = new System.Drawing.Size(270, 30);
+            this.numSoLuong.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 160);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(126, 23);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Số lượng nhập:";
+            // 
+            // cboSanPham
+            // 
+            this.cboSanPham.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboSanPham.Location = new System.Drawing.Point(24, 115);
+            this.cboSanPham.Name = "cboSanPham";
+            this.cboSanPham.Size = new System.Drawing.Size(270, 31);
+            this.cboSanPham.TabIndex = 8;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(20, 90);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(137, 23);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Chọn Sản phẩm:";
+            // 
+            // cboNhaCungCap
+            // 
+            this.cboNhaCungCap.Location = new System.Drawing.Point(24, 45);
+            this.cboNhaCungCap.Name = "cboNhaCungCap";
+            this.cboNhaCungCap.Size = new System.Drawing.Size(270, 31);
+            this.cboNhaCungCap.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(121, 23);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Nhà cung cấp:";
+            // 
+            // tabBaoCao
+            // 
+            this.tabBaoCao.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(24)))), ((int)(((byte)(45)))));
             this.tabBaoCao.Controls.Add(this.dgvLichSu);
             this.tabBaoCao.Controls.Add(this.label7);
             this.tabBaoCao.Controls.Add(this.dgvCanhBao);
             this.tabBaoCao.Controls.Add(this.label5);
-            this.tabBaoCao.ForeColor = textColor;
+            this.tabBaoCao.ForeColor = System.Drawing.Color.Gainsboro;
+            this.tabBaoCao.Location = new System.Drawing.Point(4, 32);
+            this.tabBaoCao.Name = "tabBaoCao";
+            this.tabBaoCao.Size = new System.Drawing.Size(992, 564);
+            this.tabBaoCao.TabIndex = 1;
             this.tabBaoCao.Text = "Lịch sử & Cảnh báo";
-
-            this.label5.AutoSize = true; this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.label5.ForeColor = System.Drawing.Color.Red;
-            this.label5.Location = new System.Drawing.Point(20, 20); this.label5.Text = "CẢNH BÁO TỒN KHO THẤP (< 5)";
-
-            this.dgvCanhBao.BackgroundColor = panelColor;
-            this.dgvCanhBao.Location = new System.Drawing.Point(24, 50);
-            this.dgvCanhBao.Size = new System.Drawing.Size(940, 200);
-            this.dgvCanhBao.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-
-            this.label7.AutoSize = true; this.label7.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.label7.ForeColor = System.Drawing.Color.Cyan;
-            this.label7.Location = new System.Drawing.Point(20, 270); this.label7.Text = "LỊCH SỬ NHẬP HÀNG GẦN ĐÂY";
-
-            this.dgvLichSu.BackgroundColor = panelColor;
-            this.dgvLichSu.Location = new System.Drawing.Point(24, 300);
-            this.dgvLichSu.Size = new System.Drawing.Size(940, 250);
+            // 
+            // dgvLichSu
+            // 
             this.dgvLichSu.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-
-            // --- Form Main ---
+            this.dgvLichSu.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(46)))), ((int)(((byte)(75)))));
+            this.dgvLichSu.ColumnHeadersHeight = 29;
+            this.dgvLichSu.Location = new System.Drawing.Point(24, 300);
+            this.dgvLichSu.Name = "dgvLichSu";
+            this.dgvLichSu.RowHeadersWidth = 51;
+            this.dgvLichSu.Size = new System.Drawing.Size(940, 250);
+            this.dgvLichSu.TabIndex = 0;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.label7.ForeColor = System.Drawing.Color.Cyan;
+            this.label7.Location = new System.Drawing.Point(20, 270);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(311, 28);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "LỊCH SỬ NHẬP HÀNG GẦN ĐÂY";
+            // 
+            // dgvCanhBao
+            // 
+            this.dgvCanhBao.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvCanhBao.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(46)))), ((int)(((byte)(75)))));
+            this.dgvCanhBao.ColumnHeadersHeight = 29;
+            this.dgvCanhBao.Location = new System.Drawing.Point(24, 50);
+            this.dgvCanhBao.Name = "dgvCanhBao";
+            this.dgvCanhBao.RowHeadersWidth = 51;
+            this.dgvCanhBao.Size = new System.Drawing.Size(940, 200);
+            this.dgvCanhBao.TabIndex = 2;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.label5.ForeColor = System.Drawing.Color.Red;
+            this.label5.Location = new System.Drawing.Point(20, 20);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(326, 28);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "CẢNH BÁO TỒN KHO THẤP (< 5)";
+            // 
+            // frmNhapHang
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 600);
@@ -157,13 +288,19 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản lý Nhập hàng - ABDDT Store";
             this.Load += new System.EventHandler(this.frmNhapHang_Load);
-
+            this.tabControl1.ResumeLayout(false);
+            this.tabNhapHang.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvChiTietNhap)).EndInit();
             this.panelInput.ResumeLayout(false);
             this.panelInput.PerformLayout();
-            this.tabNhapHang.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numGiaNhap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSoLuong)).EndInit();
             this.tabBaoCao.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
+            this.tabBaoCao.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLichSu)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvCanhBao)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         private System.Windows.Forms.TabControl tabControl1;

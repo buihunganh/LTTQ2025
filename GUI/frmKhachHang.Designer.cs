@@ -14,8 +14,8 @@
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelRoot = new System.Windows.Forms.Panel();
             this.dgvKhachHang = new System.Windows.Forms.DataGridView();
             this.grpFilter = new System.Windows.Forms.GroupBox();
@@ -73,23 +73,23 @@
             this.dgvKhachHang.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.dgvKhachHang.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvKhachHang.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(37)))), ((int)(((byte)(57)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvKhachHang.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(37)))), ((int)(((byte)(57)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvKhachHang.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvKhachHang.ColumnHeadersHeight = 40;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(92)))), ((int)(((byte)(120)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvKhachHang.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(92)))), ((int)(((byte)(120)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvKhachHang.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvKhachHang.EnableHeadersVisualStyles = false;
             this.dgvKhachHang.Location = new System.Drawing.Point(12, 450);
             this.dgvKhachHang.Name = "dgvKhachHang";
@@ -127,7 +127,7 @@
             this.cmbLocHang.FormattingEnabled = true;
             this.cmbLocHang.Location = new System.Drawing.Point(500, 40);
             this.cmbLocHang.Name = "cmbLocHang";
-            this.cmbLocHang.Size = new System.Drawing.Size(200, 23);
+            this.cmbLocHang.Size = new System.Drawing.Size(200, 28);
             this.cmbLocHang.TabIndex = 3;
             this.cmbLocHang.SelectedIndexChanged += new System.EventHandler(this.cmbLocHang_SelectedIndexChanged);
             // 
@@ -136,7 +136,7 @@
             this.lblLocHang.AutoSize = true;
             this.lblLocHang.Location = new System.Drawing.Point(500, 20);
             this.lblLocHang.Name = "lblLocHang";
-            this.lblLocHang.Size = new System.Drawing.Size(98, 15);
+            this.lblLocHang.Size = new System.Drawing.Size(120, 20);
             this.lblLocHang.TabIndex = 2;
             this.lblLocHang.Text = "Hạng thành viên:";
             // 
@@ -147,7 +147,7 @@
             this.txtSearch.ForeColor = System.Drawing.Color.White;
             this.txtSearch.Location = new System.Drawing.Point(20, 40);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(400, 23);
+            this.txtSearch.Size = new System.Drawing.Size(400, 27);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
@@ -156,7 +156,7 @@
             this.lblSearch.AutoSize = true;
             this.lblSearch.Location = new System.Drawing.Point(20, 20);
             this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(143, 15);
+            this.lblSearch.Size = new System.Drawing.Size(177, 20);
             this.lblSearch.TabIndex = 0;
             this.lblSearch.Text = "Tìm kiếm (Tên hoặc SĐT):";
             // 
@@ -301,7 +301,7 @@
             this.lblHang.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblHang.Location = new System.Drawing.Point(350, 90);
             this.lblHang.Name = "lblHang";
-            this.lblHang.Size = new System.Drawing.Size(98, 15);
+            this.lblHang.Size = new System.Drawing.Size(120, 20);
             this.lblHang.TabIndex = 6;
             this.lblHang.Text = "Hạng thành viên:";
             // 
@@ -324,7 +324,7 @@
             this.lblChiTieu.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblChiTieu.Location = new System.Drawing.Point(20, 90);
             this.lblChiTieu.Name = "lblChiTieu";
-            this.lblChiTieu.Size = new System.Drawing.Size(115, 15);
+            this.lblChiTieu.Size = new System.Drawing.Size(143, 20);
             this.lblChiTieu.TabIndex = 4;
             this.lblChiTieu.Text = "Tổng chi tiêu (VND):";
             // 
@@ -345,7 +345,7 @@
             this.lblSDT.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblSDT.Location = new System.Drawing.Point(350, 20);
             this.lblSDT.Name = "lblSDT";
-            this.lblSDT.Size = new System.Drawing.Size(79, 15);
+            this.lblSDT.Size = new System.Drawing.Size(100, 20);
             this.lblSDT.TabIndex = 2;
             this.lblSDT.Text = "Số điện thoại:";
             // 
@@ -366,7 +366,7 @@
             this.lblHoTen.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblHoTen.Location = new System.Drawing.Point(20, 20);
             this.lblHoTen.Name = "lblHoTen";
-            this.lblHoTen.Size = new System.Drawing.Size(94, 15);
+            this.lblHoTen.Size = new System.Drawing.Size(114, 20);
             this.lblHoTen.TabIndex = 0;
             this.lblHoTen.Text = "Tên khách hàng:";
             // 
@@ -387,7 +387,7 @@
             this.lblTitle.Location = new System.Drawing.Point(24, 25);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblTitle.Size = new System.Drawing.Size(296, 57);
+            this.lblTitle.Size = new System.Drawing.Size(365, 66);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản lý khách hàng";
             // 
