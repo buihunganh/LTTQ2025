@@ -102,6 +102,7 @@
     <Compile Include="BLL\KhachHangBLL.cs" />
     <Compile Include="BLL\NhanVienBLL.cs" />
     <Compile Include="BLL\PhienDangNhap.cs" />
+    <Compile Include="BLL\ProductService.cs" />
     <Compile Include="BLL\ReportService.cs" />
     <Compile Include="BLL\SalesBLL.cs" />
     <Compile Include="BLL\UserService.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="DTO\KhachHangDTO.cs" />
     <Compile Include="DTO\LoginResult.cs" />
     <Compile Include="DTO\NhanVienDTO.cs" />
+    <Compile Include="DTO\SanPhamDTO.cs" />
     <Compile Include="GUI\frmBanHang.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -162,6 +164,12 @@
     <Compile Include="GUI\frmReport.Designer.cs">
       <DependentUpon>frmReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\frmSanpham.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\frmSanpham.Designer.cs">
+      <DependentUpon>frmSanpham.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\frmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +202,9 @@
     <EmbeddedResource Include="GUI\frmReport.resx">
       <DependentUpon>frmReport.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frmSanpham.resx">
+      <DependentUpon>frmSanpham.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -224,7 +235,7 @@
     <None Include="GUI\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <Folder Include="Resources\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

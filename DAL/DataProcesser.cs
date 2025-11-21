@@ -69,16 +69,26 @@ namespace BTL_LTTQ.DAL
         // --- ĐĂNG NHẬP VÀ QUẢN LÝ TÀI KHOẢN ---
         public LoginResult AuthenticateUser(string username, string password)
         {
-            const string sql = @"SELECT TOP 1 MaNV, HoTen, TaiKhoan, ISNULL(IsAdmin, 0) AS IsAdmin 
-                                 FROM NhanVien WHERE TaiKhoan = @username AND MatKhau = @password AND ISNULL(TrangThai, 1) = 1";
+            const string sql = @"
+                SELECT TOP 1 MaNV, HoTen, TaiKhoan, ISNULL(IsAdmin, 0) AS IsAdmin
+                FROM NhanVien
+                WHERE TaiKhoan = @username
+                      AND MatKhau = @password
+                      AND ISNULL(TrangThai, 1) = 1";
+
             using (var connection = CreateConnection())
             using (var command = new SqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("@username", username);
-                command.Parameters.AddWithValue("@password", password);
+                command.Parameters.Add("@username", SqlDbType.VarChar, 50).Value = username;
+                command.Parameters.Add("@password", SqlDbType.VarChar, 255).Value = password;
+
                 using (var reader = command.ExecuteReader(CommandBehavior.SingleRow))
                 {
-                    if (!reader.Read()) return null;
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+
                     return new LoginResult
                     {
                         EmployeeId = reader.GetInt32(reader.GetOrdinal("MaNV")),
