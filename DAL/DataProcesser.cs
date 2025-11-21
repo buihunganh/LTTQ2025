@@ -326,7 +326,31 @@ namespace BTL_LTTQ.DAL
                 catch { transaction.Rollback(); throw; }
             }
         }
+        public DataTable TimKiemHoaDon(DateTime tuNgay, DateTime denNgay, string tenNV, string tenKH)
+        {
+            string sql = @"SELECT hd.MaHD, hd.MaHoaDon, hd.NgayLap, 
+                                  ISNULL(nv.HoTen, N'Không rõ') AS TenNhanVien, 
+                                  ISNULL(kh.HoTen, N'Khách lẻ') AS TenKhachHang, 
+                                  hd.TongTien, hd.TrangThai
+                           FROM HoaDon hd
+                           LEFT JOIN NhanVien nv ON hd.MaNV = nv.MaNV
+                           LEFT JOIN KhachHang kh ON hd.MaKH = kh.MaKH
+                           WHERE (hd.NgayLap BETWEEN @From AND @To)
+                             AND (@TenNV = '' OR nv.HoTen LIKE N'%' + @TenNV + '%')
+                             AND (@TenKH = '' OR kh.HoTen LIKE N'%' + @TenKH + '%')
+                           ORDER BY hd.NgayLap DESC";
 
+            // Chuyển đổi ngày để lấy trọn vẹn khoảng thời gian (00:00:00 đến 23:59:59)
+            string fromDate = tuNgay.ToString("yyyy-MM-dd 00:00:00");
+            string toDate = denNgay.ToString("yyyy-MM-dd 23:59:59");
+
+            return ExecuteQuery(sql, CommandType.Text,
+                new SqlParameter("@From", fromDate),
+                new SqlParameter("@To", toDate),
+                new SqlParameter("@TenNV", tenNV),
+                new SqlParameter("@TenKH", tenKH)
+            );
+        }
         public void Dispose() { }
     }
 }

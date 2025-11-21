@@ -1,5 +1,6 @@
-﻿using System.Data;
-using BTL_LTTQ.DAL;
+﻿using BTL_LTTQ.DAL;
+using System;
+using System.Data;
 
 namespace BTL_LTTQ.BLL
 {
@@ -56,6 +57,14 @@ namespace BTL_LTTQ.BLL
             {
                 // Trả về int ID từ DAL
                 return dal.BanHangTransaction(maKH, maNV, tongTien, giamGia, thanhToan, dtChiTiet);
+            }
+        }
+        // --- GỌI TÌM KIẾM ---
+        public DataTable FindInvoices(DateTime from, DateTime to, string nv, string kh)
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.TimKiemHoaDon(from, to, nv, kh);
             }
         }
     }
