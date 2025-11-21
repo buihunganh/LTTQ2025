@@ -217,7 +217,7 @@
             this.btnInvoice.Text = "Quản lý hóa đơn";
             this.btnInvoice.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnInvoice.UseVisualStyleBackColor = true;
-            this.btnInvoice.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnInvoice.Click += new System.EventHandler(this.btnQuanLyHoaDon_Click);
             // 
             // btnCustomer
             // 

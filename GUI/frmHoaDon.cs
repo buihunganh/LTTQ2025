@@ -9,6 +9,16 @@ namespace BTL_LTTQ.GUI
     public partial class frmHoaDon : Form
     {
         private SalesBLL _bll = new SalesBLL();
+
+        // Biến toàn cục
+        private string _maHDString = "";
+        private string _ngayBan = "";
+        private string _tenNV = "";
+        private string _tenKH = "";
+        private string _sdt = "";
+        private string _diaChi = "";
+        private decimal _tongTienSo = 0;
+
         private DataTable _dtChiTiet;
         private int _idHoaDonVuaLuu = 0;
 
@@ -20,49 +30,94 @@ namespace BTL_LTTQ.GUI
         private Button btnThemKhach, btnLuu, btnIn, btnHuy;
         private DataGridView dgvChiTiet;
 
+        // =================================================================================
+        // CONSTRUCTOR 1: DÙNG CHO POS (Lập hóa đơn mới)
+        // =================================================================================
         public frmHoaDon(DataTable gioHangTuPOS)
         {
             InitializeComponent();
-
-            // Tạo BindingSource để đảm bảo hiển thị dữ liệu ổn định
             _dtChiTiet = gioHangTuPOS.Copy();
 
-            SetupFullUI();
-            LoadInitData();
+            SetupFullUI(); // Vẽ giao diện
+
+            // Điền dữ liệu mặc định cho đơn mới
+            _maHDString = "HD" + DateTime.Now.ToString("ddMMyyyyHHmmss");
+            _ngayBan = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            _tenNV = "Admin";
+
+            LoadInitData(isViewOnly: false); // Chế độ nhập liệu
             CalculateTotal();
         }
 
-        // Giữ nguyên hàm này
+        // =================================================================================
+        // CONSTRUCTOR 2: DÙNG CHO QUẢN LÝ (Xem lại hóa đơn cũ)
+        // =================================================================================
+        public frmHoaDon(int maHD)
+        {
+            InitializeComponent();
+
+            // Lấy dữ liệu từ SQL lên
+            DataTable dtChung = _bll.GetInvoiceGeneral(maHD);
+            DataTable dtChiTiet = _bll.GetInvoiceDetail(maHD);
+
+            if (dtChung.Rows.Count > 0)
+            {
+                DataRow r = dtChung.Rows[0];
+                _maHDString = r["MaHoaDon"].ToString();
+                _ngayBan = Convert.ToDateTime(r["NgayLap"]).ToString("dd/MM/yyyy HH:mm");
+                _tenNV = r["NhanVien"].ToString();
+                _tenKH = r["KhachHang"].ToString();
+                _sdt = r["SoDienThoai"].ToString();
+                _diaChi = r["DiaChi"].ToString();
+                _tongTienSo = r["ThanhToan"] != DBNull.Value ? Convert.ToDecimal(r["ThanhToan"]) : 0;
+                _idHoaDonVuaLuu = maHD;
+            }
+
+            _dtChiTiet = dtChiTiet;
+
+            SetupFullUI(); // Vẽ giao diện
+            LoadInitData(isViewOnly: true); // Chế độ xem
+        }
+
         private void frmHoaDon_Load(object sender, EventArgs e) { }
 
-        private void LoadInitData()
+        // Hàm load dữ liệu chung
+        private void LoadInitData(bool isViewOnly)
         {
-            txtMaHD.Text = "HD" + DateTime.Now.ToString("ddMMyyyyHHmmss");
-            txtNgayBan.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-            txtNhanVien.Text = "Admin";
+            txtMaHD.Text = _maHDString;
+            txtNgayBan.Text = _ngayBan;
+            txtNhanVien.Text = _tenNV;
 
             try
             {
                 cboKhachHang.DataSource = _bll.GetKhachHang();
                 cboKhachHang.DisplayMember = "HoTen";
                 cboKhachHang.ValueMember = "MaKH";
-                cboKhachHang.SelectedIndex = -1;
+
+                if (isViewOnly)
+                {
+                    cboKhachHang.Text = _tenKH;
+                    cboKhachHang.Enabled = false;
+                    txtSDT.Text = _sdt;
+                    txtDiaChi.Text = _diaChi;
+                    lblTongTien.Text = _tongTienSo.ToString("N0") + " VNĐ";
+
+                    btnLuu.Visible = false;
+                    btnIn.Enabled = true;
+                    btnThemKhach.Visible = false;
+                    numGiamGia.Enabled = false;
+                }
+                else
+                {
+                    cboKhachHang.SelectedIndex = -1;
+                }
             }
             catch { }
 
-            // --- ÉP BUỘC HIỂN THỊ DỮ LIỆU LÊN LƯỚI ---
-            dgvChiTiet.DataSource = null;
             dgvChiTiet.DataSource = _dtChiTiet;
-
-            // Định dạng cột
             if (dgvChiTiet.Columns.Contains("MaCTSP")) dgvChiTiet.Columns["MaCTSP"].Visible = false;
-            if (dgvChiTiet.Columns.Contains("TenSP")) dgvChiTiet.Columns["TenSP"].HeaderText = "Tên Sản Phẩm";
-            if (dgvChiTiet.Columns.Contains("GiamGia")) dgvChiTiet.Columns["GiamGia"].HeaderText = "Giảm %";
-
-            // Format tiền tệ
-            DataGridViewCellStyle moneyStyle = new DataGridViewCellStyle { Format = "N0", Alignment = DataGridViewContentAlignment.MiddleRight };
-            if (dgvChiTiet.Columns.Contains("DonGia")) dgvChiTiet.Columns["DonGia"].DefaultCellStyle = moneyStyle;
-            if (dgvChiTiet.Columns.Contains("ThanhTien")) dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle = moneyStyle;
+            if (dgvChiTiet.Columns.Contains("DonGia")) dgvChiTiet.Columns["DonGia"].DefaultCellStyle.Format = "N0";
+            if (dgvChiTiet.Columns.Contains("ThanhTien")) dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Format = "N0";
         }
 
         private void CalculateTotal()
@@ -86,10 +141,37 @@ namespace BTL_LTTQ.GUI
             }
         }
 
+        // --- LOGIC KHI BẤM NÚT (+) THÊM KHÁCH ---
+        private void BtnThemKhach_Click(object sender, EventArgs e)
+        {
+            Form f = new Form { Text = "Thêm khách mới", Size = new Size(350, 220), StartPosition = FormStartPosition.CenterParent, BackColor = Color.FromArgb(58, 60, 92), ForeColor = Color.White, FormBorderStyle = FormBorderStyle.FixedToolWindow };
+            Label l1 = new Label { Text = "Họ tên:", Location = new Point(20, 20), AutoSize = true };
+            TextBox t1 = new TextBox { Location = new Point(20, 45), Width = 280 };
+            Label l2 = new Label { Text = "SĐT:", Location = new Point(20, 85), AutoSize = true };
+            TextBox t2 = new TextBox { Location = new Point(20, 110), Width = 280 };
+            Button b = new Button { Text = "LƯU", Location = new Point(150, 145), Width = 100, DialogResult = DialogResult.OK, BackColor = Color.OrangeRed, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+
+            f.Controls.AddRange(new Control[] { l1, t1, l2, t2, b });
+            f.AcceptButton = b;
+
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                if (string.IsNullOrWhiteSpace(t1.Text)) return;
+                try
+                {
+                    int newID = _bll.QuickAddCustomer(t1.Text, t2.Text);
+                    cboKhachHang.DataSource = _bll.GetKhachHang();
+                    cboKhachHang.SelectedValue = newID;
+                    MessageBox.Show("Đã thêm khách hàng: " + t1.Text);
+                }
+                catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
+            }
+        }
+
         private void BtnLuu_Click(object sender, EventArgs e)
         {
-            if (cboKhachHang.SelectedValue == null) { MessageBox.Show("Vui lòng chọn khách hàng!"); return; }
-            if (_dtChiTiet.Rows.Count == 0) { MessageBox.Show("Không có hàng để lưu!"); return; }
+            if (cboKhachHang.SelectedIndex == -1 || cboKhachHang.SelectedValue == null)
+                if (_dtChiTiet.Rows.Count == 0) { MessageBox.Show("Không có hàng để lưu!"); return; }
 
             try
             {
@@ -105,12 +187,12 @@ namespace BTL_LTTQ.GUI
 
                 if (_idHoaDonVuaLuu > 0)
                 {
-                    MessageBox.Show("Lưu hóa đơn thành công! Bạn có thể in ngay bây giờ.");
+                    MessageBox.Show("Lưu thành công! Mã HĐ: " + _idHoaDonVuaLuu);
                     btnLuu.Enabled = false;
                     btnIn.Enabled = true;
                     cboKhachHang.Enabled = false;
                     numGiamGia.Enabled = false;
-                    txtMaHD.Text = "HD" + _idHoaDonVuaLuu; // Cập nhật ID thật
+                    txtMaHD.Text = "HD" + _idHoaDonVuaLuu;
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
@@ -150,14 +232,6 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        private void BtnHuy_Click(object sender, EventArgs e)
-        {
-            // Nếu đã lưu thành công -> Trả về OK để POS xóa giỏ hàng
-            this.DialogResult = (_idHoaDonVuaLuu > 0) ? DialogResult.OK : DialogResult.Cancel;
-            this.Close();
-        }
-
-        // --- VẼ GIAO DIỆN ---
         private void SetupFullUI()
         {
             this.Text = "HÓA ĐƠN BÁN HÀNG";
@@ -172,29 +246,40 @@ namespace BTL_LTTQ.GUI
             GroupBox grpInfo = new GroupBox { Text = "Thông tin chung", Location = new Point(20, 70), Size = new Size(850, 150), ForeColor = Color.Gainsboro, Font = new Font("Segoe UI", 10) };
             this.Controls.Add(grpInfo);
 
-            CreateLabel(grpInfo, "Mã HĐ:", 20, 30); txtMaHD = CreateTextBox(grpInfo, 100, 27, 200); txtMaHD.ReadOnly = true;
-            CreateLabel(grpInfo, "Ngày:", 20, 70); txtNgayBan = CreateTextBox(grpInfo, 100, 67, 200); txtNgayBan.ReadOnly = true;
-            CreateLabel(grpInfo, "NV:", 20, 110); txtNhanVien = CreateTextBox(grpInfo, 100, 107, 200); txtNhanVien.ReadOnly = true;
+            CreateLabel(grpInfo, "Mã hóa đơn:", 20, 30); txtMaHD = CreateTextBox(grpInfo, 110, 27, 200); txtMaHD.ReadOnly = true;
+            CreateLabel(grpInfo, "Ngày bán:", 20, 70); txtNgayBan = CreateTextBox(grpInfo, 110, 67, 200); txtNgayBan.ReadOnly = true;
+            CreateLabel(grpInfo, "Nhân viên:", 20, 110); txtNhanVien = CreateTextBox(grpInfo, 110, 107, 200); txtNhanVien.ReadOnly = true;
 
             CreateLabel(grpInfo, "Khách hàng:", 450, 30);
-            cboKhachHang = new ComboBox { Location = new Point(550, 27), Width = 200, DropDownStyle = ComboBoxStyle.DropDownList };
+            cboKhachHang = new ComboBox
+            {
+                Location = new Point(550, 27),
+                Width = 200,
+                DropDownStyle = ComboBoxStyle.DropDown,
+        
+                AutoCompleteMode = AutoCompleteMode.SuggestAppend,
+         
+                AutoCompleteSource = AutoCompleteSource.ListItems
+            };
+   
+
             cboKhachHang.SelectedIndexChanged += CboKhachHang_SelectedIndexChanged;
             grpInfo.Controls.Add(cboKhachHang);
 
             btnThemKhach = new Button { Text = "+", Location = new Point(760, 26), Size = new Size(30, 23), BackColor = Color.OrangeRed, FlatStyle = FlatStyle.Flat, ForeColor = Color.White };
+            btnThemKhach.Click += BtnThemKhach_Click; // Gắn sự kiện Click cho nút
             grpInfo.Controls.Add(btnThemKhach);
 
             CreateLabel(grpInfo, "SĐT:", 450, 70); txtSDT = CreateTextBox(grpInfo, 550, 67, 240);
             CreateLabel(grpInfo, "Địa chỉ:", 450, 110); txtDiaChi = CreateTextBox(grpInfo, 550, 107, 240);
 
-            // --- CẤU HÌNH LƯỚI RÕ RÀNG HƠN ---
-            dgvChiTiet = new DataGridView { Location = new Point(20, 240), Size = new Size(850, 300), BackgroundColor = Color.FromArgb(58, 60, 92) };
-            dgvChiTiet.DefaultCellStyle.BackColor = Color.White; // Nền dòng màu trắng
-            dgvChiTiet.DefaultCellStyle.ForeColor = Color.Black; // Chữ màu đen (cho dễ nhìn)
-            dgvChiTiet.ColumnHeadersDefaultCellStyle.BackColor = Color.OrangeRed; // Header màu cam
+            dgvChiTiet = new DataGridView { Location = new Point(20, 240), Size = new Size(850, 300), BackgroundColor = Color.FromArgb(58, 60, 92), BorderStyle = BorderStyle.None, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, AllowUserToAddRows = false, ReadOnly = true };
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(232, 90, 79);
             dgvChiTiet.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            dgvChiTiet.DefaultCellStyle.BackColor = Color.FromArgb(45, 47, 72);
+            dgvChiTiet.DefaultCellStyle.ForeColor = Color.White;
             dgvChiTiet.EnableHeadersVisualStyles = false;
-            dgvChiTiet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this.Controls.Add(dgvChiTiet);
 
             Label lblGiam = new Label { Text = "Giảm giá (%):", Location = new Point(20, 560), AutoSize = true, Font = new Font("Segoe UI", 10) };
@@ -207,13 +292,14 @@ namespace BTL_LTTQ.GUI
             this.Controls.Add(lblTongTien);
 
             int btnY = 610;
-            btnLuu = CreateButton("Lưu Hóa Đơn", 250, btnY, Color.Green);
+            btnLuu = new Button { Text = "Lưu Hóa Đơn", Location = new Point(250, btnY), Size = new Size(150, 40), BackColor = Color.Green, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
             btnLuu.Click += BtnLuu_Click;
-            btnIn = CreateButton("In Hóa Đơn", 420, btnY, Color.Orange);
-            btnIn.Enabled = false;
+
+            btnIn = new Button { Text = "In Hóa Đơn", Location = new Point(420, btnY), Size = new Size(150, 40), BackColor = Color.Orange, ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Enabled = false };
             btnIn.Click += BtnIn_Click;
-            btnHuy = CreateButton("Hủy / Đóng", 590, btnY, Color.Gray);
-            btnHuy.Click += BtnHuy_Click;
+
+            btnHuy = new Button { Text = "Hủy / Đóng", Location = new Point(590, btnY), Size = new Size(150, 40), BackColor = Color.Gray, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            btnHuy.Click += (s, e) => { this.DialogResult = (_idHoaDonVuaLuu > 0) ? DialogResult.OK : DialogResult.Cancel; this.Close(); };
 
             this.Controls.Add(btnLuu);
             this.Controls.Add(btnIn);
@@ -222,6 +308,5 @@ namespace BTL_LTTQ.GUI
 
         private void CreateLabel(Control p, string t, int x, int y) { p.Controls.Add(new Label { Text = t, Location = new Point(x, y), AutoSize = true }); }
         private TextBox CreateTextBox(Control p, int x, int y, int w) { var t = new TextBox { Location = new Point(x, y), Width = w }; p.Controls.Add(t); return t; }
-        private Button CreateButton(string t, int x, int y, Color c) { return new Button { Text = t, Location = new Point(x, y), Size = new Size(150, 40), BackColor = c, ForeColor = Color.White, FlatStyle = FlatStyle.Flat }; }
     }
 }

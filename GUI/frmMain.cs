@@ -65,7 +65,18 @@ namespace BTL_LTTQ
                 SetActiveMenuButton(button);
             }
         }
+        private void btnQuanLyHoaDon_Click(object sender, EventArgs e)
+        {
+            // 1. Hiệu ứng đổi màu nút đang chọn
+            if (sender is Button btn)
+            {
+                SetActiveMenuButton(btn);
+            }
 
+            // 2. Mở form Quản Lý Hóa Đơn (Danh sách)
+            // Lưu ý: Đảm bảo bạn đã tạo file frmQuanLyHoaDon.cs rồi nhé
+            ShowContentForm(new BTL_LTTQ.GUI.frmQuanLyHoaDon());
+        }
         /// <summary>
         /// Hiển thị một form con trong panelContent
         /// </summary>
