@@ -40,8 +40,15 @@ namespace BTL_LTTQ
 
         private void HideScrollbars()
         {
-            ShowScrollBar(panelProfileSection.Handle, SB_VERT, 0);
-            ShowScrollBar(panelPasswordSection.Handle, SB_VERT, 0);
+            // Check if panels still exist and not disposed
+            if (panelProfileSection != null && !panelProfileSection.IsDisposed && panelProfileSection.IsHandleCreated)
+            {
+                ShowScrollBar(panelProfileSection.Handle, SB_VERT, 0);
+            }
+            if (panelPasswordSection != null && !panelPasswordSection.IsDisposed && panelPasswordSection.IsHandleCreated)
+            {
+                ShowScrollBar(panelPasswordSection.Handle, SB_VERT, 0);
+            }
         }
 
         protected override void OnLoad(EventArgs e)

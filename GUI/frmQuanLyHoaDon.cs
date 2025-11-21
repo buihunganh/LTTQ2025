@@ -157,6 +157,11 @@ namespace BTL_LTTQ.GUI
             grpFilter.SendToBack();
         }
 
+        private void frmQuanLyHoaDon_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
         // Sửa lại hàm này một chút để trả về Label thay vì Add luôn
         private Label CreateLabel(string t)
         {

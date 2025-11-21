@@ -108,10 +108,10 @@
             this.flowMenu.Controls.Add(this.btnReport);
             this.flowMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowMenu.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowMenu.Location = new System.Drawing.Point(0, 80);
+            this.flowMenu.Location = new System.Drawing.Point(0, 190);
             this.flowMenu.Name = "flowMenu";
             this.flowMenu.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
-            this.flowMenu.Size = new System.Drawing.Size(260, 494);
+            this.flowMenu.Size = new System.Drawing.Size(260, 464);
             this.flowMenu.TabIndex = 1;
             this.flowMenu.WrapContents = false;
             // 
@@ -277,37 +277,34 @@
             // panelUserContext
             // 
             this.panelUserContext.Controls.Add(this.btnSettings);
-            this.panelUserContext.Controls.Add(this.lblRole);
-            this.panelUserContext.Controls.Add(this.lblUser);
-            this.panelUserContext.Controls.Add(this.picAvatar);
             this.panelUserContext.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelUserContext.Location = new System.Drawing.Point(0, 574);
+            this.panelUserContext.Location = new System.Drawing.Point(0, 654);
             this.panelUserContext.Name = "panelUserContext";
             this.panelUserContext.Padding = new System.Windows.Forms.Padding(16);
-            this.panelUserContext.Size = new System.Drawing.Size(260, 150);
+            this.panelUserContext.Size = new System.Drawing.Size(260, 70);
             this.panelUserContext.TabIndex = 2;
             // 
             // picAvatar
             // 
-            this.picAvatar.Location = new System.Drawing.Point(85, 10);
+            this.picAvatar.Location = new System.Drawing.Point(85, 60);
             this.picAvatar.Name = "picAvatar";
             this.picAvatar.Size = new System.Drawing.Size(90, 90);
             this.picAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picAvatar.TabIndex = 3;
+            this.picAvatar.TabIndex = 1;
             this.picAvatar.TabStop = false;
             // 
             // btnSettings
             // 
             this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(106)))), ((int)(((byte)(148)))));
-            this.btnSettings.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSettings.Location = new System.Drawing.Point(16, 104);
+            this.btnSettings.Location = new System.Drawing.Point(16, 16);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(228, 30);
-            this.btnSettings.TabIndex = 2;
+            this.btnSettings.Size = new System.Drawing.Size(228, 38);
+            this.btnSettings.TabIndex = 0;
             this.btnSettings.Text = "⚙ Cài đặt";
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
@@ -315,11 +312,11 @@
             // lblRole
             // 
             this.lblRole.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblRole.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRole.Location = new System.Drawing.Point(85, 123);
+            this.lblRole.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(174)))), ((int)(((byte)(176)))), ((int)(((byte)(205)))));
+            this.lblRole.Location = new System.Drawing.Point(16, 164);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(90, 15);
-            this.lblRole.TabIndex = 1;
+            this.lblRole.Size = new System.Drawing.Size(228, 15);
+            this.lblRole.TabIndex = 2;
             this.lblRole.Text = "Quản trị viên";
             this.lblRole.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -327,21 +324,24 @@
             // 
             this.lblUser.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(85, 105);
+            this.lblUser.Location = new System.Drawing.Point(16, 148);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(90, 18);
-            this.lblUser.TabIndex = 0;
+            this.lblUser.Size = new System.Drawing.Size(228, 18);
+            this.lblUser.TabIndex = 3;
             this.lblUser.Text = "Admin";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelBrand
             // 
+            this.panelBrand.Controls.Add(this.lblRole);
+            this.panelBrand.Controls.Add(this.lblUser);
+            this.panelBrand.Controls.Add(this.picAvatar);
             this.panelBrand.Controls.Add(this.lblBrand);
             this.panelBrand.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelBrand.Location = new System.Drawing.Point(0, 0);
             this.panelBrand.Name = "panelBrand";
             this.panelBrand.Padding = new System.Windows.Forms.Padding(16);
-            this.panelBrand.Size = new System.Drawing.Size(260, 80);
+            this.panelBrand.Size = new System.Drawing.Size(260, 190);
             this.panelBrand.TabIndex = 0;
             // 
             // lblBrand
