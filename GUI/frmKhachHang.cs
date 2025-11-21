@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
 using ClosedXML.Excel;
@@ -19,16 +13,35 @@ namespace BTL_LTTQ.GUI
         public frmKhachHang()
         {
             InitializeComponent();
+            InitFilter(); 
         }
 
         private void frmKhachHang_Load(object sender, EventArgs e)
         {
-            LoadData();
+            if (cmbLocHang.Items.Count > 0) cmbLocHang.SelectedIndex = 0; 
+        }
+
+        private void InitFilter()
+        {
+            cmbLocHang.Items.Clear();
+            cmbLocHang.Items.Add("Tất cả");
+            cmbLocHang.Items.Add("Mới");
+            cmbLocHang.Items.Add("Thành viên");
+            cmbLocHang.Items.Add("Bạc");
+            cmbLocHang.Items.Add("Vàng");
+            cmbLocHang.Items.Add("Kim cương");
+
         }
 
         private void LoadData(string keyword = "")
         {
-            dgvKhachHang.DataSource = string.IsNullOrEmpty(keyword) ? bll.GetList() : bll.Search(keyword);
+            string rankFilter = "";
+            if (cmbLocHang.SelectedIndex > 0) 
+            {
+                rankFilter = cmbLocHang.SelectedItem.ToString();
+            }
+
+            dgvKhachHang.DataSource = bll.Search(keyword, rankFilter);
 
             dgvKhachHang.Columns["MaKH"].HeaderText = "Mã KH";
             dgvKhachHang.Columns["HoTen"].HeaderText = "Tên Khách Hàng";
@@ -36,6 +49,16 @@ namespace BTL_LTTQ.GUI
             dgvKhachHang.Columns["TongChiTieu"].HeaderText = "Tổng Chi Tiêu";
             dgvKhachHang.Columns["TongChiTieu"].DefaultCellStyle.Format = "N0";
             dgvKhachHang.Columns["HangThanhVien"].HeaderText = "Hạng Thành Viên";
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            LoadData(txtSearch.Text.Trim());
+        }
+
+        private void cmbLocHang_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadData(txtSearch.Text.Trim());
         }
 
         private void dgvKhachHang_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -48,43 +71,50 @@ namespace BTL_LTTQ.GUI
                 txtSDT.Text = row.Cells["SoDienThoai"].Value.ToString();
                 txtChiTieu.Text = string.Format("{0:N0} VND", row.Cells["TongChiTieu"].Value);
                 txtHang.Text = row.Cells["HangThanhVien"].Value.ToString();
+                txtChiTieu.ReadOnly = true;
             }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtHoTen.Text)) { MessageBox.Show("Nhập tên!"); return; }
+            txtChiTieu.ReadOnly = false;
 
-            if (bll.Add(txtHoTen.Text, txtSDT.Text))
+            if (string.IsNullOrWhiteSpace(txtHoTen.Text)) { MessageBox.Show("Nhập tên!"); return; }
+            string cleanMoney = txtChiTieu.Text.Replace(" VND", "").Replace(",", "").Replace(".", "").Trim();
+            decimal tongTien = 0;
+            if(!string.IsNullOrEmpty(cleanMoney))
             {
-                MessageBox.Show("Thêm thành công!");
+                decimal.TryParse(cleanMoney, out tongTien);
+            }
+            if (bll.Add(txtHoTen.Text, txtSDT.Text, tongTien))
+            {
+                MessageBox.Show("Thêm thành công! Hạng thành viên đã được tính");
                 LoadData();
                 btnLamMoi_Click(null, null);
             }
             else MessageBox.Show("Lỗi: Thiếu thông tin.");
         }
 
-        private void btnLuu_Click(object sender, EventArgs e) // Nút Sửa/Lưu
+        private void btnLuu_Click(object sender, EventArgs e) 
         {
+            txtChiTieu.ReadOnly = false;
             if (string.IsNullOrEmpty(txtMaKH.Text)) return;
-
             if (bll.Edit(int.Parse(txtMaKH.Text), txtHoTen.Text, txtSDT.Text))
             {
                 MessageBox.Show("Cập nhật thành công!");
-                LoadData();
+                LoadData(txtSearch.Text);
             }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtMaKH.Text)) return;
-
             if (MessageBox.Show("Xóa khách hàng này?", "Cảnh báo", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 if (bll.Delete(int.Parse(txtMaKH.Text)))
                 {
                     MessageBox.Show("Đã xóa.");
-                    LoadData();
+                    LoadData(txtSearch.Text);
                     btnLamMoi_Click(null, null);
                 }
             }
@@ -98,12 +128,8 @@ namespace BTL_LTTQ.GUI
             txtChiTieu.Text = "";
             txtHang.Text = "";
             txtSearch.Text = "";
+            if (cmbLocHang.Items.Count > 0) cmbLocHang.SelectedIndex = 0;
             LoadData();
-        }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
-        {
-            LoadData(txtSearch.Text.Trim());
         }
 
         private void btnXuatFile_Click(object sender, EventArgs e)
@@ -127,6 +153,11 @@ namespace BTL_LTTQ.GUI
         {
             if (string.IsNullOrEmpty(txtMaKH.Text)) { MessageBox.Show("Vui lòng chọn khách hàng."); return; }
             MessageBox.Show($"Lịch sử mua hàng của: {txtHoTen.Text}\n(Chức năng này chờ module Hóa Đơn)");
+        }
+
+        private void txtChiTieu_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

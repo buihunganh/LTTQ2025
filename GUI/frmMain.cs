@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
+using System.Data;
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
 using BTL_LTTQ.DTO;
+using BTL_LTTQ.DAL;
 
 namespace BTL_LTTQ
 {
@@ -15,6 +17,9 @@ namespace BTL_LTTQ
         private Form _activeContentForm;
         private Button _activeMenuButton;
         private readonly ReportService _reportService;
+        private readonly string _projectRootPath;
+        private DateTime? _lastCheckIn;
+        private DateTime? _lastCheckOut;
 
         public frmMain() : this(null)
         {
@@ -24,10 +29,13 @@ namespace BTL_LTTQ
         {
             InitializeComponent();
             _currentUser = user;
+            _projectRootPath = GetProjectRootPath();
             SetupAvatarCircular(); // Setup avatar hình tròn
             ApplyUserContext();
             ConfigureMenuButtons();
             _reportService = IsInDesignMode() ? null : new ReportService();
+            UpdateCheckStatusLabel();
+            LoadRealtimeNotifications();
         }
 
         private void SetupAvatarCircular()
@@ -110,8 +118,8 @@ namespace BTL_LTTQ
             lblUser.Text = displayName;
             lblRole.Text = roleLabel;
 
-            // Cập nhật avatar
-            CreateDefaultAvatar();
+            // Load avatar từ file (đã upload trong Settings), nếu không có thì dùng mặc định
+            LoadAvatarFromFile();
         }
 
         private void btnLogout_Click(object sender, EventArgs e)
@@ -200,6 +208,8 @@ namespace BTL_LTTQ
             // Hiển thị các control của Dashboard
             panelContent.Controls.Clear();
             panelContent.Controls.Add(panelDashboard);
+            panelContent.Controls.Add(panelQuickActions);
+            panelContent.Controls.Add(panelRealtime);
             panelContent.Controls.Add(panelGreeting);
             panelContent.Controls.Add(lblContentSubtitle);
             panelContent.Controls.Add(lblContentTitle);
@@ -208,12 +218,16 @@ namespace BTL_LTTQ
             lblContentTitle.Visible = true;
             lblContentSubtitle.Visible = true;
             panelDashboard.Visible = true;
+            panelQuickActions.Visible = true;
+            panelRealtime.Visible = true;
             panelGreeting.Visible = true;
 
             // Đưa các control lên trước
             lblContentTitle.BringToFront();
             lblContentSubtitle.BringToFront();
             panelDashboard.BringToFront();
+            panelQuickActions.BringToFront();
+            panelRealtime.BringToFront();
             panelGreeting.BringToFront();
 
             // Cập nhật dữ liệu dashboard
@@ -259,6 +273,8 @@ namespace BTL_LTTQ
             lblOrdersTodayValue.Text = overview.TodayOrders.ToString();
             lblTopProductValue.Text = overview.TopProductName;
             lblLowStockValue.Text = overview.LowStockAlert;
+
+            LoadRealtimeNotifications();
 
             // Cập nhật thông tin chào mừng
             var userName = _currentUser?.FullName ?? "Bạn";
@@ -312,12 +328,21 @@ namespace BTL_LTTQ
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            ShowContentForm(new frmSettings(_currentUser));
+            var settingsForm = new frmSettings(_currentUser);
+            ShowContentForm(settingsForm);
+
+            // Reload avatar sau khi đóng form Settings (nếu user đã upload ảnh mới)
+            settingsForm.FormClosed += (s, args) =>
+            {
+                LoadAvatarFromFile();
+            };
         }
 
         private void btnCheckIn_Click(object sender, EventArgs e)
         {
             string currentTime = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+            _lastCheckIn = DateTime.Now;
+            UpdateCheckStatusLabel();
             MessageBox.Show(
                 $"✓ Check-in thành công!\nThời gian: {currentTime}",
                 "Chấm công - Vào làm",
@@ -329,6 +354,8 @@ namespace BTL_LTTQ
         private void btnCheckOut_Click(object sender, EventArgs e)
         {
             string currentTime = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+            _lastCheckOut = DateTime.Now;
+            UpdateCheckStatusLabel();
             MessageBox.Show(
                 $"✓ Check-out thành công!\nThời gian: {currentTime}",
                 "Chấm công - Tan làm",
@@ -347,6 +374,24 @@ namespace BTL_LTTQ
         {
             SetActiveMenuButton(btnStaff);
             ShowContentForm(new GUI.frnNhanVien());
+        }
+
+        private void btnQuickInvoice_Click(object sender, EventArgs e)
+        {
+            SetActiveMenuButton(btnPos);
+            ShowContentForm(new BTL_LTTQ.GUI.frmBanHang());
+        }
+
+        private void btnQuickImport_Click(object sender, EventArgs e)
+        {
+            SetActiveMenuButton(btnInventory);
+            ShowContentForm(new BTL_LTTQ.GUI.frmNhapHang());
+        }
+
+        private void btnQuickReport_Click(object sender, EventArgs e)
+        {
+            SetActiveMenuButton(btnReport);
+            ShowContentForm(new frmReport());
         }
 
         private struct ButtonAppearance
@@ -379,6 +424,150 @@ namespace BTL_LTTQ
                 SetActiveMenuButton(btn);
             }
             ShowContentForm(new BTL_LTTQ.GUI.frmBanHang());
+        }
+
+        /// <summary>
+        /// Load avatar từ file path (đã upload trong form Settings)
+        /// </summary>
+        private void LoadAvatarFromFile()
+        {
+            try
+            {
+                // Lấy profile từ DAL để có AvatarPath
+                using (var dataProcesser = new DataProcesser())
+                {
+                    var profile = dataProcesser.GetEmployeeProfile(_currentUser?.EmployeeId ?? 0);
+
+                    if (profile != null && !string.IsNullOrEmpty(profile.AvatarPath))
+                    {
+                        string fullPath = GetAvatarFullPath(profile.AvatarPath);
+                        if (!string.IsNullOrEmpty(fullPath) && System.IO.File.Exists(fullPath))
+                        {
+                            // Tạo một bản sao của ảnh để tránh khóa file
+                            using (var img = Image.FromFile(fullPath))
+                            {
+                                picAvatar.Image = new Bitmap(img);
+                            }
+                            return; // Đã load được từ file
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Nếu lỗi thì dùng avatar mặc định
+            }
+
+            // Nếu không có avatar, dùng avatar mặc định
+            CreateDefaultAvatar();
+        }
+
+        private string GetAvatarFullPath(string relativePath)
+        {
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                return null;
+            }
+
+            // Ưu tiên thư mục gốc dự án (Resources thực tế)
+            var projectPath = System.IO.Path.Combine(_projectRootPath, relativePath);
+            if (System.IO.File.Exists(projectPath))
+            {
+                return projectPath;
+            }
+
+            // Fallback: thư mục thực thi (trong trường hợp ảnh cũ vẫn nằm ở bin)
+            var startupPath = System.IO.Path.Combine(Application.StartupPath, relativePath);
+            if (System.IO.File.Exists(startupPath))
+            {
+                return startupPath;
+            }
+
+            return projectPath; // trả về path dự kiến để caller thử tạo nếu cần
+        }
+
+        private static string GetProjectRootPath()
+        {
+            string root = Application.StartupPath;
+
+            try
+            {
+                root = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.StartupPath, @"..\.."));
+            }
+            catch
+            {
+                // Nếu lỗi thì giữ nguyên StartupPath
+            }
+
+            return root;
+        }
+
+        private void UpdateCheckStatusLabel()
+        {
+            if (lblCheckStatus == null)
+            {
+                return;
+            }
+
+            string message;
+            if (_lastCheckOut.HasValue && (!_lastCheckIn.HasValue || _lastCheckOut.Value >= _lastCheckIn.Value))
+            {
+                message = $"Trạng thái chấm công: Đã check-out lúc {_lastCheckOut:HH:mm:ss}";
+            }
+            else if (_lastCheckIn.HasValue)
+            {
+                message = $"Trạng thái chấm công: Đã check-in lúc {_lastCheckIn:HH:mm:ss}";
+            }
+            else
+            {
+                message = "Trạng thái chấm công: Chưa check-in";
+            }
+
+            lblCheckStatus.Text = message;
+        }
+
+        private void LoadRealtimeNotifications()
+        {
+            if (IsInDesignMode() || lstRealtime == null)
+            {
+                return;
+            }
+
+            try
+            {
+                lstRealtime.Items.Clear();
+                using (var dataProcesser = new DataProcesser())
+                {
+                    var table = dataProcesser.ExecuteQuery(@"
+                        SELECT TOP 5 hd.MaHD, hd.NgayLap, ISNULL(kh.HoTen, N'Khách lẻ') AS KhachHang,
+                               ISNULL(hd.ThanhToan, 0) AS ThanhToan
+                        FROM HoaDon hd
+                        LEFT JOIN KhachHang kh ON hd.MaKH = kh.MaKH
+                        ORDER BY hd.NgayLap DESC");
+
+                    if (table.Rows.Count == 0)
+                    {
+                        lstRealtime.Items.Add("Chưa có giao dịch nào hôm nay.");
+                        return;
+                    }
+
+                    foreach (System.Data.DataRow row in table.Rows)
+                    {
+                        var createdAt = row.Field<DateTime>("NgayLap");
+                        var customer = row.Field<string>("KhachHang");
+                        var amount = row.Field<decimal>("ThanhToan");
+                        var invoiceId = row.Field<int>("MaHD");
+
+                        var line = $"{createdAt:HH:mm dd/MM} • HĐ #{invoiceId} • {customer} • {amount:N0} đ";
+                        lstRealtime.Items.Add(line);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                lstRealtime.Items.Clear();
+                lstRealtime.Items.Add($"Không thể tải thông báo: {ex.Message}");
+            }
         }
     }
 }

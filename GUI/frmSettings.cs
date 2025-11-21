@@ -19,10 +19,13 @@ namespace BTL_LTTQ
         private string _tempAvatarPath;
         private System.Windows.Forms.Timer _hideScrollbarTimer;
 
+        private readonly string _projectRootPath;
+
         public frmSettings(LoginResult currentUser)
         {
             InitializeComponent();
             _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+            _projectRootPath = GetProjectRootPath();
             LoadProfile();
             InitializeScrollbarHiding();
         }
@@ -74,7 +77,7 @@ namespace BTL_LTTQ
 
                     if (!string.IsNullOrEmpty(_profile.AvatarPath))
                     {
-                        string fullPath = System.IO.Path.Combine(Application.StartupPath, _profile.AvatarPath);
+                        string fullPath = System.IO.Path.Combine(_projectRootPath, _profile.AvatarPath);
                         if (System.IO.File.Exists(fullPath))
                         {
                             picAvatar.Image = System.Drawing.Image.FromFile(fullPath);
@@ -111,7 +114,7 @@ namespace BTL_LTTQ
             {
                 try
                 {
-                    string avatarFolder = System.IO.Path.Combine(Application.StartupPath, "Resources", "Images", "Avatar");
+                    string avatarFolder = System.IO.Path.Combine(_projectRootPath, "Resources", "Images", "Avatar");
                     if (!System.IO.Directory.Exists(avatarFolder))
                     {
                         System.IO.Directory.CreateDirectory(avatarFolder);
@@ -240,6 +243,23 @@ namespace BTL_LTTQ
         private void lblSubtitle_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private static string GetProjectRootPath()
+        {
+            string root = Application.StartupPath;
+
+            try
+            {
+                // Move up two levels from bin\Debug (or Release) to project directory
+                root = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.StartupPath, @"..\.."));
+            }
+            catch
+            {
+                // Ignore and fall back to StartupPath
+            }
+
+            return root;
         }
     }
 }

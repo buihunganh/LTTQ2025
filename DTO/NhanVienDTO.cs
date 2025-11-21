@@ -14,5 +14,6 @@ namespace BTL_LTTQ.DTO
         public string Email { get; set; }
         public string DiaChi { get; set; }
         public DateTime? NgayVaoLam { get; set; }
+        public byte[] Avatar { get; set; } // Ảnh đại diện (lưu từ database)
     }
 }

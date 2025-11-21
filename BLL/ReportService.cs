@@ -6,6 +6,13 @@ using BTL_LTTQ.DTO;
 
 namespace BTL_LTTQ.BLL
 {
+    public enum TrendGrouping
+    {
+        Day,
+        Week,
+        Month
+    }
+
     public class ReportService
     {
         public DashboardSummary GetDashboardSummary(DateTime fromDate, DateTime toDate)
@@ -45,18 +52,33 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        public DataTable GetRevenueTrend(DateTime fromDate, DateTime toDate)
+        public DataTable GetRevenueTrend(DateTime fromDate, DateTime toDate, TrendGrouping grouping = TrendGrouping.Day)
         {
-            const string sql = @"
+            string periodExpression;
+
+            switch (grouping)
+            {
+                case TrendGrouping.Week:
+                    periodExpression = "DATEADD(DAY, - (DATEPART(WEEKDAY, hd.NgayLap) - 1), CAST(hd.NgayLap AS DATE))";
+                    break;
+                case TrendGrouping.Month:
+                    periodExpression = "DATEFROMPARTS(YEAR(hd.NgayLap), MONTH(hd.NgayLap), 1)";
+                    break;
+                default:
+                    periodExpression = "CAST(hd.NgayLap AS DATE)";
+                    break;
+            }
+
+            string sql = $@"
                 SELECT
-                    CAST(hd.NgayLap AS DATE) AS Ngay,
+                    {periodExpression} AS Ngay,
                     ISNULL(SUM(hd.ThanhToan), 0) AS DoanhThu,
                     ISNULL(SUM((cthd.DonGia - ISNULL(cthd.GiaVon, 0)) * cthd.SoLuong), 0) AS LoiNhuan
                 FROM HoaDon hd
                 LEFT JOIN ChiTietHoaDon cthd ON hd.MaHD = cthd.MaHD
                 WHERE hd.NgayLap BETWEEN @fromDate AND @toDate
-                GROUP BY CAST(hd.NgayLap AS DATE)
-                ORDER BY Ngay";
+                GROUP BY {periodExpression}
+                ORDER BY {periodExpression}";
 
             using (var db = new DataProcesser())
             {

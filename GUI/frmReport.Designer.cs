@@ -55,6 +55,15 @@ namespace BTL_LTTQ
             this.lblCustomerValue = new System.Windows.Forms.Label();
             this.lblCustomerTitle = new System.Windows.Forms.Label();
             this.grpFilter = new System.Windows.Forms.GroupBox();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.lblCompareMode = new System.Windows.Forms.Label();
+            this.cboCompareMode = new System.Windows.Forms.ComboBox();
+            this.lblTopCount = new System.Windows.Forms.Label();
+            this.nudTopCount = new System.Windows.Forms.NumericUpDown();
+            this.lblGrouping = new System.Windows.Forms.Label();
+            this.cboGrouping = new System.Windows.Forms.ComboBox();
+            this.lblQuickRange = new System.Windows.Forms.Label();
+            this.cboQuickRange = new System.Windows.Forms.ComboBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.lblTo = new System.Windows.Forms.Label();
             this.lblFrom = new System.Windows.Forms.Label();
@@ -73,6 +82,7 @@ namespace BTL_LTTQ
             this.panelOrderCard.SuspendLayout();
             this.panelCustomerCard.SuspendLayout();
             this.grpFilter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTopCount)).BeginInit();
             this.SuspendLayout();
             // 
             // panelRoot
@@ -98,12 +108,12 @@ namespace BTL_LTTQ
             this.bodyLayout.Controls.Add(this.chartRevenue, 0, 0);
             this.bodyLayout.Controls.Add(this.panelRight, 1, 0);
             this.bodyLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bodyLayout.Location = new System.Drawing.Point(24, 276);
+            this.bodyLayout.Location = new System.Drawing.Point(24, 336);
             this.bodyLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bodyLayout.Name = "bodyLayout";
             this.bodyLayout.RowCount = 1;
             this.bodyLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.bodyLayout.Size = new System.Drawing.Size(1232, 425);
+            this.bodyLayout.Size = new System.Drawing.Size(1232, 365);
             this.bodyLayout.TabIndex = 3;
             // 
             // chartRevenue
@@ -144,7 +154,7 @@ namespace BTL_LTTQ
             series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
             this.chartRevenue.Series.Add(series1);
             this.chartRevenue.Series.Add(series2);
-            this.chartRevenue.Size = new System.Drawing.Size(719, 409);
+            this.chartRevenue.Size = new System.Drawing.Size(719, 349);
             this.chartRevenue.TabIndex = 0;
             this.chartRevenue.Text = "chart1";
             // 
@@ -160,7 +170,7 @@ namespace BTL_LTTQ
             this.panelRight.Margin = new System.Windows.Forms.Padding(0);
             this.panelRight.Name = "panelRight";
             this.panelRight.Padding = new System.Windows.Forms.Padding(10, 8, 10, 8);
-            this.panelRight.Size = new System.Drawing.Size(493, 425);
+            this.panelRight.Size = new System.Drawing.Size(493, 365);
             this.panelRight.TabIndex = 1;
             // 
             // lblTopCustomers
@@ -237,7 +247,7 @@ namespace BTL_LTTQ
             this.tableSummary.Controls.Add(this.panelOrderCard, 2, 0);
             this.tableSummary.Controls.Add(this.panelCustomerCard, 3, 0);
             this.tableSummary.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableSummary.Location = new System.Drawing.Point(24, 104);
+            this.tableSummary.Location = new System.Drawing.Point(24, 164);
             this.tableSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tableSummary.Name = "tableSummary";
             this.tableSummary.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
@@ -557,6 +567,15 @@ namespace BTL_LTTQ
             // 
             // grpFilter
             // 
+            this.grpFilter.Controls.Add(this.btnExport);
+            this.grpFilter.Controls.Add(this.lblCompareMode);
+            this.grpFilter.Controls.Add(this.cboCompareMode);
+            this.grpFilter.Controls.Add(this.lblTopCount);
+            this.grpFilter.Controls.Add(this.nudTopCount);
+            this.grpFilter.Controls.Add(this.lblGrouping);
+            this.grpFilter.Controls.Add(this.cboGrouping);
+            this.grpFilter.Controls.Add(this.lblQuickRange);
+            this.grpFilter.Controls.Add(this.cboQuickRange);
             this.grpFilter.Controls.Add(this.btnRefresh);
             this.grpFilter.Controls.Add(this.lblTo);
             this.grpFilter.Controls.Add(this.lblFrom);
@@ -568,10 +587,121 @@ namespace BTL_LTTQ
             this.grpFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpFilter.Name = "grpFilter";
             this.grpFilter.Padding = new System.Windows.Forms.Padding(16, 13, 16, 13);
-            this.grpFilter.Size = new System.Drawing.Size(1232, 85);
+            this.grpFilter.Size = new System.Drawing.Size(1232, 145);
             this.grpFilter.TabIndex = 1;
             this.grpFilter.TabStop = false;
-            this.grpFilter.Text = "Khoảng thời gian thống kê";
+            this.grpFilter.Text = "Thiết lập bộ lọc nâng cao";
+            // 
+            // btnExport
+            // 
+            this.btnExport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
+            this.btnExport.FlatAppearance.BorderSize = 0;
+            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnExport.ForeColor = System.Drawing.Color.White;
+            this.btnExport.Location = new System.Drawing.Point(470, 98);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(155, 30);
+            this.btnExport.TabIndex = 10;
+            this.btnExport.Text = "Xuất báo cáo";
+            this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // lblCompareMode
+            // 
+            this.lblCompareMode.AutoSize = true;
+            this.lblCompareMode.Location = new System.Drawing.Point(22, 82);
+            this.lblCompareMode.Name = "lblCompareMode";
+            this.lblCompareMode.Size = new System.Drawing.Size(139, 16);
+            this.lblCompareMode.TabIndex = 9;
+            this.lblCompareMode.Text = "Chế độ so sánh kỳ đối";
+            // 
+            // cboCompareMode
+            // 
+            this.cboCompareMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboCompareMode.FormattingEnabled = true;
+            this.cboCompareMode.Location = new System.Drawing.Point(22, 101);
+            this.cboCompareMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboCompareMode.Name = "cboCompareMode";
+            this.cboCompareMode.Size = new System.Drawing.Size(220, 24);
+            this.cboCompareMode.TabIndex = 8;
+            // 
+            // lblTopCount
+            // 
+            this.lblTopCount.AutoSize = true;
+            this.lblTopCount.Location = new System.Drawing.Point(741, 24);
+            this.lblTopCount.Name = "lblTopCount";
+            this.lblTopCount.Size = new System.Drawing.Size(156, 16);
+            this.lblTopCount.TabIndex = 7;
+            this.lblTopCount.Text = "Số dòng Top (3 - 15 mục)";
+            // 
+            // nudTopCount
+            // 
+            this.nudTopCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
+            this.nudTopCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.nudTopCount.ForeColor = System.Drawing.Color.White;
+            this.nudTopCount.Location = new System.Drawing.Point(744, 44);
+            this.nudTopCount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.nudTopCount.Maximum = new decimal(new int[] {
+            15,
+            0,
+            0,
+            0});
+            this.nudTopCount.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.nudTopCount.Name = "nudTopCount";
+            this.nudTopCount.Size = new System.Drawing.Size(90, 22);
+            this.nudTopCount.TabIndex = 6;
+            this.nudTopCount.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // lblGrouping
+            // 
+            this.lblGrouping.AutoSize = true;
+            this.lblGrouping.Location = new System.Drawing.Point(560, 24);
+            this.lblGrouping.Name = "lblGrouping";
+            this.lblGrouping.Size = new System.Drawing.Size(99, 16);
+            this.lblGrouping.TabIndex = 5;
+            this.lblGrouping.Text = "Nhóm xu hướng";
+            // 
+            // cboGrouping
+            // 
+            this.cboGrouping.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
+            this.cboGrouping.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboGrouping.ForeColor = System.Drawing.Color.White;
+            this.cboGrouping.FormattingEnabled = true;
+            this.cboGrouping.Location = new System.Drawing.Point(563, 43);
+            this.cboGrouping.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboGrouping.Name = "cboGrouping";
+            this.cboGrouping.Size = new System.Drawing.Size(160, 24);
+            this.cboGrouping.TabIndex = 4;
+            // 
+            // lblQuickRange
+            // 
+            this.lblQuickRange.AutoSize = true;
+            this.lblQuickRange.Location = new System.Drawing.Point(22, 24);
+            this.lblQuickRange.Name = "lblQuickRange";
+            this.lblQuickRange.Size = new System.Drawing.Size(94, 16);
+            this.lblQuickRange.TabIndex = 3;
+            this.lblQuickRange.Text = "Phạm vi nhanh";
+            // 
+            // cboQuickRange
+            // 
+            this.cboQuickRange.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboQuickRange.FormattingEnabled = true;
+            this.cboQuickRange.Location = new System.Drawing.Point(22, 43);
+            this.cboQuickRange.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboQuickRange.Name = "cboQuickRange";
+            this.cboQuickRange.Size = new System.Drawing.Size(160, 24);
+            this.cboQuickRange.TabIndex = 2;
+            this.cboQuickRange.SelectedIndexChanged += new System.EventHandler(this.cboQuickRange_SelectedIndexChanged);
             // 
             // btnRefresh
             // 
@@ -580,10 +710,10 @@ namespace BTL_LTTQ
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnRefresh.ForeColor = System.Drawing.Color.White;
-            this.btnRefresh.Location = new System.Drawing.Point(583, 34);
+            this.btnRefresh.Location = new System.Drawing.Point(283, 98);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(155, 28);
+            this.btnRefresh.Size = new System.Drawing.Size(170, 30);
             this.btnRefresh.TabIndex = 4;
             this.btnRefresh.Text = "Tải dữ liệu";
             this.btnRefresh.UseVisualStyleBackColor = false;
@@ -592,7 +722,7 @@ namespace BTL_LTTQ
             // lblTo
             // 
             this.lblTo.AutoSize = true;
-            this.lblTo.Location = new System.Drawing.Point(307, 39);
+            this.lblTo.Location = new System.Drawing.Point(377, 24);
             this.lblTo.Name = "lblTo";
             this.lblTo.Size = new System.Drawing.Size(64, 16);
             this.lblTo.TabIndex = 3;
@@ -601,7 +731,7 @@ namespace BTL_LTTQ
             // lblFrom
             // 
             this.lblFrom.AutoSize = true;
-            this.lblFrom.Location = new System.Drawing.Point(19, 39);
+            this.lblFrom.Location = new System.Drawing.Point(199, 24);
             this.lblFrom.Name = "lblFrom";
             this.lblFrom.Size = new System.Drawing.Size(56, 16);
             this.lblFrom.TabIndex = 2;
@@ -610,7 +740,7 @@ namespace BTL_LTTQ
             // dtpTo
             // 
             this.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpTo.Location = new System.Drawing.Point(383, 36);
+            this.dtpTo.Location = new System.Drawing.Point(380, 43);
             this.dtpTo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpTo.Name = "dtpTo";
             this.dtpTo.Size = new System.Drawing.Size(176, 22);
@@ -619,7 +749,7 @@ namespace BTL_LTTQ
             // dtpFrom
             // 
             this.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFrom.Location = new System.Drawing.Point(88, 36);
+            this.dtpFrom.Location = new System.Drawing.Point(202, 43);
             this.dtpFrom.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dtpFrom.Name = "dtpFrom";
             this.dtpFrom.Size = new System.Drawing.Size(176, 22);
@@ -670,6 +800,7 @@ namespace BTL_LTTQ
             this.panelCustomerCard.PerformLayout();
             this.grpFilter.ResumeLayout(false);
             this.grpFilter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTopCount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -685,6 +816,15 @@ namespace BTL_LTTQ
         private System.Windows.Forms.Label lblTo;
         private System.Windows.Forms.Label lblFrom;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.ComboBox cboQuickRange;
+        private System.Windows.Forms.Label lblQuickRange;
+        private System.Windows.Forms.Label lblGrouping;
+        private System.Windows.Forms.ComboBox cboGrouping;
+        private System.Windows.Forms.NumericUpDown nudTopCount;
+        private System.Windows.Forms.Label lblTopCount;
+        private System.Windows.Forms.Label lblCompareMode;
+        private System.Windows.Forms.ComboBox cboCompareMode;
+        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Panel panelRevenueCard;
         private System.Windows.Forms.Panel panelProfitCard;
         private System.Windows.Forms.Panel panelOrderCard;

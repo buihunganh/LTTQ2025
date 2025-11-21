@@ -48,6 +48,14 @@
             this.panelBrand = new System.Windows.Forms.Panel();
             this.lblBrand = new System.Windows.Forms.Label();
             this.panelContent = new System.Windows.Forms.Panel();
+            this.panelQuickActions = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnQuickInvoice = new System.Windows.Forms.Button();
+            this.btnQuickImport = new System.Windows.Forms.Button();
+            this.btnQuickReport = new System.Windows.Forms.Button();
+            this.panelRealtime = new System.Windows.Forms.Panel();
+            this.lstRealtime = new System.Windows.Forms.ListBox();
+            this.lblCheckStatus = new System.Windows.Forms.Label();
+            this.lblRealtimeTitle = new System.Windows.Forms.Label();
             this.panelDashboard = new System.Windows.Forms.TableLayoutPanel();
             this.panelLowStock = new System.Windows.Forms.Panel();
             this.lblLowStockValue = new System.Windows.Forms.Label();
@@ -74,6 +82,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).BeginInit();
             this.panelBrand.SuspendLayout();
             this.panelContent.SuspendLayout();
+            this.panelQuickActions.SuspendLayout();
+            this.panelRealtime.SuspendLayout();
             this.panelDashboard.SuspendLayout();
             this.panelLowStock.SuspendLayout();
             this.panelTopProduct.SuspendLayout();
@@ -86,6 +96,7 @@
             // 
             this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(32)))), ((int)(((byte)(50)))));
             this.panelSidebar.Controls.Add(this.flowMenu);
+            this.panelSidebar.Controls.Add(this.btnSettings);
             this.panelSidebar.Controls.Add(this.panelUserContext);
             this.panelSidebar.Controls.Add(this.panelBrand);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
@@ -108,10 +119,10 @@
             this.flowMenu.Controls.Add(this.btnReport);
             this.flowMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowMenu.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowMenu.Location = new System.Drawing.Point(0, 80);
+            this.flowMenu.Location = new System.Drawing.Point(0, 210);
             this.flowMenu.Name = "flowMenu";
             this.flowMenu.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
-            this.flowMenu.Size = new System.Drawing.Size(260, 494);
+            this.flowMenu.Size = new System.Drawing.Size(260, 514);
             this.flowMenu.TabIndex = 1;
             this.flowMenu.WrapContents = false;
             // 
@@ -170,7 +181,7 @@
             this.btnProduct.Text = "Quản lý sản phẩm";
             this.btnProduct.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnProduct.UseVisualStyleBackColor = true;
-            this.btnProduct.Click += new System.EventHandler(this.HighlightOnlyMenuButton_Click);
+            this.btnProduct.Click += new System.EventHandler(this.btnProduct_Click);
             // 
             // btnInventory
             // 
@@ -276,22 +287,21 @@
             // 
             // panelUserContext
             // 
-            this.panelUserContext.Controls.Add(this.btnSettings);
             this.panelUserContext.Controls.Add(this.lblRole);
             this.panelUserContext.Controls.Add(this.lblUser);
             this.panelUserContext.Controls.Add(this.picAvatar);
-            this.panelUserContext.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelUserContext.Location = new System.Drawing.Point(0, 574);
+            this.panelUserContext.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelUserContext.Location = new System.Drawing.Point(0, 80);
             this.panelUserContext.Name = "panelUserContext";
             this.panelUserContext.Padding = new System.Windows.Forms.Padding(16);
-            this.panelUserContext.Size = new System.Drawing.Size(260, 150);
+            this.panelUserContext.Size = new System.Drawing.Size(260, 130);
             this.panelUserContext.TabIndex = 2;
             // 
             // picAvatar
             // 
-            this.picAvatar.Location = new System.Drawing.Point(85, 10);
+            this.picAvatar.Location = new System.Drawing.Point(95, 12);
             this.picAvatar.Name = "picAvatar";
-            this.picAvatar.Size = new System.Drawing.Size(90, 90);
+            this.picAvatar.Size = new System.Drawing.Size(70, 70);
             this.picAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picAvatar.TabIndex = 3;
             this.picAvatar.TabStop = false;
@@ -304,10 +314,11 @@
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnSettings.ForeColor = System.Drawing.Color.White;
-            this.btnSettings.Location = new System.Drawing.Point(16, 104);
+            this.btnSettings.Location = new System.Drawing.Point(0, 684);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(228, 30);
-            this.btnSettings.TabIndex = 2;
+            this.btnSettings.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
+            this.btnSettings.Size = new System.Drawing.Size(260, 40);
+            this.btnSettings.TabIndex = 3;
             this.btnSettings.Text = "⚙ Cài đặt";
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
@@ -315,10 +326,10 @@
             // lblRole
             // 
             this.lblRole.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblRole.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRole.Location = new System.Drawing.Point(85, 123);
+            this.lblRole.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(174)))), ((int)(((byte)(176)))), ((int)(((byte)(205)))));
+            this.lblRole.Location = new System.Drawing.Point(20, 106);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(90, 15);
+            this.lblRole.Size = new System.Drawing.Size(220, 16);
             this.lblRole.TabIndex = 1;
             this.lblRole.Text = "Quản trị viên";
             this.lblRole.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -327,9 +338,9 @@
             // 
             this.lblUser.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(85, 105);
+            this.lblUser.Location = new System.Drawing.Point(20, 86);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(90, 18);
+            this.lblUser.Size = new System.Drawing.Size(220, 20);
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Admin";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -358,6 +369,8 @@
             // panelContent
             // 
             this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
+            this.panelContent.Controls.Add(this.panelRealtime);
+            this.panelContent.Controls.Add(this.panelQuickActions);
             this.panelContent.Controls.Add(this.panelDashboard);
             this.panelContent.Controls.Add(this.panelGreeting);
             this.panelContent.Controls.Add(this.lblContentSubtitle);
@@ -368,6 +381,114 @@
             this.panelContent.Padding = new System.Windows.Forms.Padding(32);
             this.panelContent.Size = new System.Drawing.Size(1059, 724);
             this.panelContent.TabIndex = 1;
+            // 
+            // panelQuickActions
+            // 
+            this.panelQuickActions.BackColor = System.Drawing.Color.Transparent;
+            this.panelQuickActions.Controls.Add(this.btnQuickInvoice);
+            this.panelQuickActions.Controls.Add(this.btnQuickImport);
+            this.panelQuickActions.Controls.Add(this.btnQuickReport);
+            this.panelQuickActions.Location = new System.Drawing.Point(36, 370);
+            this.panelQuickActions.Name = "panelQuickActions";
+            this.panelQuickActions.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
+            this.panelQuickActions.Size = new System.Drawing.Size(979, 70);
+            this.panelQuickActions.TabIndex = 4;
+            // 
+            // btnQuickInvoice
+            // 
+            this.btnQuickInvoice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(106)))), ((int)(((byte)(148)))));
+            this.btnQuickInvoice.FlatAppearance.BorderSize = 0;
+            this.btnQuickInvoice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnQuickInvoice.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnQuickInvoice.ForeColor = System.Drawing.Color.White;
+            this.btnQuickInvoice.Location = new System.Drawing.Point(0, 8);
+            this.btnQuickInvoice.Margin = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            this.btnQuickInvoice.Name = "btnQuickInvoice";
+            this.btnQuickInvoice.Size = new System.Drawing.Size(180, 54);
+            this.btnQuickInvoice.TabIndex = 0;
+            this.btnQuickInvoice.Text = "➕ Tạo hóa đơn";
+            this.btnQuickInvoice.UseVisualStyleBackColor = false;
+            this.btnQuickInvoice.Click += new System.EventHandler(this.btnQuickInvoice_Click);
+            // 
+            // btnQuickImport
+            // 
+            this.btnQuickImport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(106)))), ((int)(((byte)(148)))));
+            this.btnQuickImport.FlatAppearance.BorderSize = 0;
+            this.btnQuickImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnQuickImport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnQuickImport.ForeColor = System.Drawing.Color.White;
+            this.btnQuickImport.Location = new System.Drawing.Point(200, 8);
+            this.btnQuickImport.Margin = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            this.btnQuickImport.Name = "btnQuickImport";
+            this.btnQuickImport.Size = new System.Drawing.Size(180, 54);
+            this.btnQuickImport.TabIndex = 1;
+            this.btnQuickImport.Text = "📦 Nhập hàng";
+            this.btnQuickImport.UseVisualStyleBackColor = false;
+            this.btnQuickImport.Click += new System.EventHandler(this.btnQuickImport_Click);
+            // 
+            // btnQuickReport
+            // 
+            this.btnQuickReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(106)))), ((int)(((byte)(148)))));
+            this.btnQuickReport.FlatAppearance.BorderSize = 0;
+            this.btnQuickReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnQuickReport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnQuickReport.ForeColor = System.Drawing.Color.White;
+            this.btnQuickReport.Location = new System.Drawing.Point(400, 8);
+            this.btnQuickReport.Margin = new System.Windows.Forms.Padding(0, 0, 20, 0);
+            this.btnQuickReport.Name = "btnQuickReport";
+            this.btnQuickReport.Size = new System.Drawing.Size(180, 54);
+            this.btnQuickReport.TabIndex = 2;
+            this.btnQuickReport.Text = "📊 Xem báo cáo";
+            this.btnQuickReport.UseVisualStyleBackColor = false;
+            this.btnQuickReport.Click += new System.EventHandler(this.btnQuickReport_Click);
+            // 
+            // panelRealtime
+            // 
+            this.panelRealtime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(56)))), ((int)(((byte)(82)))));
+            this.panelRealtime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelRealtime.Controls.Add(this.lstRealtime);
+            this.panelRealtime.Controls.Add(this.lblCheckStatus);
+            this.panelRealtime.Controls.Add(this.lblRealtimeTitle);
+            this.panelRealtime.Location = new System.Drawing.Point(36, 456);
+            this.panelRealtime.Name = "panelRealtime";
+            this.panelRealtime.Padding = new System.Windows.Forms.Padding(16);
+            this.panelRealtime.Size = new System.Drawing.Size(979, 210);
+            this.panelRealtime.TabIndex = 5;
+            // 
+            // lstRealtime
+            // 
+            this.lstRealtime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
+            this.lstRealtime.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstRealtime.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lstRealtime.ForeColor = System.Drawing.Color.White;
+            this.lstRealtime.FormattingEnabled = true;
+            this.lstRealtime.ItemHeight = 17;
+            this.lstRealtime.Location = new System.Drawing.Point(20, 80);
+            this.lstRealtime.Name = "lstRealtime";
+            this.lstRealtime.Size = new System.Drawing.Size(937, 119);
+            this.lstRealtime.TabIndex = 2;
+            // 
+            // lblCheckStatus
+            // 
+            this.lblCheckStatus.AutoSize = true;
+            this.lblCheckStatus.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblCheckStatus.ForeColor = System.Drawing.Color.Gainsboro;
+            this.lblCheckStatus.Location = new System.Drawing.Point(20, 52);
+            this.lblCheckStatus.Name = "lblCheckStatus";
+            this.lblCheckStatus.Size = new System.Drawing.Size(187, 15);
+            this.lblCheckStatus.TabIndex = 1;
+            this.lblCheckStatus.Text = "Trạng thái chấm công: Chưa xác định";
+            // 
+            // lblRealtimeTitle
+            // 
+            this.lblRealtimeTitle.AutoSize = true;
+            this.lblRealtimeTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblRealtimeTitle.ForeColor = System.Drawing.Color.White;
+            this.lblRealtimeTitle.Location = new System.Drawing.Point(17, 16);
+            this.lblRealtimeTitle.Name = "lblRealtimeTitle";
+            this.lblRealtimeTitle.Size = new System.Drawing.Size(180, 21);
+            this.lblRealtimeTitle.TabIndex = 0;
+            this.lblRealtimeTitle.Text = "Thông báo theo thời gian";
             // 
             // panelDashboard
             // 
@@ -649,6 +770,9 @@
             this.panelBrand.PerformLayout();
             this.panelContent.ResumeLayout(false);
             this.panelContent.PerformLayout();
+            this.panelQuickActions.ResumeLayout(false);
+            this.panelRealtime.ResumeLayout(false);
+            this.panelRealtime.PerformLayout();
             this.panelDashboard.ResumeLayout(false);
             this.panelLowStock.ResumeLayout(false);
             this.panelLowStock.PerformLayout();
@@ -685,6 +809,14 @@
         private System.Windows.Forms.PictureBox picAvatar;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Panel panelContent;
+        private System.Windows.Forms.FlowLayoutPanel panelQuickActions;
+        private System.Windows.Forms.Button btnQuickInvoice;
+        private System.Windows.Forms.Button btnQuickImport;
+        private System.Windows.Forms.Button btnQuickReport;
+        private System.Windows.Forms.Panel panelRealtime;
+        private System.Windows.Forms.Label lblRealtimeTitle;
+        private System.Windows.Forms.Label lblCheckStatus;
+        private System.Windows.Forms.ListBox lstRealtime;
         private System.Windows.Forms.TableLayoutPanel panelDashboard;
         private System.Windows.Forms.Panel panelOrdersToday;
         private System.Windows.Forms.Label lblOrdersTodayValue;
