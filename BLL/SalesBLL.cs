@@ -6,7 +6,6 @@ namespace BTL_LTTQ.BLL
 {
     public class SalesBLL
     {
-        // 1. Lấy danh sách sản phẩm để bán (Chỉ lấy cái nào còn tồn kho > 0)
         public DataTable GetSanPhamBanHang()
         {
             using (var dal = new DataProcesser())
@@ -39,7 +38,6 @@ namespace BTL_LTTQ.BLL
         {
             using (var dal = new DataProcesser()) return dal.GetThongTinChungHoaDon(maHD);
         }
-        // 2. Lấy danh sách khách hàng
         public DataTable GetKhachHang()
         {
             using (var dal = new DataProcesser())
@@ -47,9 +45,6 @@ namespace BTL_LTTQ.BLL
                 return dal.ExecuteQuery("SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi FROM KhachHang WHERE TrangThai = 1");
             }
         }
-
-        // Mở file SalesBLL.cs
-
 
         public int ThanhToan(int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
         {
@@ -59,7 +54,6 @@ namespace BTL_LTTQ.BLL
                 return dal.BanHangTransaction(maKH, maNV, tongTien, giamGia, thanhToan, dtChiTiet);
             }
         }
-        // --- GỌI TÌM KIẾM ---
         public DataTable FindInvoices(DateTime from, DateTime to, string nv, string kh)
         {
             using (var dal = new DataProcesser())
@@ -68,7 +62,6 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        // Hủy hóa đơn và cộng lại số lượng vào kho
         public bool HuyHoaDon(int maHD)
         {
             using (var dal = new DataProcesser())
@@ -77,7 +70,6 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        // Lấy danh sách mã hóa đơn
         public DataTable GetDanhSachMaHoaDon()
         {
             using (var dal = new DataProcesser())
@@ -86,7 +78,6 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        // Cập nhật hóa đơn
         public bool CapNhatHoaDon(int maHD, int maKH, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())

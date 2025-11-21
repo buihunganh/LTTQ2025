@@ -37,7 +37,6 @@
             this.ClientSize = new System.Drawing.Size(1000, 600);
             this.Name = "frmBanHang";
             this.Text = "frmBanHang";
-            this.Load += new System.EventHandler(this.frmBanHang_Load_1);
             this.ResumeLayout(false);
 
         }

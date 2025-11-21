@@ -173,7 +173,7 @@ namespace BTL_LTTQ
             }
 
             // 2. Mở form Quản Lý Hóa Đơn (Danh sách)
-            ShowContentForm(new BTL_LTTQ.GUI.frmQuanLyHoaDon());
+            ShowContentForm(new BTL_LTTQ.GUI.frmQuanLyHoaDon(_currentUser));
         }
 
         /// <summary>

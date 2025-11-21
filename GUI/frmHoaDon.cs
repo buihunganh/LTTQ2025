@@ -34,25 +34,19 @@ namespace BTL_LTTQ.GUI
         private DataGridView dgvChiTiet;
         private bool _isEditMode = false;
 
-        // =================================================================================
-        // CONSTRUCTOR 1: DÙNG CHO POS (Lập hóa đơn mới)
-        // =================================================================================
         public frmHoaDon(DataTable gioHangTuPOS, BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
             InitializeComponent();
             _currentUser = currentUser;
             _dtChiTiet = gioHangTuPOS.Copy();
 
-            SetupFullUI(); // Vẽ giao diện
+            SetupFullUI();
 
-            // Điền dữ liệu mặc định cho đơn mới
-            // Tạo mã HĐ theo format: HDB_ddMMyyyy0xxx
             string datePart = DateTime.Now.ToString("ddMMyyyy");
             int sequence = GetNextInvoiceSequence(datePart);
             _maHDString = $"HDB_{datePart}0{sequence:D3}";
             _ngayBan = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             
-            // Lấy thông tin nhân viên từ LoginResult
             if (_currentUser != null)
             {
                 _tenNV = _currentUser.FullName;
@@ -61,22 +55,17 @@ namespace BTL_LTTQ.GUI
             else
             {
                 _tenNV = "Không xác định";
-                _maNV = 1; // Fallback
+                _maNV = 1;
             }
 
-            LoadInitData(isViewOnly: false); // Chế độ nhập liệu
+            LoadInitData(isViewOnly: false);
             CalculateTotal();
         }
-
-        // =================================================================================
-        // CONSTRUCTOR 2: DÙNG CHO QUẢN LÝ (Xem lại hóa đơn cũ)
-        // =================================================================================
         public frmHoaDon(int maHD, BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
             InitializeComponent();
             _currentUser = currentUser;
 
-            // Lấy dữ liệu từ SQL lên
             DataTable dtChung = _bll.GetInvoiceGeneral(maHD);
             DataTable dtChiTiet = _bll.GetInvoiceDetail(maHD);
 
@@ -95,13 +84,12 @@ namespace BTL_LTTQ.GUI
 
             _dtChiTiet = dtChiTiet;
 
-            SetupFullUI(); // Vẽ giao diện
-            LoadInitData(isViewOnly: true); // Chế độ xem
+            SetupFullUI();
+            LoadInitData(isViewOnly: true);
         }
 
         private void frmHoaDon_Load(object sender, EventArgs e) { }
 
-        // Lấy số thứ tự hóa đơn tiếp theo trong ngày
         private int GetNextInvoiceSequence(string datePart)
         {
             try
@@ -123,7 +111,6 @@ namespace BTL_LTTQ.GUI
             return 1;
         }
 
-        // Hàm load dữ liệu chung
         private void LoadInitData(bool isViewOnly)
         {
             txtMaHD.Text = _maHDString;
@@ -145,11 +132,19 @@ namespace BTL_LTTQ.GUI
                     lblTongTien.Text = _tongTienSo.ToString("N0") + " VNĐ";
 
                     btnLuu.Visible = false;
-                    btnSua.Visible = true;
                     btnIn.Enabled = true;
                     btnThemKhach.Visible = false;
                     numGiamGia.Enabled = false;
                     dgvChiTiet.ReadOnly = true;
+
+                    // Chỉ admin mới được sửa và hủy hóa đơn
+                    bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
+                    btnSua.Visible = isAdmin;
+                    btnHuy.Enabled = isAdmin;
+                    if (!isAdmin)
+                    {
+                        btnHuy.Text = "Đóng";
+                    }
                 }
                 else
                 {
@@ -181,14 +176,12 @@ namespace BTL_LTTQ.GUI
             {
                 DataRowView drv = (DataRowView)cboKhachHang.SelectedItem;
                 txtSDT.Text = drv["SoDienThoai"].ToString();
-                // Lấy địa chỉ từ ComboBox
                 txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString()) 
                     ? drv["DiaChi"].ToString() 
                     : "Khách tại quầy";
             }
         }
 
-        // Tìm hoặc thêm khách hàng theo SĐT
         private void TimHoacThemKhachTheoSDT(string sdt)
         {
             if (string.IsNullOrWhiteSpace(sdt))
@@ -204,14 +197,12 @@ namespace BTL_LTTQ.GUI
                 {
                     if (row["SoDienThoai"].ToString().Trim() == sdt.Trim())
                     {
-                        // Tìm thấy, chọn khách hàng
                         cboKhachHang.SelectedValue = row["MaKH"];
                         MessageBox.Show($"Đã tìm thấy khách hàng: {row["HoTen"]}");
                         return;
                     }
                 }
 
-                // Không tìm thấy, hỏi có muốn thêm không
                 if (MessageBox.Show($"Không tìm thấy khách hàng với SĐT: {sdt}\nBạn có muốn thêm khách hàng mới không?",
                     "Thêm khách hàng", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -241,7 +232,6 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        // --- LOGIC KHI BẤM NÚT (+) THÊM KHÁCH ---
         private void BtnThemKhach_Click(object sender, EventArgs e)
         {
             Form f = new Form { Text = "Thêm khách mới", Size = new Size(350, 220), StartPosition = FormStartPosition.CenterParent, BackColor = Color.FromArgb(58, 60, 92), ForeColor = Color.White, FormBorderStyle = FormBorderStyle.FixedToolWindow };
@@ -270,14 +260,12 @@ namespace BTL_LTTQ.GUI
 
         private void BtnLuu_Click(object sender, EventArgs e)
         {
-            // Kiểm tra khách hàng
             if (cboKhachHang.SelectedIndex == -1 || cboKhachHang.SelectedValue == null)
             {
                 MessageBox.Show("Vui lòng chọn khách hàng!");
                 return;
             }
 
-            // Kiểm tra có hàng trong giỏ
             if (_dtChiTiet == null || _dtChiTiet.Rows.Count == 0)
             {
                 MessageBox.Show("Không có hàng để lưu!");
@@ -287,7 +275,6 @@ namespace BTL_LTTQ.GUI
             try
             {
                 int maKH = Convert.ToInt32(cboKhachHang.SelectedValue);
-                // Sử dụng mã NV từ LoginResult
                 int maNV = _maNV > 0 ? _maNV : (_currentUser?.EmployeeId ?? 1);
 
                 decimal tongHang = 0;
@@ -297,7 +284,6 @@ namespace BTL_LTTQ.GUI
 
                 if (_isEditMode && _idHoaDonVuaLuu > 0)
                 {
-                    // Cập nhật DataTable từ DataGridView trước
                     DataTable dtChiTietMoi = new DataTable();
                     dtChiTietMoi.Columns.Add("MaCTSP", typeof(int));
                     dtChiTietMoi.Columns.Add("TenSP", typeof(string));
@@ -316,7 +302,6 @@ namespace BTL_LTTQ.GUI
                             ? Convert.ToInt32(row.Cells["GiamGia"].Value) : 0;
                         decimal thanhTien = Convert.ToDecimal(row.Cells["ThanhTien"].Value);
 
-                        // Kiểm tra số lượng tồn kho
                         var sanPham = _bll.GetSanPhamBanHang();
                         bool found = false;
                         foreach (DataRow spRow in sanPham.Rows)
@@ -342,7 +327,6 @@ namespace BTL_LTTQ.GUI
                         dtChiTietMoi.Rows.Add(maCTSP, row.Cells["TenSP"].Value, soLuong, donGia, giamGiaSP, thanhTien);
                     }
 
-                    // Cập nhật hóa đơn
                     bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, tienGiam, thanhToan, dtChiTietMoi);
                     if (success)
                     {
@@ -366,7 +350,6 @@ namespace BTL_LTTQ.GUI
                 }
                 else
                 {
-                    // Tạo hóa đơn mới
                     _idHoaDonVuaLuu = _bll.ThanhToan(maKH, maNV, tongHang, tienGiam, thanhToan, _dtChiTiet);
 
                     if (_idHoaDonVuaLuu > 0)
@@ -398,13 +381,11 @@ namespace BTL_LTTQ.GUI
                     {
                         var worksheet = workbook.Worksheets.Add("HoaDon");
 
-                        // Tiêu đề
                         worksheet.Cell(1, 1).Value = "HÓA ĐƠN BÁN HÀNG";
                         worksheet.Cell(1, 1).Style.Font.Bold = true;
                         worksheet.Cell(1, 1).Style.Font.FontSize = 16;
                         worksheet.Range(1, 1, 1, 4).Merge();
 
-                        // Thông tin hóa đơn
                         worksheet.Cell(3, 1).Value = "Mã HĐ:";
                         worksheet.Cell(3, 2).Value = txtMaHD.Text;
                         worksheet.Cell(4, 1).Value = "Ngày:";
@@ -418,7 +399,6 @@ namespace BTL_LTTQ.GUI
                         worksheet.Cell(8, 1).Value = "Địa chỉ:";
                         worksheet.Cell(8, 2).Value = txtDiaChi.Text;
 
-                        // Tiêu đề bảng
                         int rowStart = 10;
                         worksheet.Cell(rowStart, 1).Value = "Tên Hàng";
                         worksheet.Cell(rowStart, 2).Value = "Số Lượng";
@@ -427,7 +407,6 @@ namespace BTL_LTTQ.GUI
                         worksheet.Range(rowStart, 1, rowStart, 4).Style.Font.Bold = true;
                         worksheet.Range(rowStart, 1, rowStart, 4).Style.Fill.BackgroundColor = XLColor.LightGray;
 
-                        // Dữ liệu chi tiết
                         int row = rowStart + 1;
                         foreach (DataGridViewRow dgvRow in dgvChiTiet.Rows)
                         {
@@ -440,7 +419,6 @@ namespace BTL_LTTQ.GUI
                             row++;
                         }
 
-                        // Tổng tiền
                         worksheet.Cell(row, 3).Value = "TỔNG THANH TOÁN:";
                         worksheet.Cell(row, 3).Style.Font.Bold = true;
                         worksheet.Cell(row, 4).Value = lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "");
@@ -476,12 +454,10 @@ namespace BTL_LTTQ.GUI
             GroupBox grpInfo = new GroupBox { Text = "Thông tin chung", Location = new Point(20, 70), Size = new Size(850, 210), ForeColor = Color.Gainsboro, Font = new Font("Segoe UI", 10) };
             this.Controls.Add(grpInfo);
 
-            // Cột trái - Thông tin hóa đơn
             CreateLabel(grpInfo, "Mã hóa đơn:", 20, 35); txtMaHD = CreateTextBox(grpInfo, 120, 32, 200); txtMaHD.ReadOnly = true;
             CreateLabel(grpInfo, "Ngày bán:", 20, 70); txtNgayBan = CreateTextBox(grpInfo, 120, 67, 200); txtNgayBan.ReadOnly = true;
             CreateLabel(grpInfo, "Nhân viên:", 20, 105); txtNhanVien = CreateTextBox(grpInfo, 120, 102, 200); txtNhanVien.ReadOnly = true;
 
-            // Cột phải - Thông tin khách hàng
             CreateLabel(grpInfo, "SĐT khách hàng:", 400, 35);
             TextBox txtSDTInput = CreateTextBox(grpInfo, 520, 32, 180);
             txtSDTInput.KeyDown += (s, e) => {
@@ -551,6 +527,14 @@ namespace BTL_LTTQ.GUI
 
         private void BtnSua_Click(object sender, EventArgs e)
         {
+            // Kiểm tra quyền admin trước khi sửa hóa đơn
+            bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
+            if (!isAdmin)
+            {
+                MessageBox.Show("Chỉ quản trị viên mới có quyền sửa hóa đơn!", "Không có quyền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (_idHoaDonVuaLuu == 0)
             {
                 MessageBox.Show("Không có hóa đơn để sửa!");
@@ -561,14 +545,10 @@ namespace BTL_LTTQ.GUI
                 "Xác nhận sửa", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 _isEditMode = true;
-                
-                // Cho phép chỉnh sửa
                 cboKhachHang.Enabled = true;
                 numGiamGia.Enabled = true;
                 btnThemKhach.Visible = true;
                 dgvChiTiet.ReadOnly = false;
-                
-                // Đổi nút
                 btnSua.Visible = false;
                 btnLuu.Visible = true;
                 btnLuu.Text = "Cập nhật";
@@ -578,9 +558,18 @@ namespace BTL_LTTQ.GUI
 
         private void BtnHuy_Click(object sender, EventArgs e)
         {
-            // Nếu đã lưu hóa đơn, hỏi có muốn xóa không
             if (_idHoaDonVuaLuu > 0)
             {
+                // Kiểm tra quyền admin trước khi hủy hóa đơn
+                bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
+                if (!isAdmin)
+                {
+                    MessageBox.Show("Chỉ quản trị viên mới có quyền hủy hóa đơn!", "Không có quyền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    this.DialogResult = DialogResult.Cancel;
+                    this.Close();
+                    return;
+                }
+
                 if (MessageBox.Show("Bạn có muốn hủy hóa đơn này và cộng lại số lượng vào kho không?",
                     "Xác nhận hủy", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -605,7 +594,6 @@ namespace BTL_LTTQ.GUI
             }
             else
             {
-                // Chưa lưu, chỉ đóng form
                 this.DialogResult = DialogResult.Cancel;
                 this.Close();
             }

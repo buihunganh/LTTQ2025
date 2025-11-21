@@ -11,7 +11,6 @@ namespace BTL_LTTQ.GUI
         private InventoryBLL _bll = new InventoryBLL();
         private DataTable _dtChiTietNhap;
 
-        // --- BẢNG MÀU CHUẨN TỪ REPORT ---
         private readonly Color COLOR_ROOT = Color.FromArgb(45, 47, 72);       // Nền chính
         private readonly Color COLOR_CARD = Color.FromArgb(58, 60, 92);       // Nền panel con
         private readonly Color COLOR_ACCENT = Color.FromArgb(232, 90, 79);    // Màu cam chủ đạo
@@ -56,42 +55,35 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        // --- HÀM QUAN TRỌNG: STYLE GIAO DIỆN ---
         private void SetupTheme()
         {
-            // 1. Nền Form & TabControl
             this.BackColor = COLOR_ROOT;
             tabControl1.BackColor = COLOR_ROOT;
 
-            // TabPage: Vì Winform TabControl khó chỉnh màu header, ta chỉnh màu nền content
             foreach (TabPage tab in tabControl1.TabPages)
             {
                 tab.BackColor = COLOR_ROOT;
                 tab.ForeColor = COLOR_TEXT_MAIN;
             }
 
-            // 2. Panel Input (Trái)
             panelInput.BackColor = COLOR_CARD;
             panelInput.ForeColor = COLOR_TEXT_SUB;
 
-            // 3. Các Labels
             foreach (Control c in panelInput.Controls)
             {
                 if (c is Label) c.ForeColor = COLOR_TEXT_SUB;
             }
-            // Riêng Label tổng tiền và tiêu đề cần nổi bật
+
             lblTongTien.ForeColor = Color.Yellow;
-            label6.ForeColor = COLOR_TEXT_MAIN; // Label "Tổng tiền nhập"
+            label6.ForeColor = COLOR_TEXT_MAIN;
             label1.ForeColor = COLOR_TEXT_MAIN;
             label2.ForeColor = COLOR_TEXT_MAIN;
             label3.ForeColor = COLOR_TEXT_MAIN;
             label4.ForeColor = COLOR_TEXT_MAIN;
 
-            // 4. Buttons
-            StyleButton(btnThem, Color.Teal); // Nút thêm giữ màu xanh Teal hoặc đổi sang Cam tùy bạn
-            StyleButton(btnLuu, COLOR_ACCENT); // Nút Lưu màu Cam chuẩn
+            StyleButton(btnThem, Color.Teal);
+            StyleButton(btnLuu, COLOR_ACCENT);
 
-            // 5. DataGridView (Làm đẹp lưới)
             StyleDataGridView(dgvChiTietNhap);
             StyleDataGridView(dgvCanhBao);
             StyleDataGridView(dgvLichSu);
@@ -109,51 +101,42 @@ namespace BTL_LTTQ.GUI
 
         private void StyleDataGridView(DataGridView dgv)
         {
-            // Cấu hình chung
             dgv.BackgroundColor = COLOR_GRID_BG;
             dgv.BorderStyle = BorderStyle.None;
             dgv.EnableHeadersVisualStyles = false;
             dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgv.GridColor = Color.FromArgb(70, 72, 98); // Màu kẻ mờ
+            dgv.GridColor = Color.FromArgb(70, 72, 98);
 
-            // Header (Tiêu đề cột)
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = COLOR_ACCENT; // Màu Cam
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = COLOR_ACCENT;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(6);
             dgv.ColumnHeadersHeight = 40;
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
 
-            // Rows (Dòng dữ liệu)
             dgv.DefaultCellStyle.BackColor = COLOR_GRID_BG;
             dgv.DefaultCellStyle.ForeColor = COLOR_TEXT_SUB;
-            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(80, 82, 110); // Màu khi click chọn dòng
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(80, 82, 110);
             dgv.DefaultCellStyle.SelectionForeColor = Color.White;
             dgv.DefaultCellStyle.Font = new Font("Segoe UI", 10);
             dgv.RowTemplate.Height = 35;
 
-            // Tự động co giãn cột
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
-        // ---------------------------------------
 
         private void LoadComboBoxes()
         {
-            // Load Nhà cung cấp từ database
             cboNhaCungCap.DataSource = _bll.GetNhaCungCap();
             cboNhaCungCap.DisplayMember = "TenNCC";
             cboNhaCungCap.ValueMember = "MaNCC";
-            cboNhaCungCap.DropDownStyle = ComboBoxStyle.DropDownList; // Chỉ chọn từ danh sách
+            cboNhaCungCap.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            // Load Sản phẩm từ database - chỉ lấy dữ liệu từ database
             cboSanPham.DataSource = _bll.GetSanPhamBienThe();
             cboSanPham.DisplayMember = "TenHienThi";
             cboSanPham.ValueMember = "MaCTSP";
-            cboSanPham.DropDownStyle = ComboBoxStyle.DropDownList; // Chỉ chọn từ danh sách, không cho nhập
-            cboSanPham.AutoCompleteMode = AutoCompleteMode.None; // Tắt autocomplete
-            cboSanPham.AutoCompleteSource = AutoCompleteSource.None; // Tắt autocomplete
-            
-            // Khi chọn sản phẩm, tự động điền giá nhập từ database
+            cboSanPham.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboSanPham.AutoCompleteMode = AutoCompleteMode.None;
+            cboSanPham.AutoCompleteSource = AutoCompleteSource.None;
             cboSanPham.SelectedIndexChanged += CboSanPham_SelectedIndexChanged;
         }
 

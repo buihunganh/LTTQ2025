@@ -20,7 +20,6 @@ namespace BTL_LTTQ.DAL
             _connectionString = connectionSetting.ConnectionString;
         }
 
-        // --- CÁC HÀM HELPER CƠ BẢN ---
         private SqlConnection CreateConnection()
         {
             var connection = new SqlConnection(_connectionString);
@@ -35,7 +34,6 @@ namespace BTL_LTTQ.DAL
             return command;
         }
 
-        // --- CÁC HÀM THỰC THI SQL ---
         public DataTable ExecuteQuery(string query, CommandType commandType = CommandType.Text, params SqlParameter[] parameters)
         {
             using (var connection = CreateConnection())
@@ -66,7 +64,6 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        // --- ĐĂNG NHẬP VÀ QUẢN LÝ TÀI KHOẢN ---
         public LoginResult AuthenticateUser(string username, string password)
         {
             const string sql = @"
@@ -202,7 +199,6 @@ namespace BTL_LTTQ.DAL
             catch { return false; }
         }
 
-        // --- THÊM KHÁCH HÀNG NHANH ---
         public int ThemKhachHangNhanh(string hoTen, string sdt)
         {
             string sql = @"INSERT INTO KhachHang(HoTen, SoDienThoai, DiemTichLuy, TrangThai) 
@@ -216,7 +212,6 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        // --- LẤY CHI TIẾT HÓA ĐƠN ---
         public DataTable GetChiTietHoaDon(int maHD)
         {
             string sql = @"SELECT cthd.MaCTSP, sp.TenGiay + ' (' + sz.KichCo + ' - ' + ms.TenMau + ')' AS TenSP, 
@@ -230,7 +225,6 @@ namespace BTL_LTTQ.DAL
             return ExecuteQuery(sql, CommandType.Text, new SqlParameter("@MaHD", maHD));
         }
 
-        // --- LẤY THÔNG TIN CHUNG HÓA ĐƠN ---
         public DataTable GetThongTinChungHoaDon(int maHD)
         {
             string sql = @"SELECT hd.MaHoaDon, hd.NgayLap, hd.TongTien, hd.GiamGia, hd.ThanhToan, 
@@ -245,7 +239,6 @@ namespace BTL_LTTQ.DAL
             return ExecuteQuery(sql, CommandType.Text, new SqlParameter("@MaHD", maHD));
         }
 
-        // --- TRANSACTION NHẬP HÀNG ---
         public bool NhapHangTransaction(int maNCC, int maNV, decimal tongTien, DataTable dtChiTiet)
         {
             using (var connection = CreateConnection())
@@ -293,7 +286,6 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        // --- TRANSACTION BÁN HÀNG ---
         public int BanHangTransaction(int maKH, int maNV, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
         {
             using (var connection = CreateConnection())
@@ -367,7 +359,6 @@ namespace BTL_LTTQ.DAL
                 new SqlParameter("@TenKH", tenKH)
             );
         }
-        // Hủy hóa đơn và cộng lại số lượng vào kho
         public bool HuyHoaDonTransaction(int maHD)
         {
             using (var connection = CreateConnection())
@@ -375,7 +366,6 @@ namespace BTL_LTTQ.DAL
             {
                 try
                 {
-                    // Lấy chi tiết hóa đơn để cộng lại số lượng
                     string sqlGetDetail = @"SELECT MaCTSP, SoLuong FROM ChiTietHoaDon WHERE MaHD = @MaHD";
                     SqlCommand cmdGet = new SqlCommand(sqlGetDetail, connection, transaction);
                     cmdGet.Parameters.AddWithValue("@MaHD", maHD);
@@ -418,7 +408,6 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        // Cập nhật hóa đơn và điều chỉnh số lượng trong kho
         public bool CapNhatHoaDonTransaction(int maHD, int maKH, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
         {
             using (var connection = CreateConnection())

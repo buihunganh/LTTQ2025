@@ -12,13 +12,11 @@ namespace BTL_LTTQ.GUI
         private DataTable _dtGioHang;
         private BTL_LTTQ.DTO.LoginResult _currentUser;
 
-        // --- Bảng màu ---
         private readonly Color COLOR_ROOT = Color.FromArgb(45, 47, 72);
         private readonly Color COLOR_CARD = Color.FromArgb(58, 60, 92);
         private readonly Color COLOR_ACCENT = Color.FromArgb(232, 90, 79);
         private readonly Color COLOR_TEXT_SUB = Color.Gainsboro;
 
-        // Controls khai báo thủ công
         private ComboBox cboSanPham;
         private NumericUpDown numSoLuong;
         private NumericUpDown numGiamGiaSP;
@@ -54,7 +52,7 @@ namespace BTL_LTTQ.GUI
 
         private void frmBanHang_Load(object sender, EventArgs e)
         {
-            SetupUI_Simple(); // Giao diện rút gọn
+            SetupUI_Simple();
             LoadData();
         }
 
@@ -65,12 +63,10 @@ namespace BTL_LTTQ.GUI
             cboSanPham.ValueMember = "MaCTSP";
         }
 
-        // --- GIAO DIỆN POS RÚT GỌN (CHỈ CÒN GIỎ HÀNG) ---
         private void SetupUI_Simple()
         {
             this.BackColor = COLOR_ROOT;
 
-            // 1. PANEL TRÁI (Chọn hàng)
             Panel pnlLeft = new Panel { Dock = DockStyle.Left, Width = 350, BackColor = COLOR_CARD, Padding = new Padding(20) };
             this.Controls.Add(pnlLeft);
 
@@ -105,7 +101,6 @@ namespace BTL_LTTQ.GUI
             btnAdd.Click += btnAdd_Click;
             pnlLeft.Controls.Add(btnAdd);
 
-            // NÚT CHUYỂN TIẾP (TO VÀ NỔI BẬT)
             btnGoToInvoice = new Button
             {
                 Text = "🧾  TẠO HÓA ĐƠN",
@@ -127,18 +122,14 @@ namespace BTL_LTTQ.GUI
 
             CreateLabel(pnlLeft, "* Kích đúp dòng để xóa", 20, 380, Color.Yellow);
 
-            // 2. GRID GIỎ HÀNG (Chiếm toàn bộ bên phải)
             dgvGioHang = new DataGridView { Dock = DockStyle.Fill, BackgroundColor = Color.FromArgb(55, 57, 82), BorderStyle = BorderStyle.None, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, AllowUserToAddRows = false };
             dgvGioHang.ColumnHeadersDefaultCellStyle.BackColor = COLOR_ACCENT;
             dgvGioHang.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgvGioHang.DefaultCellStyle.BackColor = Color.FromArgb(55, 57, 82);
             dgvGioHang.DefaultCellStyle.ForeColor = COLOR_TEXT_SUB;
-            dgvGioHang.CellDoubleClick += DgvGioHang_CellDoubleClick; // Sự kiện xóa
-
-            this.Controls.Add(dgvGioHang);
-
-            // Gán nguồn lại
+            dgvGioHang.CellDoubleClick += DgvGioHang_CellDoubleClick;
             dgvGioHang.DataSource = _dtGioHang;
+            this.Controls.Add(dgvGioHang);
             if (dgvGioHang.Columns["MaCTSP"] != null) dgvGioHang.Columns["MaCTSP"].Visible = false;
         }
 
@@ -147,7 +138,6 @@ namespace BTL_LTTQ.GUI
             p.Controls.Add(new Label { Text = t, Location = new Point(x, y), AutoSize = true, ForeColor = c ?? COLOR_TEXT_SUB });
         }
 
-        // --- LOGIC THÊM HÀNG ---
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (cboSanPham.SelectedValue == null) return;
@@ -160,46 +150,36 @@ namespace BTL_LTTQ.GUI
 
             if (slMua > tonKho) { MessageBox.Show($"Kho chỉ còn {tonKho}!"); return; }
 
-            // Tính tiền từng món
             decimal tienGiam = (giaBan * slMua) * giamGia / 100;
             decimal thanhTien = (giaBan * slMua) - tienGiam;
 
-            // Check trùng
             foreach (DataRow r in _dtGioHang.Rows)
             {
                 if ((int)r["MaCTSP"] == (int)cboSanPham.SelectedValue)
                 {
                     r["SoLuong"] = (int)r["SoLuong"] + slMua;
                     r["ThanhTien"] = (int)r["ThanhTien"] + thanhTien;
-                    // Lưu ý: Cộng dồn tiền thì % giảm giá của lần sau phải tính lại cẩn thận nếu khác % lần đầu.
-                    // Để đơn giản, ta cứ cộng dồn số lượng và tính lại tổng tiền theo giá mới nhất.
                     return;
                 }
             }
 
             _dtGioHang.Rows.Add(cboSanPham.SelectedValue, cboSanPham.Text, slMua, giaBan, giamGia, thanhTien);
-
-            // Reset nhập
             numSoLuong.Value = 1;
             numGiamGiaSP.Value = 0;
         }
 
-        // --- SỰ KIỆN XÓA DÒNG ---
         private void DgvGioHang_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0) _dtGioHang.Rows.RemoveAt(e.RowIndex);
         }
 
-        // --- CHUYỂN SANG FORM HÓA ĐƠN ---
         private void btnGoToInvoice_Click(object sender, EventArgs e)
         {
             if (_dtGioHang.Rows.Count == 0) { MessageBox.Show("Giỏ hàng trống!"); return; }
 
-            // Mở form Hóa Đơn và truyền Giỏ hàng + LoginResult sang
             frmHoaDon f = new frmHoaDon(_dtGioHang, _currentUser);
             f.ShowDialog();
 
-            // Nếu bên kia Lưu thành công (DialogResult = OK) thì xóa giỏ hàng
             if (f.DialogResult == DialogResult.OK)
             {
                 _dtGioHang.Rows.Clear();
@@ -208,9 +188,5 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        private void frmBanHang_Load_1(object sender, EventArgs e)
-        {
-
-        }
     }
 }
