@@ -10,6 +10,7 @@ namespace BTL_LTTQ.GUI
     {
         private SalesBLL _bll = new SalesBLL();
         private DataTable _dtGioHang;
+        private BTL_LTTQ.DTO.LoginResult _currentUser;
 
         // --- Bảng màu ---
         private readonly Color COLOR_ROOT = Color.FromArgb(45, 47, 72);
@@ -25,15 +26,16 @@ namespace BTL_LTTQ.GUI
         private DataGridView dgvGioHang;
         private Button btnGoToInvoice;
 
-        public frmBanHang()
+        public frmBanHang(BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
+            _currentUser = currentUser;
             InitializeComponent();
-
-            // --- THÊM DÒNG NÀY VÀO ĐỂ KÍCH HOẠT GIAO DIỆN ---
             this.Load += frmBanHang_Load;
-            // -----------------------------------------------
-
             InitGioHang();
+        }
+
+        public frmBanHang() : this(null)
+        {
         }
 
         private void InitGioHang()
@@ -193,8 +195,8 @@ namespace BTL_LTTQ.GUI
         {
             if (_dtGioHang.Rows.Count == 0) { MessageBox.Show("Giỏ hàng trống!"); return; }
 
-            // Mở form Hóa Đơn và truyền Giỏ hàng sang
-            frmHoaDon f = new frmHoaDon(_dtGioHang);
+            // Mở form Hóa Đơn và truyền Giỏ hàng + LoginResult sang
+            frmHoaDon f = new frmHoaDon(_dtGioHang, _currentUser);
             f.ShowDialog();
 
             // Nếu bên kia Lưu thành công (DialogResult = OK) thì xóa giỏ hàng

@@ -12,6 +12,7 @@ namespace BTL_LTTQ.GUI
         private DataGridView dgvHoaDon;
         private DateTimePicker dtpFrom, dtpTo;
         private TextBox txtTenNV, txtTenKH;
+        private ComboBox cboMaHD;
         private Button btnTim;
 
         // Màu sắc Dark Mode
@@ -84,14 +85,14 @@ namespace BTL_LTTQ.GUI
             this.ForeColor = COLOR_TEXT;
 
             // 1. GroupBox chứa bộ lọc
-            GroupBox grpFilter = new GroupBox { Text = "Bộ lọc tìm kiếm", Dock = DockStyle.Top, Height = 140, ForeColor = Color.Gainsboro, Padding = new Padding(10) };
+            GroupBox grpFilter = new GroupBox { Text = "Bộ lọc tìm kiếm", Dock = DockStyle.Top, Height = 180, ForeColor = Color.Gainsboro, Padding = new Padding(10) };
             this.Controls.Add(grpFilter);
 
             // 2. SỬ DỤNG TABLE LAYOUT (Chia lưới tự động)
             TableLayoutPanel tlp = new TableLayoutPanel();
             tlp.Dock = DockStyle.Fill;
             tlp.ColumnCount = 4; // 4 Cột
-            tlp.RowCount = 3;    // 3 Dòng
+            tlp.RowCount = 4;    // 4 Dòng (thêm dòng cho mã HĐ)
 
             // Cấu hình tỉ lệ cột: (Label bé) - (Input to) - (Label bé) - (Input to)
             tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F)); // Cột 1: Nhãn (100px)
@@ -123,7 +124,21 @@ namespace BTL_LTTQ.GUI
             txtTenKH = new TextBox { Dock = DockStyle.Fill };
             tlp.Controls.Add(txtTenKH, 3, 1);
 
-            // --- DÒNG 3: NÚT TÌM KIẾM (Chiếm trọn chiều ngang và căn giữa) ---
+            // --- DÒNG 3: Mã Hóa Đơn ---
+            tlp.Controls.Add(CreateLabel("Mã HĐ:"), 0, 2);
+            cboMaHD = new ComboBox { Dock = DockStyle.Fill, DropDownStyle = ComboBoxStyle.DropDown, AutoCompleteMode = AutoCompleteMode.SuggestAppend, AutoCompleteSource = AutoCompleteSource.ListItems };
+            cboMaHD.SelectedIndexChanged += (s, e) => {
+                if (cboMaHD.SelectedValue != null)
+                {
+                    int maHD = Convert.ToInt32(cboMaHD.SelectedValue);
+                    frmHoaDon f = new frmHoaDon(maHD);
+                    f.ShowDialog();
+                }
+            };
+            LoadDanhSachMaHoaDon();
+            tlp.Controls.Add(cboMaHD, 1, 2);
+
+            // --- DÒNG 4: NÚT TÌM KIẾM (Chiếm trọn chiều ngang và căn giữa) ---
             btnTim = new Button
             {
                 Text = "🔍 TÌM KIẾM HÓA ĐƠN",
@@ -138,7 +153,7 @@ namespace BTL_LTTQ.GUI
             btnTim.FlatAppearance.BorderSize = 0;
             btnTim.Click += BtnTim_Click;
 
-            tlp.Controls.Add(btnTim, 0, 2);
+            tlp.Controls.Add(btnTim, 0, 3);
             tlp.SetColumnSpan(btnTim, 4); // Gộp 4 cột làm 1 để nút nằm giữa
 
             // GridView (Phần dưới giữ nguyên)
@@ -160,6 +175,19 @@ namespace BTL_LTTQ.GUI
         private void frmQuanLyHoaDon_Load_1(object sender, EventArgs e)
         {
 
+        }
+
+        // Load danh sách mã hóa đơn
+        private void LoadDanhSachMaHoaDon()
+        {
+            try
+            {
+                var dt = _bll.GetDanhSachMaHoaDon();
+                cboMaHD.DataSource = dt;
+                cboMaHD.DisplayMember = "MaHoaDon";
+                cboMaHD.ValueMember = "MaHD";
+            }
+            catch { }
         }
 
         // Sửa lại hàm này một chút để trả về Label thay vì Add luôn

@@ -44,7 +44,7 @@ namespace BTL_LTTQ.BLL
         {
             using (var dal = new DataProcesser())
             {
-                return dal.ExecuteQuery("SELECT MaKH, HoTen, SoDienThoai FROM KhachHang WHERE TrangThai = 1");
+                return dal.ExecuteQuery("SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi FROM KhachHang WHERE TrangThai = 1");
             }
         }
 
@@ -65,6 +65,33 @@ namespace BTL_LTTQ.BLL
             using (var dal = new DataProcesser())
             {
                 return dal.TimKiemHoaDon(from, to, nv, kh);
+            }
+        }
+
+        // Hủy hóa đơn và cộng lại số lượng vào kho
+        public bool HuyHoaDon(int maHD)
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.HuyHoaDonTransaction(maHD);
+            }
+        }
+
+        // Lấy danh sách mã hóa đơn
+        public DataTable GetDanhSachMaHoaDon()
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.ExecuteQuery("SELECT MaHD, MaHoaDon FROM HoaDon ORDER BY NgayLap DESC");
+            }
+        }
+
+        // Cập nhật hóa đơn
+        public bool CapNhatHoaDon(int maHD, int maKH, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
+        {
+            using (var dal = new DataProcesser())
+            {
+                return dal.CapNhatHoaDonTransaction(maHD, maKH, tongTien, giamGia, thanhToan, dtChiTiet);
             }
         }
     }

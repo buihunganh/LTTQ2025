@@ -399,7 +399,7 @@ namespace BTL_LTTQ
         private void btnQuickInvoice_Click(object sender, EventArgs e)
         {
             SetActiveMenuButton(btnPos);
-            ShowContentForm(new BTL_LTTQ.GUI.frmBanHang());
+            ShowContentForm(new BTL_LTTQ.GUI.frmBanHang(_currentUser));
         }
 
         private void btnQuickImport_Click(object sender, EventArgs e)
@@ -443,7 +443,7 @@ namespace BTL_LTTQ
             {
                 SetActiveMenuButton(btn);
             }
-            ShowContentForm(new BTL_LTTQ.GUI.frmBanHang());
+            ShowContentForm(new BTL_LTTQ.GUI.frmBanHang(_currentUser));
         }
 
         /// <summary>

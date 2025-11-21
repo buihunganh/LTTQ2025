@@ -139,13 +139,38 @@ namespace BTL_LTTQ.GUI
 
         private void LoadComboBoxes()
         {
+            // Load Nhà cung cấp từ database
             cboNhaCungCap.DataSource = _bll.GetNhaCungCap();
             cboNhaCungCap.DisplayMember = "TenNCC";
             cboNhaCungCap.ValueMember = "MaNCC";
+            cboNhaCungCap.DropDownStyle = ComboBoxStyle.DropDownList; // Chỉ chọn từ danh sách
 
+            // Load Sản phẩm từ database - chỉ lấy dữ liệu từ database
             cboSanPham.DataSource = _bll.GetSanPhamBienThe();
             cboSanPham.DisplayMember = "TenHienThi";
             cboSanPham.ValueMember = "MaCTSP";
+            cboSanPham.DropDownStyle = ComboBoxStyle.DropDownList; // Chỉ chọn từ danh sách, không cho nhập
+            cboSanPham.AutoCompleteMode = AutoCompleteMode.None; // Tắt autocomplete
+            cboSanPham.AutoCompleteSource = AutoCompleteSource.None; // Tắt autocomplete
+            
+            // Khi chọn sản phẩm, tự động điền giá nhập từ database
+            cboSanPham.SelectedIndexChanged += CboSanPham_SelectedIndexChanged;
+        }
+
+        private void CboSanPham_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboSanPham.SelectedItem != null && cboSanPham.SelectedValue != null)
+            {
+                try
+                {
+                    DataRowView drv = (DataRowView)cboSanPham.SelectedItem;
+                    if (drv["GiaNhap"] != DBNull.Value)
+                    {
+                        numGiaNhap.Value = Convert.ToDecimal(drv["GiaNhap"]);
+                    }
+                }
+                catch { }
+            }
         }
 
         private void LoadDashboard()

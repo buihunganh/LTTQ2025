@@ -219,7 +219,8 @@ namespace BTL_LTTQ.DAL
         // --- LẤY CHI TIẾT HÓA ĐƠN ---
         public DataTable GetChiTietHoaDon(int maHD)
         {
-            string sql = @"SELECT sp.TenGiay, sz.KichCo, ms.TenMau, cthd.SoLuong, cthd.DonGia, cthd.ThanhTien
+            string sql = @"SELECT cthd.MaCTSP, sp.TenGiay + ' (' + sz.KichCo + ' - ' + ms.TenMau + ')' AS TenSP, 
+                                  cthd.SoLuong, cthd.DonGia, ISNULL(cthd.GiamGia, 0) AS GiamGia, cthd.ThanhTien
                            FROM ChiTietHoaDon cthd
                            JOIN ChiTietSanPham ctsp ON cthd.MaCTSP = ctsp.MaCTSP
                            JOIN SanPham sp ON ctsp.MaSP = sp.MaSP
@@ -274,9 +275,14 @@ namespace BTL_LTTQ.DAL
                         cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
                         cmdCT.ExecuteNonQuery();
 
-                        string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL WHERE MaCTSP = @MaCTSP";
+                        // Cập nhật số lượng tồn kho VÀ giá nhập mới nhất
+                        string sqlUpd = @"UPDATE ChiTietSanPham 
+                                          SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL, 
+                                              GiaNhap = @GiaNhap 
+                                          WHERE MaCTSP = @MaCTSP";
                         SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
                         cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
+                        cmdUpd.Parameters.AddWithValue("@GiaNhap", r["GiaNhap"]);
                         cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
                         cmdUpd.ExecuteNonQuery();
                     }
@@ -361,6 +367,139 @@ namespace BTL_LTTQ.DAL
                 new SqlParameter("@TenKH", tenKH)
             );
         }
+        // Hủy hóa đơn và cộng lại số lượng vào kho
+        public bool HuyHoaDonTransaction(int maHD)
+        {
+            using (var connection = CreateConnection())
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    // Lấy chi tiết hóa đơn để cộng lại số lượng
+                    string sqlGetDetail = @"SELECT MaCTSP, SoLuong FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdGet = new SqlCommand(sqlGetDetail, connection, transaction);
+                    cmdGet.Parameters.AddWithValue("@MaHD", maHD);
+                    DataTable dtChiTiet = new DataTable();
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmdGet))
+                    {
+                        adapter.Fill(dtChiTiet);
+                    }
+
+                    // Cộng lại số lượng vào kho
+                    foreach (DataRow row in dtChiTiet.Rows)
+                    {
+                        string sqlUpdate = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
+                        SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, connection, transaction);
+                        cmdUpdate.Parameters.AddWithValue("@SL", row["SoLuong"]);
+                        cmdUpdate.Parameters.AddWithValue("@MaCTSP", row["MaCTSP"]);
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+
+                    // Xóa chi tiết hóa đơn
+                    string sqlDeleteCT = "DELETE FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdDeleteCT = new SqlCommand(sqlDeleteCT, connection, transaction);
+                    cmdDeleteCT.Parameters.AddWithValue("@MaHD", maHD);
+                    cmdDeleteCT.ExecuteNonQuery();
+
+                    // Xóa hóa đơn
+                    string sqlDeleteHD = "DELETE FROM HoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdDeleteHD = new SqlCommand(sqlDeleteHD, connection, transaction);
+                    cmdDeleteHD.Parameters.AddWithValue("@MaHD", maHD);
+                    cmdDeleteHD.ExecuteNonQuery();
+
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
+        // Cập nhật hóa đơn và điều chỉnh số lượng trong kho
+        public bool CapNhatHoaDonTransaction(int maHD, int maKH, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
+        {
+            using (var connection = CreateConnection())
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    // 1. Lấy chi tiết hóa đơn cũ để cộng lại số lượng vào kho
+                    string sqlGetOld = @"SELECT MaCTSP, SoLuong FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdGetOld = new SqlCommand(sqlGetOld, connection, transaction);
+                    cmdGetOld.Parameters.AddWithValue("@MaHD", maHD);
+                    DataTable dtOld = new DataTable();
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmdGetOld))
+                    {
+                        adapter.Fill(dtOld);
+                    }
+
+                    // 2. Cộng lại số lượng vào kho cho các sản phẩm cũ
+                    foreach (DataRow row in dtOld.Rows)
+                    {
+                        string sqlUpdate = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
+                        SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, connection, transaction);
+                        cmdUpdate.Parameters.AddWithValue("@SL", row["SoLuong"]);
+                        cmdUpdate.Parameters.AddWithValue("@MaCTSP", row["MaCTSP"]);
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+
+                    // 3. Xóa chi tiết hóa đơn cũ
+                    string sqlDeleteCT = "DELETE FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdDeleteCT = new SqlCommand(sqlDeleteCT, connection, transaction);
+                    cmdDeleteCT.Parameters.AddWithValue("@MaHD", maHD);
+                    cmdDeleteCT.ExecuteNonQuery();
+
+                    // 4. Cập nhật thông tin hóa đơn
+                    string sqlUpdateHD = @"UPDATE HoaDon 
+                                           SET MaKH = @MaKH, TongTien = @TongTien, GiamGia = @GiamGia, ThanhToan = @ThanhToan
+                                           WHERE MaHD = @MaHD";
+                    SqlCommand cmdUpdateHD = new SqlCommand(sqlUpdateHD, connection, transaction);
+                    cmdUpdateHD.Parameters.AddWithValue("@MaHD", maHD);
+                    cmdUpdateHD.Parameters.AddWithValue("@MaKH", maKH);
+                    cmdUpdateHD.Parameters.AddWithValue("@TongTien", tongTien);
+                    cmdUpdateHD.Parameters.AddWithValue("@GiamGia", giamGiaTong);
+                    cmdUpdateHD.Parameters.AddWithValue("@ThanhToan", thanhToan);
+                    cmdUpdateHD.ExecuteNonQuery();
+
+                    // 5. Thêm chi tiết mới và trừ số lượng trong kho
+                    foreach (DataRow r in dtChiTiet.Rows)
+                    {
+                        string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien) 
+                                         VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien)";
+
+                        SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
+                        cmdCT.Parameters.AddWithValue("@MaHD", maHD);
+                        cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
+                        cmdCT.Parameters.AddWithValue("@DonGia", r["DonGia"]);
+                        cmdCT.Parameters.AddWithValue("@GiamGia", r["GiamGia"]);
+                        cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
+                        cmdCT.ExecuteNonQuery();
+
+                        string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon - @SL WHERE MaCTSP = @MaCTSP";
+                        SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
+                        cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
+                        cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdUpd.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    // Log lỗi để debug
+                    System.Diagnostics.Debug.WriteLine($"Lỗi cập nhật hóa đơn: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                    return false;
+                }
+            }
+        }
+
         public void Dispose() { }
     }
 }
