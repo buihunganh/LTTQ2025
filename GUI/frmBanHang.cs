@@ -205,5 +205,10 @@ namespace BTL_LTTQ.GUI
                 numSoLuong.Value = 1;
             }
         }
+
+        private void frmBanHang_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

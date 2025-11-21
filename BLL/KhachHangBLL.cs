@@ -56,6 +56,11 @@ namespace BTL_LTTQ.BLL
 
         public bool Delete(int ma) => dal.DeleteKhachHang(ma);
 
+        public DataTable GetPurchaseHistory(int maKH, int limit = 20)
+        {
+            return dal.GetPurchaseHistory(maKH, limit);
+        }
+
         public string TinhHangThanhVien(decimal tongTien)
         {
             if (tongTien >= 20000000) return "Kim cương";

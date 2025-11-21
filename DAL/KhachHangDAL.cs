@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using BTL_LTTQ.DTO;
-using BTL_LTTQ.DAL;
-using BTL_LTTQ.BLL;
 
 namespace BTL_LTTQ.DAL
 {
@@ -72,6 +71,28 @@ namespace BTL_LTTQ.DAL
         {
             string sql = $"DELETE FROM KhachHang WHERE MaKH = {maKH}";
             return db.ExecuteNonQuery(sql) > 0;
+        }
+
+        public DataTable GetPurchaseHistory(int maKH, int limit = 20)
+        {
+            const string sql = @"
+                SELECT TOP (@Limit)
+                       hd.MaHD,
+                       hd.MaHoaDon,
+                       hd.NgayLap,
+                       ISNULL(SUM(cthd.SoLuong), 0) AS TongSanPham,
+                       ISNULL(SUM(cthd.ThanhTien), hd.ThanhToan) AS TongTien,
+                       hd.ThanhToan,
+                       hd.TrangThai
+                FROM HoaDon hd
+                LEFT JOIN ChiTietHoaDon cthd ON hd.MaHD = cthd.MaHD
+                WHERE hd.MaKH = @MaKH
+                GROUP BY hd.MaHD, hd.MaHoaDon, hd.NgayLap, hd.ThanhToan, hd.TrangThai
+                ORDER BY hd.NgayLap DESC";
+
+            return db.ExecuteQuery(sql, CommandType.Text,
+                new SqlParameter("@Limit", limit),
+                new SqlParameter("@MaKH", maKH));
         }
     }
 }

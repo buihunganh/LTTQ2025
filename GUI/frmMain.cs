@@ -118,6 +118,14 @@ namespace BTL_LTTQ
             lblUser.Text = displayName;
             lblRole.Text = roleLabel;
 
+            // Ẩn các chức năng chỉ dành cho admin
+            bool isAdmin = _currentUser?.IsAdmin ?? false;
+            if (btnStaff != null)
+            {
+                btnStaff.Visible = isAdmin;
+                btnStaff.Enabled = isAdmin;
+            }
+
             // Load avatar từ file (đã upload trong Settings), nếu không có thì dùng mặc định
             LoadAvatarFromFile();
         }
@@ -372,6 +380,18 @@ namespace BTL_LTTQ
 
         private void btnStaff_Click(object sender, EventArgs e)
         {
+            // Kiểm tra quyền admin
+            if (_currentUser == null || !_currentUser.IsAdmin)
+            {
+                MessageBox.Show(
+                    "Bạn không có quyền truy cập chức năng này.\nChỉ quản trị viên mới có thể quản lý nhân viên.",
+                    "Không có quyền truy cập",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
             SetActiveMenuButton(btnStaff);
             ShowContentForm(new GUI.frnNhanVien());
         }
