@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -18,6 +18,7 @@ namespace BTL_LTTQ.GUI
         private string _tenNV = "";
         private int _maNV = 0;
         private string _tenKH = "";
+        private int _maKH = 0;
         private string _sdt = "";
         private string _diaChi = "";
         private decimal _tongTienSo = 0;
@@ -33,9 +34,7 @@ namespace BTL_LTTQ.GUI
             _currentUser = currentUser;
             _dtChiTiet = gioHangTuPOS.Copy();
 
-            string datePart = DateTime.Now.ToString("ddMMyyyy");
-            int sequence = GetNextInvoiceSequence(datePart);
-            _maHDString = $"HDB_{datePart}0{sequence:D3}";
+            _maHDString = "HD" + DateTime.Now.ToString("yyyyMMddHHmmss");
             _ngayBan = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             
             if (_currentUser != null)
@@ -67,7 +66,9 @@ namespace BTL_LTTQ.GUI
                 DataRow r = dtChung.Rows[0];
                 _maHDString = r["MaHoaDon"].ToString();
                 _ngayBan = Convert.ToDateTime(r["NgayLap"]).ToString("dd/MM/yyyy HH:mm");
+                _maNV = r["MaNV"] != DBNull.Value ? Convert.ToInt32(r["MaNV"]) : 0;
                 _tenNV = r["NhanVien"].ToString();
+                _maKH = r["MaKH"] != DBNull.Value ? Convert.ToInt32(r["MaKH"]) : 0;
                 _tenKH = r["KhachHang"].ToString();
                 _sdt = r["SoDienThoai"].ToString();
                 _diaChi = r["DiaChi"].ToString();
@@ -79,31 +80,13 @@ namespace BTL_LTTQ.GUI
             LoadInitData(isViewOnly: true);
         }
 
-        private int GetNextInvoiceSequence(string datePart)
-        {
-            try
-            {
-                using (var dal = new BTL_LTTQ.DAL.DataProcesser())
-                {
-                    string sql = @"SELECT COUNT(*) + 1 
-                                   FROM HoaDon 
-                                   WHERE MaHoaDon LIKE @Pattern";
-                    var result = dal.ExecuteQuery(sql, System.Data.CommandType.Text,
-                        new System.Data.SqlClient.SqlParameter("@Pattern", $"HDB_{datePart}0%"));
-                    if (result.Rows.Count > 0 && result.Rows[0][0] != DBNull.Value)
-                    {
-                        return Convert.ToInt32(result.Rows[0][0]);
-                    }
-                }
-            }
-            catch { }
-            return 1;
-        }
+
 
         private void LoadInitData(bool isViewOnly)
         {
             txtMaHD.Text = _maHDString;
             txtNgayBan.Text = _ngayBan;
+            txtMaNV.Text = _maNV.ToString();
             txtNhanVien.Text = _tenNV;
 
             try
@@ -114,30 +97,30 @@ namespace BTL_LTTQ.GUI
 
                 if (isViewOnly)
                 {
+                    txtMaKH.Text = _maKH > 0 ? _maKH.ToString() : "";
                     cboKhachHang.Text = _tenKH;
                     cboKhachHang.Enabled = false;
                     txtSDT.Text = _sdt;
                     txtDiaChi.Text = _diaChi;
+                    txtSDT.ReadOnly = true;
+                    txtDiaChi.ReadOnly = true;
                     lblTongTien.Text = _tongTienSo.ToString("N0") + " VNĐ";
 
                     btnLuu.Visible = false;
                     btnIn.Enabled = true;
                     btnThemKhach.Visible = false;
-                    numGiamGia.Enabled = false;
                     dgvChiTiet.ReadOnly = true;
 
-                    // Only admin can edit and cancel invoices
+                    // Only admin can cancel invoices
                     bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
                     btnSua.Visible = isAdmin;
-                    btnHuy.Enabled = isAdmin;
-                    if (!isAdmin)
-                    {
-                        btnHuy.Text = "Đóng";
-                    }
+                    btnHuyHoaDon.Visible = isAdmin;
                 }
                 else
                 {
                     cboKhachHang.SelectedIndex = -1;
+                    txtSDT.ReadOnly = false;
+                    txtDiaChi.ReadOnly = false;
                 }
             }
             catch { }
@@ -153,10 +136,7 @@ namespace BTL_LTTQ.GUI
             decimal tongTienHang = 0;
             foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
 
-            decimal giamGia = tongTienHang * (numGiamGia.Value / 100);
-            decimal thanhToan = tongTienHang - giamGia;
-
-            lblTongTien.Text = thanhToan.ToString("N0") + " VNĐ";
+            lblTongTien.Text = tongTienHang.ToString("N0") + " VNĐ";
         }
 
         private void CboKhachHang_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,72 +144,11 @@ namespace BTL_LTTQ.GUI
             if (cboKhachHang.SelectedItem != null)
             {
                 DataRowView drv = (DataRowView)cboKhachHang.SelectedItem;
+                txtMaKH.Text = drv["MaKH"].ToString();
                 txtSDT.Text = drv["SoDienThoai"].ToString();
                 txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString()) 
                     ? drv["DiaChi"].ToString() 
                     : "Khách tại quầy";
-            }
-        }
-
-        private void txtSDTInput_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                TextBox txtBox = sender as TextBox;
-                if (txtBox != null)
-                {
-                    TimHoacThemKhachTheoSDT(txtBox.Text.Trim());
-                }
-            }
-        }
-
-        private void TimHoacThemKhachTheoSDT(string sdt)
-        {
-            if (string.IsNullOrWhiteSpace(sdt))
-            {
-                MessageBox.Show("Vui lòng nhập số điện thoại!");
-                return;
-            }
-
-            try
-            {
-                var khachHang = _bll.GetKhachHang();
-                foreach (DataRow row in khachHang.Rows)
-                {
-                    if (row["SoDienThoai"].ToString().Trim() == sdt.Trim())
-                    {
-                        cboKhachHang.SelectedValue = row["MaKH"];
-                        MessageBox.Show($"Đã tìm thấy khách hàng: {row["HoTen"]}");
-                        return;
-                    }
-                }
-
-                if (MessageBox.Show($"Không tìm thấy khách hàng với SĐT: {sdt}\nBạn có muốn thêm khách hàng mới không?",
-                    "Thêm khách hàng", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    Form f = new Form { Text = "Thêm khách mới", Size = new Size(350, 220), StartPosition = FormStartPosition.CenterParent, BackColor = Color.FromArgb(58, 60, 92), ForeColor = Color.White, FormBorderStyle = FormBorderStyle.FixedToolWindow };
-                    Label l1 = new Label { Text = "Họ tên:", Location = new Point(20, 20), AutoSize = true };
-                    TextBox t1 = new TextBox { Location = new Point(20, 45), Width = 280 };
-                    Label l2 = new Label { Text = "SĐT:", Location = new Point(20, 85), AutoSize = true };
-                    TextBox t2 = new TextBox { Location = new Point(20, 110), Width = 280, Text = sdt, ReadOnly = true };
-                    Button b = new Button { Text = "LƯU", Location = new Point(150, 145), Width = 100, DialogResult = DialogResult.OK, BackColor = Color.OrangeRed, ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-
-                    f.Controls.AddRange(new Control[] { l1, t1, l2, t2, b });
-                    f.AcceptButton = b;
-
-                    if (f.ShowDialog() == DialogResult.OK)
-                    {
-                        if (string.IsNullOrWhiteSpace(t1.Text)) return;
-                        int newID = _bll.QuickAddCustomer(t1.Text, sdt);
-                        cboKhachHang.DataSource = _bll.GetKhachHang();
-                        cboKhachHang.SelectedValue = newID;
-                        MessageBox.Show("Đã thêm khách hàng: " + t1.Text);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
 
@@ -259,11 +178,6 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        private void numGiamGia_ValueChanged(object sender, EventArgs e)
-        {
-            CalculateTotal();
-        }
-
         private void BtnLuu_Click(object sender, EventArgs e)
         {
             if (cboKhachHang.SelectedIndex == -1 || cboKhachHang.SelectedValue == null)
@@ -285,8 +199,7 @@ namespace BTL_LTTQ.GUI
 
                 decimal tongHang = 0;
                 foreach (DataRow r in _dtChiTiet.Rows) tongHang += Convert.ToDecimal(r["ThanhTien"]);
-                decimal tienGiam = tongHang * (numGiamGia.Value / 100);
-                decimal thanhToan = tongHang - tienGiam;
+                decimal thanhToan = tongHang; // No discount
 
                 if (_isEditMode && _idHoaDonVuaLuu > 0)
                 {
@@ -333,7 +246,12 @@ namespace BTL_LTTQ.GUI
                         dtChiTietMoi.Rows.Add(maCTSP, row.Cells["TenSP"].Value, soLuong, donGia, giamGiaSP, thanhTien);
                     }
 
-                    bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, tienGiam, thanhToan, dtChiTietMoi);
+                    // Update customer info before updating invoice
+                    string newSDT = txtSDT.Text.Trim();
+                    string newDiaChi = txtDiaChi.Text.Trim();
+                    _bll.UpdateKhachHangInfo(maKH, newSDT, newDiaChi);
+
+                    bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, 0, thanhToan, dtChiTietMoi);
                     if (success)
                     {
                         MessageBox.Show("Cập nhật hóa đơn thành công!");
@@ -344,8 +262,9 @@ namespace BTL_LTTQ.GUI
                         btnLuu.BackColor = Color.Green;
                         btnSua.Visible = true;
                         btnIn.Enabled = true;
+                        txtSDT.ReadOnly = true;
+                        txtDiaChi.ReadOnly = true;
                         cboKhachHang.Enabled = false;
-                        numGiamGia.Enabled = false;
                         dgvChiTiet.ReadOnly = true;
                         btnThemKhach.Visible = false;
                     }
@@ -356,16 +275,14 @@ namespace BTL_LTTQ.GUI
                 }
                 else
                 {
-                    _idHoaDonVuaLuu = _bll.ThanhToan(maKH, maNV, tongHang, tienGiam, thanhToan, _dtChiTiet);
+                    _idHoaDonVuaLuu = _bll.ThanhToan(_maHDString, maKH, maNV, tongHang, 0, thanhToan, _dtChiTiet);
 
                     if (_idHoaDonVuaLuu > 0)
                     {
-                        MessageBox.Show("Lưu thành công! Mã HĐ: " + _idHoaDonVuaLuu);
+                        MessageBox.Show("Lưu thành công! Mã HĐ: " + txtMaHD.Text);
                         btnLuu.Enabled = false;
                         btnIn.Enabled = true;
                         cboKhachHang.Enabled = false;
-                        numGiamGia.Enabled = false;
-                        txtMaHD.Text = "HD" + _idHoaDonVuaLuu;
                         this.DialogResult = DialogResult.OK;
                     }
                 }
@@ -469,8 +386,9 @@ namespace BTL_LTTQ.GUI
             {
                 _isEditMode = true;
                 cboKhachHang.Enabled = true;
-                numGiamGia.Enabled = true;
                 btnThemKhach.Visible = true;
+                txtSDT.ReadOnly = false;
+                txtDiaChi.ReadOnly = false;
                 dgvChiTiet.ReadOnly = false;
                 btnSua.Visible = false;
                 btnLuu.Visible = true;
@@ -479,46 +397,57 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        private void BtnHuy_Click(object sender, EventArgs e)
+        private void BtnHuyHoaDon_Click(object sender, EventArgs e)
         {
-            if (_idHoaDonVuaLuu > 0)
+            // Check admin permission before canceling invoice
+            bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
+            if (!isAdmin)
             {
-                // Check admin permission before canceling invoice
-                bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
-                if (!isAdmin)
-                {
-                    MessageBox.Show("Chỉ quản trị viên mới có quyền hủy hóa đơn!", "Không có quyền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    this.DialogResult = DialogResult.Cancel;
-                    this.Close();
-                    return;
-                }
+                MessageBox.Show("Chỉ quản trị viên mới có quyền hủy hóa đơn!", "Không có quyền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                if (MessageBox.Show("Bạn có muốn hủy hóa đơn này và cộng lại số lượng vào kho không?",
-                    "Xác nhận hủy", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (_idHoaDonVuaLuu == 0)
+            {
+                MessageBox.Show("Không có hóa đơn để hủy!");
+                return;
+            }
+
+            if (MessageBox.Show("Bạn có muốn hủy hóa đơn này và cộng lại số lượng vào kho không?",
+                "Xác nhận hủy", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
                 {
-                    try
+                    if (_bll.HuyHoaDon(_idHoaDonVuaLuu))
                     {
-                        if (_bll.HuyHoaDon(_idHoaDonVuaLuu))
-                        {
-                            MessageBox.Show("Đã hủy hóa đơn và cộng lại số lượng vào kho!");
-                            this.DialogResult = DialogResult.Cancel;
-                            this.Close();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Không thể hủy hóa đơn!");
-                        }
+                        MessageBox.Show("Đã hủy hóa đơn và cộng lại số lượng vào kho!");
+                        this.DialogResult = DialogResult.Cancel;
+                        this.Close();
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show("Lỗi: " + ex.Message);
+                        MessageBox.Show("Không thể hủy hóa đơn!");
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi: " + ex.Message);
                 }
             }
-            else
+        }
+
+        private void BtnDong_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void TxtSDT_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Only allow digits, backspace, and control characters
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
+                e.Handled = true; // Block the character
             }
         }
     }

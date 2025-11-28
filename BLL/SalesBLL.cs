@@ -46,12 +46,12 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        public int ThanhToan(int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
+        public int ThanhToan(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())
             {
                 // Trả về int ID từ DAL
-                return dal.BanHangTransaction(maKH, maNV, tongTien, giamGia, thanhToan, dtChiTiet);
+                return dal.BanHangTransaction(maHoaDon, maKH, maNV, tongTien, giamGia, thanhToan, dtChiTiet);
             }
         }
         public DataTable FindInvoices(DateTime from, DateTime to, string nv, string kh)
@@ -83,6 +83,18 @@ namespace BTL_LTTQ.BLL
             using (var dal = new DataProcesser())
             {
                 return dal.CapNhatHoaDonTransaction(maHD, maKH, tongTien, giamGia, thanhToan, dtChiTiet);
+            }
+        }
+
+        public bool UpdateKhachHangInfo(int maKH, string sdt, string diaChi)
+        {
+            using (var dal = new DataProcesser())
+            {
+                string sql = $@"UPDATE KhachHang 
+                                SET SoDienThoai = '{sdt}', 
+                                    DiaChi = N'{diaChi}'
+                                WHERE MaKH = {maKH}";
+                return dal.ExecuteNonQuery(sql) > 0;
             }
         }
     }

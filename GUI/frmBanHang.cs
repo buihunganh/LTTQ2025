@@ -47,7 +47,6 @@ namespace BTL_LTTQ.GUI
             cboSanPham.DisplayMember = "TenHienThi";
             cboSanPham.ValueMember = "MaCTSP";
             
-            // Hide MaCTSP column if it exists
             if (dgvGioHang.Columns["MaCTSP"] != null) 
                 dgvGioHang.Columns["MaCTSP"].Visible = false;
         }
@@ -72,7 +71,7 @@ namespace BTL_LTTQ.GUI
                 if ((int)r["MaCTSP"] == (int)cboSanPham.SelectedValue)
                 {
                     r["SoLuong"] = (int)r["SoLuong"] + slMua;
-                    r["ThanhTien"] = (int)r["ThanhTien"] + thanhTien;
+                    r["ThanhTien"] = (decimal)r["ThanhTien"] + thanhTien;
                     return;
                 }
             }

@@ -228,6 +228,7 @@ namespace BTL_LTTQ.DAL
         public DataTable GetThongTinChungHoaDon(int maHD)
         {
             string sql = @"SELECT hd.MaHoaDon, hd.NgayLap, hd.TongTien, hd.GiamGia, hd.ThanhToan, 
+                          hd.MaNV, hd.MaKH,
                           ISNULL(nv.HoTen, N'Không xác định') AS NhanVien, 
                           ISNULL(kh.HoTen, N'Khách lẻ') AS KhachHang, 
                           ISNULL(kh.SoDienThoai, '') AS SoDienThoai, 
@@ -286,20 +287,19 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        public int BanHangTransaction(int maKH, int maNV, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
+        public int BanHangTransaction(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
         {
             using (var connection = CreateConnection())
             using (var transaction = connection.BeginTransaction())
             {
                 try
                 {
-                    string maHDCode = "HD" + DateTime.Now.ToString("yyyyMMddHHmmss");
                     string sqlHD = @"INSERT INTO HoaDon(MaHoaDon, NgayLap, MaNV, MaKH, MaKM, TongTien, GiamGia, ThanhToan, PhuongThucThanhToan, TrangThai) 
                                      VALUES (@MaCode, GETDATE(), @MaNV, @MaKH, 1, @TongTien, 0, @ThanhToan, N'Tiền mặt', N'Hoàn thành');
                                      SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                     SqlCommand cmdHD = new SqlCommand(sqlHD, connection, transaction);
-                    cmdHD.Parameters.AddWithValue("@MaCode", maHDCode);
+                    cmdHD.Parameters.AddWithValue("@MaCode", maHoaDon);
                     cmdHD.Parameters.AddWithValue("@MaNV", maNV);
                     cmdHD.Parameters.AddWithValue("@MaKH", maKH);
                     cmdHD.Parameters.AddWithValue("@TongTien", tongTien);
