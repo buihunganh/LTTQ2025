@@ -23,7 +23,27 @@ namespace BTL_LTTQ.GUI
             InitializeComponent();
             InitBangTam();
         }
+        public void XemTonKho()
+        {
+            Form frmTonKho = new Form();
+            frmTonKho.Text = "DANH SÁCH TỒN KHO";
+            frmTonKho.Size = new Size(900, 600);
+            frmTonKho.StartPosition = FormStartPosition.CenterParent;
+            frmTonKho.BackColor = COLOR_ROOT;
 
+            DataGridView dgv = new DataGridView();
+            dgv.Dock = DockStyle.Fill;
+            dgv.ReadOnly = true;
+            dgv.DataSource = _bll.GetAllInventory();
+
+            if (dgv.Columns["MaCTSP"] != null)
+                dgv.Columns["MaCTSP"].Visible = false;
+
+            StyleDataGridView(dgv);
+
+            frmTonKho.Controls.Add(dgv);
+            frmTonKho.ShowDialog();
+        }
         private void InitBangTam()
         {
             _dtChiTietNhap = new DataTable();
@@ -87,6 +107,7 @@ namespace BTL_LTTQ.GUI
             StyleDataGridView(dgvChiTietNhap);
             StyleDataGridView(dgvCanhBao);
             StyleDataGridView(dgvLichSu);
+            StyleDataGridView(dgvTonKho);
         }
 
         private void StyleButton(Button btn, Color backColor)
@@ -160,6 +181,11 @@ namespace BTL_LTTQ.GUI
         {
             dgvCanhBao.DataSource = _bll.GetCanhBaoTonKho();
             dgvLichSu.DataSource = _bll.GetLichSuNhap();
+            dgvTonKho.DataSource = _bll.GetAllInventory();
+            
+            // Ẩn cột MaCTSP trong tab Tồn Kho
+            if (dgvTonKho.Columns["MaCTSP"] != null)
+                dgvTonKho.Columns["MaCTSP"].Visible = false;
         }
 
         private void btnThem_Click(object sender, EventArgs e)
@@ -226,6 +252,11 @@ namespace BTL_LTTQ.GUI
         }
 
         private void dgvChiTietNhap_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }

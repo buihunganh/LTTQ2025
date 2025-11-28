@@ -59,7 +59,25 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        // 5. Lưu phiếu nhập (Gọi Transaction bên DAL)
+        // 5. Lấy tất cả tồn kho
+        public DataTable GetAllInventory()
+        {
+            using (var dal = new DataProcesser())
+            {
+                string sql = @"SELECT ct.MaCTSP, 
+                                      sp.TenGiay + ' (' + sz.KichCo + ' - ' + ms.TenMau + ')' AS TenSP, 
+                                      ct.SoLuongTon 
+                               FROM ChiTietSanPham ct 
+                               JOIN SanPham sp ON ct.MaSP = sp.MaSP
+                               JOIN SizeGiay sz ON ct.MaSize = sz.MaSize
+                               JOIN MauSac ms ON ct.MaMau = ms.MaMau
+                               WHERE ct.TrangThai = 1
+                               ORDER BY sp.TenGiay, sz.KichCo, ms.TenMau";
+                return dal.ExecuteQuery(sql);
+            }
+        }
+
+        // 6. Lưu phiếu nhập (Gọi Transaction bên DAL)
         public bool LuuPhieuNhap(int maNCC, int maNV, decimal tongTien, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())
