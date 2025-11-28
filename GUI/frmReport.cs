@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
 using BTL_LTTQ.DTO;
-using ClosedXML.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BTL_LTTQ
 {
@@ -427,90 +427,417 @@ namespace BTL_LTTQ
                 throw new InvalidOperationException("Không có dữ liệu để xuất.");
             }
 
-            using (var workbook = new XLWorkbook())
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+
+            try
             {
+                excelApp = new Excel.Application();
+                excelApp.Visible = false;
+                excelApp.DisplayAlerts = false;
+
+                workbook = excelApp.Workbooks.Add();
+
                 BuildSummarySheet(workbook);
                 BuildTrendSheet(workbook);
-                BuildTopSheet(workbook, "Top sản phẩm", PrepareTopTable(_topProductsTable, "SanPham", "SoLuongBan", "DoanhThu"));
-                BuildTopSheet(workbook, "Top khách hàng", PrepareTopTable(_topCustomersTable, "KhachHang", "SoDon", "TongChi"));
+                BuildTopProductsSheet(workbook);
+                BuildTopCustomersSheet(workbook);
+
+                while (workbook.Worksheets.Count > 4)
+                {
+                    Excel.Worksheet defaultSheet = (Excel.Worksheet)workbook.Worksheets[workbook.Worksheets.Count];
+                    defaultSheet.Delete();
+                    ReleaseObject(defaultSheet);
+                }
 
                 workbook.SaveAs(filePath);
             }
-        }
-
-        private void BuildSummarySheet(XLWorkbook workbook)
-        {
-            var ws = workbook.Worksheets.Add("Tong quan");
-            ws.Cell(1, 1).Value = "Khoảng thời gian";
-            ws.Cell(1, 2).Value = $"{_lastFromDate:dd/MM/yyyy} - {_lastToDate:dd/MM/yyyy}";
-            ws.Cell(2, 1).Value = "Nhóm xu hướng";
-            ws.Cell(2, 2).Value = _lastTrendGrouping.ToString();
-
-            ws.Cell(4, 1).Value = "Chỉ số";
-            ws.Cell(4, 2).Value = "Giá trị";
-            ws.Cell(5, 1).Value = "Doanh thu";
-            ws.Cell(5, 2).Value = _currentSummary.TotalRevenue;
-            ws.Cell(6, 1).Value = "Lợi nhuận";
-            ws.Cell(6, 2).Value = _currentSummary.TotalProfit;
-            ws.Cell(7, 1).Value = "Đơn hàng";
-            ws.Cell(7, 2).Value = _currentSummary.TotalOrders;
-            ws.Cell(8, 1).Value = "Khách hàng";
-            ws.Cell(8, 2).Value = _currentSummary.TotalCustomers;
-
-            if (_previousSummary != null)
+            finally
             {
-                ws.Cell(10, 1).Value = "So sánh kỳ";
-                ws.Cell(10, 2).Value = "Giá trị";
-                ws.Cell(11, 1).Value = "Doanh thu so sánh";
-                ws.Cell(11, 2).Value = _previousSummary.TotalRevenue;
-                ws.Cell(12, 1).Value = "Lợi nhuận so sánh";
-                ws.Cell(12, 2).Value = _previousSummary.TotalProfit;
-                ws.Cell(13, 1).Value = "Đơn hàng so sánh";
-                ws.Cell(13, 2).Value = _previousSummary.TotalOrders;
-                ws.Cell(14, 1).Value = "Khách hàng so sánh";
-                ws.Cell(14, 2).Value = _previousSummary.TotalCustomers;
+                if (workbook != null)
+                {
+                    workbook.Close(false);
+                    ReleaseObject(workbook);
+                }
+
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    ReleaseObject(excelApp);
+                }
             }
-
-            ws.Columns().AdjustToContents();
         }
 
-        private void BuildTrendSheet(XLWorkbook workbook)
+        private void BuildSummarySheet(Excel.Workbook workbook)
         {
-            var ws = workbook.Worksheets.Add("Xu huong");
-            var data = _trendTable?.Copy() ?? CreateEmptyTrendTable();
+            Excel.Worksheet ws = null;
 
-            ws.Cell(1, 1).InsertTable(data, "TrendTable", true);
-            ws.Columns().AdjustToContents();
-        }
-
-        private void BuildTopSheet(XLWorkbook workbook, string sheetName, DataTable table)
-        {
-            var ws = workbook.Worksheets.Add(sheetName);
-            ws.Cell(1, 1).InsertTable(table, $"{sheetName.Replace(" ", string.Empty)}Table", true);
-            ws.Columns().AdjustToContents();
-        }
-
-        private static DataTable PrepareTopTable(DataTable source, string nameColumn, string quantityColumn, string valueColumn)
-        {
-            var table = new DataTable();
-            table.Columns.Add("Tên", typeof(string));
-            table.Columns.Add("Số lượng", typeof(decimal));
-            table.Columns.Add("Giá trị", typeof(decimal));
-
-            if (source == null || source.Rows.Count == 0)
+            try
             {
-                return table;
-            }
+                ws = (Excel.Worksheet)workbook.Worksheets.Add();
+                ws.Name = "Tổng quan";
 
-            foreach (DataRow row in source.Rows)
+                Excel.Range titleRange = ws.Range["A1", "B1"];
+                titleRange.Merge();
+                titleRange.Value2 = "BÁO CÁO THỐNG KÊ BÁN HÀNG";
+                titleRange.Font.Bold = true;
+                titleRange.Font.Size = 16;
+                titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(titleRange);
+
+                ws.Cells[3, 1] = "Khoảng thời gian:";
+                ws.Cells[3, 2] = $"{_lastFromDate:dd/MM/yyyy} - {_lastToDate:dd/MM/yyyy}";
+                ws.Cells[4, 1] = "Nhóm xu hướng:";
+                ws.Cells[4, 2] = GetTrendGroupingText(_lastTrendGrouping);
+
+                int row = 6;
+                Excel.Range headerRange = ws.Range[ws.Cells[row, 1], ws.Cells[row, 2]];
+                headerRange.Font.Bold = true;
+                headerRange.Font.Size = 11;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ws.Cells[row, 1] = "Chỉ số";
+                ws.Cells[row, 2] = "Giá trị";
+                ReleaseObject(headerRange);
+
+                row++;
+                ws.Cells[row, 1] = "Doanh thu";
+                ws.Cells[row, 2] = _currentSummary.TotalRevenue;
+                FormatCurrency(ws.Cells[row, 2]);
+
+                row++;
+                ws.Cells[row, 1] = "Lợi nhuận";
+                ws.Cells[row, 2] = _currentSummary.TotalProfit;
+                FormatCurrency(ws.Cells[row, 2]);
+
+                row++;
+                ws.Cells[row, 1] = "Đơn hàng";
+                ws.Cells[row, 2] = _currentSummary.TotalOrders;
+                FormatNumber(ws.Cells[row, 2]);
+
+                row++;
+                ws.Cells[row, 1] = "Khách hàng";
+                ws.Cells[row, 2] = _currentSummary.TotalCustomers;
+                FormatNumber(ws.Cells[row, 2]);
+
+                if (_previousSummary != null)
+                {
+                    row += 2;
+                    Excel.Range compareHeaderRange = ws.Range[ws.Cells[row, 1], ws.Cells[row, 2]];
+                    compareHeaderRange.Font.Bold = true;
+                    compareHeaderRange.Font.Size = 11;
+                    compareHeaderRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                    compareHeaderRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    ws.Cells[row, 1] = "So sánh kỳ";
+                    ws.Cells[row, 2] = "Giá trị";
+                    ReleaseObject(compareHeaderRange);
+
+                    row++;
+                    ws.Cells[row, 1] = "Doanh thu so sánh";
+                    ws.Cells[row, 2] = _previousSummary.TotalRevenue;
+                    FormatCurrency(ws.Cells[row, 2]);
+
+                    row++;
+                    ws.Cells[row, 1] = "Lợi nhuận so sánh";
+                    ws.Cells[row, 2] = _previousSummary.TotalProfit;
+                    FormatCurrency(ws.Cells[row, 2]);
+
+                    row++;
+                    ws.Cells[row, 1] = "Đơn hàng so sánh";
+                    ws.Cells[row, 2] = _previousSummary.TotalOrders;
+                    FormatNumber(ws.Cells[row, 2]);
+
+                    row++;
+                    ws.Cells[row, 1] = "Khách hàng so sánh";
+                    ws.Cells[row, 2] = _previousSummary.TotalCustomers;
+                    FormatNumber(ws.Cells[row, 2]);
+                }
+
+                Excel.Range dataRange = ws.Range[ws.Cells[6, 1], ws.Cells[row, 2]];
+                dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                ReleaseObject(dataRange);
+
+                ws.Columns.AutoFit();
+                ws.UsedRange.WrapText = false;
+
+                Excel.Range col1 = (Excel.Range)ws.Columns[1];
+                col1.ColumnWidth = Math.Max((double)col1.ColumnWidth * 1.1, 20);
+                ReleaseObject(col1);
+
+                Excel.Range col2 = (Excel.Range)ws.Columns[2];
+                col2.ColumnWidth = Math.Max((double)col2.ColumnWidth * 1.1, 15);
+                ReleaseObject(col2);
+            }
+            finally
             {
-                var name = row[nameColumn]?.ToString() ?? string.Empty;
-                var quantity = Convert.ToDecimal(row[quantityColumn] ?? 0);
-                var value = Convert.ToDecimal(row[valueColumn] ?? 0);
-                table.Rows.Add(name, quantity, value);
+                ReleaseObject(ws);
             }
+        }
 
-            return table;
+        private void BuildTrendSheet(Excel.Workbook workbook)
+        {
+            Excel.Worksheet ws = null;
+
+            try
+            {
+                ws = (Excel.Worksheet)workbook.Worksheets.Add();
+                ws.Name = "Xu hướng";
+
+                var data = _trendTable ?? CreateEmptyTrendTable();
+
+                Excel.Range titleRange = ws.Range["A1", "C1"];
+                titleRange.Merge();
+                titleRange.Value2 = "XU HƯỚNG DOANH THU VÀ LỢI NHUẬN";
+                titleRange.Font.Bold = true;
+                titleRange.Font.Size = 14;
+                titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(titleRange);
+
+                int headerRow = 3;
+                ws.Cells[headerRow, 1] = "Ngày";
+                ws.Cells[headerRow, 2] = "Doanh thu";
+                ws.Cells[headerRow, 3] = "Lợi nhuận";
+
+                Excel.Range headerRange = ws.Range[ws.Cells[headerRow, 1], ws.Cells[headerRow, 3]];
+                headerRange.Font.Bold = true;
+                headerRange.Font.Size = 11;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(headerRange);
+
+                int row = headerRow + 1;
+                foreach (DataRow dr in data.Rows)
+                {
+                    ws.Cells[row, 1] = Convert.ToDateTime(dr["Ngay"]).ToString("dd/MM/yyyy");
+                    ws.Cells[row, 2] = Convert.ToDecimal(dr["DoanhThu"]);
+                    FormatCurrency(ws.Cells[row, 2]);
+                    ws.Cells[row, 3] = Convert.ToDecimal(dr["LoiNhuan"]);
+                    FormatCurrency(ws.Cells[row, 3]);
+                    row++;
+                }
+
+                if (data.Rows.Count > 0)
+                {
+                    Excel.Range dataRange = ws.Range[ws.Cells[headerRow, 1], ws.Cells[row - 1, 3]];
+                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    ReleaseObject(dataRange);
+                }
+
+                ws.Columns.AutoFit();
+                ws.UsedRange.WrapText = false;
+
+                Excel.Range col1 = (Excel.Range)ws.Columns[1];
+                col1.ColumnWidth = Math.Max((double)col1.ColumnWidth * 1.1, 15);
+                ReleaseObject(col1);
+
+                Excel.Range col2 = (Excel.Range)ws.Columns[2];
+                col2.ColumnWidth = Math.Max((double)col2.ColumnWidth * 1.1, 18);
+                ReleaseObject(col2);
+
+                Excel.Range col3 = (Excel.Range)ws.Columns[3];
+                col3.ColumnWidth = Math.Max((double)col3.ColumnWidth * 1.1, 18);
+                ReleaseObject(col3);
+            }
+            finally
+            {
+                ReleaseObject(ws);
+            }
+        }
+
+        private void BuildTopProductsSheet(Excel.Workbook workbook)
+        {
+            Excel.Worksheet ws = null;
+
+            try
+            {
+                ws = (Excel.Worksheet)workbook.Worksheets.Add();
+                ws.Name = "Top sản phẩm";
+
+                var data = _topProductsTable ?? new DataTable();
+
+                Excel.Range titleRange = ws.Range["A1", "C1"];
+                titleRange.Merge();
+                titleRange.Value2 = "TOP SẢN PHẨM BÁN CHẠY";
+                titleRange.Font.Bold = true;
+                titleRange.Font.Size = 14;
+                titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(titleRange);
+
+                int headerRow = 3;
+                ws.Cells[headerRow, 1] = "Sản phẩm";
+                ws.Cells[headerRow, 2] = "Số lượng bán";
+                ws.Cells[headerRow, 3] = "Doanh thu";
+
+                Excel.Range headerRange = ws.Range[ws.Cells[headerRow, 1], ws.Cells[headerRow, 3]];
+                headerRange.Font.Bold = true;
+                headerRange.Font.Size = 11;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(headerRange);
+
+                int row = headerRow + 1;
+                foreach (DataRow dr in data.Rows)
+                {
+                    ws.Cells[row, 1] = dr["SanPham"].ToString();
+                    ws.Cells[row, 2] = Convert.ToDecimal(dr["SoLuongBan"]);
+                    FormatNumber(ws.Cells[row, 2]);
+                    ws.Cells[row, 3] = Convert.ToDecimal(dr["DoanhThu"]);
+                    FormatCurrency(ws.Cells[row, 3]);
+                    row++;
+                }
+
+                if (data.Rows.Count > 0)
+                {
+                    Excel.Range dataRange = ws.Range[ws.Cells[headerRow, 1], ws.Cells[row - 1, 3]];
+                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    ReleaseObject(dataRange);
+                }
+
+                ws.Columns.AutoFit();
+                ws.UsedRange.WrapText = false;
+
+                Excel.Range col1 = (Excel.Range)ws.Columns[1];
+                col1.ColumnWidth = Math.Max((double)col1.ColumnWidth * 1.1, 25);
+                ReleaseObject(col1);
+
+                Excel.Range col2 = (Excel.Range)ws.Columns[2];
+                col2.ColumnWidth = Math.Max((double)col2.ColumnWidth * 1.1, 18);
+                ReleaseObject(col2);
+
+                Excel.Range col3 = (Excel.Range)ws.Columns[3];
+                col3.ColumnWidth = Math.Max((double)col3.ColumnWidth * 1.1, 18);
+                ReleaseObject(col3);
+            }
+            finally
+            {
+                ReleaseObject(ws);
+            }
+        }
+
+        private void BuildTopCustomersSheet(Excel.Workbook workbook)
+        {
+            Excel.Worksheet ws = null;
+
+            try
+            {
+                ws = (Excel.Worksheet)workbook.Worksheets.Add();
+                ws.Name = "Top khách hàng";
+
+                var data = _topCustomersTable ?? new DataTable();
+
+                // Title
+                Excel.Range titleRange = ws.Range["A1", "C1"];
+                titleRange.Merge();
+                titleRange.Value2 = "TOP KHÁCH HÀNG";
+                titleRange.Font.Bold = true;
+                titleRange.Font.Size = 14;
+                titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(titleRange);
+
+                int headerRow = 3;
+                ws.Cells[headerRow, 1] = "Khách hàng";
+                ws.Cells[headerRow, 2] = "Số đơn";
+                ws.Cells[headerRow, 3] = "Tổng chi tiêu";
+
+                Excel.Range headerRange = ws.Range[ws.Cells[headerRow, 1], ws.Cells[headerRow, 3]];
+                headerRange.Font.Bold = true;
+                headerRange.Font.Size = 11;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(headerRange);
+
+                int row = headerRow + 1;
+                foreach (DataRow dr in data.Rows)
+                {
+                    ws.Cells[row, 1] = dr["KhachHang"].ToString();
+                    ws.Cells[row, 2] = Convert.ToDecimal(dr["SoDon"]);
+                    FormatNumber(ws.Cells[row, 2]);
+                    ws.Cells[row, 3] = Convert.ToDecimal(dr["TongChi"]);
+                    FormatCurrency(ws.Cells[row, 3]);
+                    row++;
+                }
+
+                if (data.Rows.Count > 0)
+                {
+                    Excel.Range dataRange = ws.Range[ws.Cells[headerRow, 1], ws.Cells[row - 1, 3]];
+                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    ReleaseObject(dataRange);
+                }
+
+                ws.Columns.AutoFit();
+                ws.UsedRange.WrapText = false;
+
+                Excel.Range col1 = (Excel.Range)ws.Columns[1];
+                col1.ColumnWidth = Math.Max((double)col1.ColumnWidth * 1.1, 25);
+                ReleaseObject(col1);
+
+                Excel.Range col2 = (Excel.Range)ws.Columns[2];
+                col2.ColumnWidth = Math.Max((double)col2.ColumnWidth * 1.1, 15);
+                ReleaseObject(col2);
+
+                Excel.Range col3 = (Excel.Range)ws.Columns[3];
+                col3.ColumnWidth = Math.Max((double)col3.ColumnWidth * 1.1, 20);
+                ReleaseObject(col3);
+            }
+            finally
+            {
+                ReleaseObject(ws);
+            }
+        }
+
+        private void FormatCurrency(Excel.Range cell)
+        {
+            cell.NumberFormat = "#,##0";
+            cell.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+        }
+
+        private void FormatNumber(Excel.Range cell)
+        {
+            cell.NumberFormat = "#,##0";
+            cell.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+        }
+
+        private string GetTrendGroupingText(TrendGrouping grouping)
+        {
+            switch (grouping)
+            {
+                case TrendGrouping.Day:
+                    return "Theo ngày";
+                case TrendGrouping.Week:
+                    return "Theo tuần";
+                case TrendGrouping.Month:
+                    return "Theo tháng";
+                default:
+                    return grouping.ToString();
+            }
+        }
+
+        private void ReleaseObject(object obj)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    obj = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+            }
+            finally
+            {
+                GC.Collect();
+            }
         }
 
         private static DataTable CreateEmptyTrendTable()
