@@ -342,24 +342,6 @@ namespace BTL_LTTQ
             this.txtHireDate.Name = "txtHireDate";
             this.txtHireDate.ReadOnly = true;
             this.txtHireDate.Size = new System.Drawing.Size(512, 32);
-            this.txtHireDate.TabIndex = 10;
-            // 
-            // lblHireDate
-            // 
-            this.lblHireDate.AutoSize = true;
-            this.lblHireDate.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblHireDate.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblHireDate.Location = new System.Drawing.Point(30, 477);
-            this.lblHireDate.Name = "lblHireDate";
-            this.lblHireDate.Size = new System.Drawing.Size(120, 23);
-            this.lblHireDate.TabIndex = 8;
-            this.lblHireDate.Text = "Ngày vào làm";
-            this.lblHireDate.Click += new System.EventHandler(this.lblHireDate_Click);
-            // 
-            // txtAddress
-            // 
-            this.txtAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAddress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtAddress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtAddress.Font = new System.Drawing.Font("Segoe UI", 11F);

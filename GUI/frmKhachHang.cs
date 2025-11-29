@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
-using ClosedXML.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BTL_LTTQ.GUI
 {
@@ -15,12 +15,12 @@ namespace BTL_LTTQ.GUI
         public frmKhachHang()
         {
             InitializeComponent();
-            InitFilter(); 
+            InitFilter();
         }
 
         private void frmKhachHang_Load(object sender, EventArgs e)
         {
-            if (cmbLocHang.Items.Count > 0) cmbLocHang.SelectedIndex = 0; 
+            if (cmbLocHang.Items.Count > 0) cmbLocHang.SelectedIndex = 0;
         }
 
         private void InitFilter()
@@ -38,7 +38,7 @@ namespace BTL_LTTQ.GUI
         private void LoadData(string keyword = "")
         {
             string rankFilter = "";
-            if (cmbLocHang.SelectedIndex > 0) 
+            if (cmbLocHang.SelectedIndex > 0)
             {
                 rankFilter = cmbLocHang.SelectedItem.ToString();
             }
@@ -84,7 +84,7 @@ namespace BTL_LTTQ.GUI
             if (string.IsNullOrWhiteSpace(txtHoTen.Text)) { MessageBox.Show("Nhập tên!"); return; }
             string cleanMoney = txtChiTieu.Text.Replace(" VND", "").Replace(",", "").Replace(".", "").Trim();
             decimal tongTien = 0;
-            if(!string.IsNullOrEmpty(cleanMoney))
+            if (!string.IsNullOrEmpty(cleanMoney))
             {
                 decimal.TryParse(cleanMoney, out tongTien);
             }
@@ -97,7 +97,7 @@ namespace BTL_LTTQ.GUI
             else MessageBox.Show("Lỗi: Thiếu thông tin.");
         }
 
-        private void btnLuu_Click(object sender, EventArgs e) 
+        private void btnLuu_Click(object sender, EventArgs e)
         {
             txtChiTieu.ReadOnly = false;
             if (string.IsNullOrEmpty(txtMaKH.Text)) return;
@@ -139,15 +139,152 @@ namespace BTL_LTTQ.GUI
             SaveFileDialog sfd = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = "KhachHang_" + DateTime.Now.ToString("ddMMyy") };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                using (var wb = new XLWorkbook())
+                Excel.Application excelApp = null;
+                Excel.Workbook workbook = null;
+                Excel.Worksheet worksheet = null;
+
+                try
                 {
-                    var ws = wb.Worksheets.Add("KhachHang");
-                    ws.Cell(1, 1).InsertTable(dgvKhachHang.DataSource as DataTable);
-                    ws.Columns().AdjustToContents();
-                    wb.SaveAs(sfd.FileName);
+                    excelApp = new Excel.Application();
+                    excelApp.Visible = false;
+                    excelApp.DisplayAlerts = false;
+
+                    workbook = excelApp.Workbooks.Add();
+                    worksheet = (Excel.Worksheet)workbook.Worksheets[1];
+                    worksheet.Name = "KhachHang";
+
+                    DataTable dt = dgvKhachHang.DataSource as DataTable;
+                    if (dt == null || dt.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Không có dữ liệu để xuất!");
+                        return;
+                    }
+
+                    // Title
+                    int colCount = dt.Columns.Count;
+                    string lastCol = GetExcelColumnName(colCount);
+                    Excel.Range titleRange = worksheet.Range["A1", $"{lastCol}1"];
+                    titleRange.Merge();
+                    titleRange.Value2 = "DANH SÁCH KHÁCH HÀNG";
+                    titleRange.Font.Bold = true;
+                    titleRange.Font.Size = 16;
+                    titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                    titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    ReleaseObject(titleRange);
+
+                    // Headers
+                    int headerRow = 3;
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        worksheet.Cells[headerRow, i + 1] = dt.Columns[i].ColumnName;
+                    }
+
+                    Excel.Range headerRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[headerRow, colCount]];
+                    headerRange.Font.Bold = true;
+                    headerRange.Font.Size = 11;
+                    headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    ReleaseObject(headerRange);
+
+                    // Data rows
+                    int row = headerRow + 1;
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < dt.Columns.Count; j++)
+                        {
+                            var value = dt.Rows[i][j];
+                            if (value != null && value != DBNull.Value)
+                            {
+                                worksheet.Cells[row, j + 1] = value.ToString();
+
+                                // Format currency columns
+                                if (dt.Columns[j].ColumnName == "TongChiTieu")
+                                {
+                                    ((Excel.Range)worksheet.Cells[row, j + 1]).NumberFormat = "#,##0";
+                                    ((Excel.Range)worksheet.Cells[row, j + 1]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                                }
+                            }
+                        }
+                        row++;
+                    }
+
+                    // Add borders to data range
+                    Excel.Range dataRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[row - 1, colCount]];
+                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    ReleaseObject(dataRange);
+
+                    // Auto-fit columns
+                    worksheet.Columns.AutoFit();
+                    worksheet.UsedRange.WrapText = false;
+
+                    // Adjust column widths for better appearance
+                    for (int i = 1; i <= colCount; i++)
+                    {
+                        Excel.Range col = (Excel.Range)worksheet.Columns[i];
+                        col.ColumnWidth = Math.Max((double)col.ColumnWidth * 1.1, 12);
+                        ReleaseObject(col);
+                    }
+
+                    workbook.SaveAs(sfd.FileName);
+
+                    MessageBox.Show("Xuất file thành công!");
+                    System.Diagnostics.Process.Start(sfd.FileName);
                 }
-                MessageBox.Show("Xuất file thành công!");
-                System.Diagnostics.Process.Start(sfd.FileName);
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xuất file: " + ex.Message);
+                }
+                finally
+                {
+                    if (worksheet != null) ReleaseObject(worksheet);
+                    if (workbook != null)
+                    {
+                        workbook.Close(false);
+                        ReleaseObject(workbook);
+                    }
+                    if (excelApp != null)
+                    {
+                        excelApp.Quit();
+                        ReleaseObject(excelApp);
+                    }
+                }
+            }
+        }
+
+        private string GetExcelColumnName(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = String.Empty;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+
+            return columnName;
+        }
+
+        private void ReleaseObject(object obj)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    obj = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+            }
+            finally
+            {
+                GC.Collect();
             }
         }
 

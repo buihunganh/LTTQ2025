@@ -235,16 +235,6 @@ namespace BTL_LTTQ
             }
         }
 
-        private void lblHireDate_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblSubtitle_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private static string GetProjectRootPath()
         {
             string root = Application.StartupPath;

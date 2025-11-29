@@ -504,22 +504,22 @@ namespace BTL_LTTQ
                 row++;
                 ws.Cells[row, 1] = "Doanh thu";
                 ws.Cells[row, 2] = _currentSummary.TotalRevenue;
-                FormatCurrency(ws.Cells[row, 2]);
+                FormatCurrency((Excel.Range)ws.Cells[row, 2]);
 
                 row++;
                 ws.Cells[row, 1] = "Lợi nhuận";
                 ws.Cells[row, 2] = _currentSummary.TotalProfit;
-                FormatCurrency(ws.Cells[row, 2]);
+                FormatCurrency((Excel.Range)ws.Cells[row, 2]);
 
                 row++;
                 ws.Cells[row, 1] = "Đơn hàng";
                 ws.Cells[row, 2] = _currentSummary.TotalOrders;
-                FormatNumber(ws.Cells[row, 2]);
+                FormatNumber((Excel.Range)ws.Cells[row, 2]);
 
                 row++;
                 ws.Cells[row, 1] = "Khách hàng";
                 ws.Cells[row, 2] = _currentSummary.TotalCustomers;
-                FormatNumber(ws.Cells[row, 2]);
+                FormatNumber((Excel.Range)ws.Cells[row, 2]);
 
                 if (_previousSummary != null)
                 {
@@ -536,22 +536,22 @@ namespace BTL_LTTQ
                     row++;
                     ws.Cells[row, 1] = "Doanh thu so sánh";
                     ws.Cells[row, 2] = _previousSummary.TotalRevenue;
-                    FormatCurrency(ws.Cells[row, 2]);
+                    FormatCurrency((Excel.Range)ws.Cells[row, 2]);
 
                     row++;
                     ws.Cells[row, 1] = "Lợi nhuận so sánh";
                     ws.Cells[row, 2] = _previousSummary.TotalProfit;
-                    FormatCurrency(ws.Cells[row, 2]);
+                    FormatCurrency((Excel.Range)ws.Cells[row, 2]);
 
                     row++;
                     ws.Cells[row, 1] = "Đơn hàng so sánh";
                     ws.Cells[row, 2] = _previousSummary.TotalOrders;
-                    FormatNumber(ws.Cells[row, 2]);
+                    FormatNumber((Excel.Range)ws.Cells[row, 2]);
 
                     row++;
                     ws.Cells[row, 1] = "Khách hàng so sánh";
                     ws.Cells[row, 2] = _previousSummary.TotalCustomers;
-                    FormatNumber(ws.Cells[row, 2]);
+                    FormatNumber((Excel.Range)ws.Cells[row, 2]);
                 }
 
                 Excel.Range dataRange = ws.Range[ws.Cells[6, 1], ws.Cells[row, 2]];
@@ -613,9 +613,9 @@ namespace BTL_LTTQ
                 {
                     ws.Cells[row, 1] = Convert.ToDateTime(dr["Ngay"]).ToString("dd/MM/yyyy");
                     ws.Cells[row, 2] = Convert.ToDecimal(dr["DoanhThu"]);
-                    FormatCurrency(ws.Cells[row, 2]);
+                    FormatCurrency((Excel.Range)ws.Cells[row, 2]);
                     ws.Cells[row, 3] = Convert.ToDecimal(dr["LoiNhuan"]);
-                    FormatCurrency(ws.Cells[row, 3]);
+                    FormatCurrency((Excel.Range)ws.Cells[row, 3]);
                     row++;
                 }
 
@@ -685,9 +685,9 @@ namespace BTL_LTTQ
                 {
                     ws.Cells[row, 1] = dr["SanPham"].ToString();
                     ws.Cells[row, 2] = Convert.ToDecimal(dr["SoLuongBan"]);
-                    FormatNumber(ws.Cells[row, 2]);
+                    FormatNumber((Excel.Range)ws.Cells[row, 2]);
                     ws.Cells[row, 3] = Convert.ToDecimal(dr["DoanhThu"]);
-                    FormatCurrency(ws.Cells[row, 3]);
+                    FormatCurrency((Excel.Range)ws.Cells[row, 3]);
                     row++;
                 }
 
@@ -758,9 +758,9 @@ namespace BTL_LTTQ
                 {
                     ws.Cells[row, 1] = dr["KhachHang"].ToString();
                     ws.Cells[row, 2] = Convert.ToDecimal(dr["SoDon"]);
-                    FormatNumber(ws.Cells[row, 2]);
+                    FormatNumber((Excel.Range)ws.Cells[row, 2]);
                     ws.Cells[row, 3] = Convert.ToDecimal(dr["TongChi"]);
-                    FormatCurrency(ws.Cells[row, 3]);
+                    FormatCurrency((Excel.Range)ws.Cells[row, 3]);
                     row++;
                 }
 

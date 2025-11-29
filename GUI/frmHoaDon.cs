@@ -3,7 +3,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
-using ClosedXML.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BTL_LTTQ.GUI
 {
@@ -36,7 +36,7 @@ namespace BTL_LTTQ.GUI
 
             _maHDString = "HD" + DateTime.Now.ToString("yyyyMMddHHmmss");
             _ngayBan = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-            
+
             if (_currentUser != null)
             {
                 _tenNV = _currentUser.FullName;
@@ -146,8 +146,8 @@ namespace BTL_LTTQ.GUI
                 DataRowView drv = (DataRowView)cboKhachHang.SelectedItem;
                 txtMaKH.Text = drv["MaKH"].ToString();
                 txtSDT.Text = drv["SoDienThoai"].ToString();
-                txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString()) 
-                    ? drv["DiaChi"].ToString() 
+                txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString())
+                    ? drv["DiaChi"].ToString()
                     : "Khách tại quầy";
             }
         }
@@ -217,7 +217,7 @@ namespace BTL_LTTQ.GUI
                         int maCTSP = Convert.ToInt32(row.Cells["MaCTSP"].Value);
                         int soLuong = Convert.ToInt32(row.Cells["SoLuong"].Value);
                         decimal donGia = Convert.ToDecimal(row.Cells["DonGia"].Value);
-                        int giamGiaSP = row.Cells["GiamGia"] != null && row.Cells["GiamGia"].Value != DBNull.Value 
+                        int giamGiaSP = row.Cells["GiamGia"] != null && row.Cells["GiamGia"].Value != DBNull.Value
                             ? Convert.ToInt32(row.Cells["GiamGia"].Value) : 0;
                         decimal thanhTien = Convert.ToDecimal(row.Cells["ThanhTien"].Value);
 
@@ -299,61 +299,120 @@ namespace BTL_LTTQ.GUI
             sfd.FileName = "HoaDon_" + txtMaHD.Text + ".xlsx";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
+                Excel.Application excelApp = null;
+                Excel.Workbook workbook = null;
+                Excel.Worksheet worksheet = null;
+
                 try
                 {
-                    using (var workbook = new XLWorkbook())
+                    excelApp = new Excel.Application();
+                    excelApp.Visible = false;
+                    excelApp.DisplayAlerts = false;
+
+                    workbook = excelApp.Workbooks.Add();
+                    worksheet = (Excel.Worksheet)workbook.Worksheets[1];
+                    worksheet.Name = "HoaDon";
+
+                    // Title
+                    Excel.Range titleRange = worksheet.Range["A1", "D1"];
+                    titleRange.Merge();
+                    titleRange.Value2 = "HÓA ĐƠN BÁN HÀNG";
+                    titleRange.Font.Bold = true;
+                    titleRange.Font.Size = 16;
+                    titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                    titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    ReleaseObject(titleRange);
+
+                    // Invoice information
+                    worksheet.Cells[3, 1] = "Mã HĐ:";
+                    worksheet.Cells[3, 2] = txtMaHD.Text;
+                    worksheet.Cells[4, 1] = "Ngày:";
+                    worksheet.Cells[4, 2] = txtNgayBan.Text;
+                    worksheet.Cells[5, 1] = "Nhân viên:";
+                    worksheet.Cells[5, 2] = txtNhanVien.Text;
+                    worksheet.Cells[6, 1] = "Khách hàng:";
+                    worksheet.Cells[6, 2] = cboKhachHang.Text;
+                    worksheet.Cells[7, 1] = "SĐT:";
+                    worksheet.Cells[7, 2] = txtSDT.Text;
+                    worksheet.Cells[8, 1] = "Địa chỉ:";
+                    worksheet.Cells[8, 2] = txtDiaChi.Text;
+
+                    // Table header
+                    int rowStart = 10;
+                    worksheet.Cells[rowStart, 1] = "Tên Hàng";
+                    worksheet.Cells[rowStart, 2] = "Số Lượng";
+                    worksheet.Cells[rowStart, 3] = "Đơn Giá";
+                    worksheet.Cells[rowStart, 4] = "Thành Tiền";
+
+                    Excel.Range headerRange = worksheet.Range[worksheet.Cells[rowStart, 1], worksheet.Cells[rowStart, 4]];
+                    headerRange.Font.Bold = true;
+                    headerRange.Font.Size = 11;
+                    headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    ReleaseObject(headerRange);
+
+                    // Detail rows
+                    int row = rowStart + 1;
+                    foreach (DataGridViewRow dgvRow in dgvChiTiet.Rows)
                     {
-                        var worksheet = workbook.Worksheets.Add("HoaDon");
+                        if (dgvRow.IsNewRow) continue;
+                        worksheet.Cells[row, 1] = dgvRow.Cells["TenSP"].Value?.ToString();
+                        worksheet.Cells[row, 2] = Convert.ToInt32(dgvRow.Cells["SoLuong"].Value);
+                        ((Excel.Range)worksheet.Cells[row, 2]).NumberFormat = "#,##0";
+                        ((Excel.Range)worksheet.Cells[row, 2]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
 
-                        worksheet.Cell(1, 1).Value = "HÓA ĐƠN BÁN HÀNG";
-                        worksheet.Cell(1, 1).Style.Font.Bold = true;
-                        worksheet.Cell(1, 1).Style.Font.FontSize = 16;
-                        worksheet.Range(1, 1, 1, 4).Merge();
+                        worksheet.Cells[row, 3] = Convert.ToDecimal(dgvRow.Cells["DonGia"].Value);
+                        ((Excel.Range)worksheet.Cells[row, 3]).NumberFormat = "#,##0";
+                        ((Excel.Range)worksheet.Cells[row, 3]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
 
-                        worksheet.Cell(3, 1).Value = "Mã HĐ:";
-                        worksheet.Cell(3, 2).Value = txtMaHD.Text;
-                        worksheet.Cell(4, 1).Value = "Ngày:";
-                        worksheet.Cell(4, 2).Value = txtNgayBan.Text;
-                        worksheet.Cell(5, 1).Value = "Nhân viên:";
-                        worksheet.Cell(5, 2).Value = txtNhanVien.Text;
-                        worksheet.Cell(6, 1).Value = "Khách hàng:";
-                        worksheet.Cell(6, 2).Value = cboKhachHang.Text;
-                        worksheet.Cell(7, 1).Value = "SĐT:";
-                        worksheet.Cell(7, 2).Value = txtSDT.Text;
-                        worksheet.Cell(8, 1).Value = "Địa chỉ:";
-                        worksheet.Cell(8, 2).Value = txtDiaChi.Text;
-
-                        int rowStart = 10;
-                        worksheet.Cell(rowStart, 1).Value = "Tên Hàng";
-                        worksheet.Cell(rowStart, 2).Value = "Số Lượng";
-                        worksheet.Cell(rowStart, 3).Value = "Đơn Giá";
-                        worksheet.Cell(rowStart, 4).Value = "Thành Tiền";
-                        worksheet.Range(rowStart, 1, rowStart, 4).Style.Font.Bold = true;
-                        worksheet.Range(rowStart, 1, rowStart, 4).Style.Fill.BackgroundColor = XLColor.LightGray;
-
-                        int row = rowStart + 1;
-                        foreach (DataGridViewRow dgvRow in dgvChiTiet.Rows)
-                        {
-                            if (dgvRow.IsNewRow) continue;
-                            worksheet.Cell(row, 1).Value = dgvRow.Cells["TenSP"].Value?.ToString();
-                            worksheet.Cell(row, 2).Value = Convert.ToInt32(dgvRow.Cells["SoLuong"].Value);
-                            worksheet.Cell(row, 3).Value = Convert.ToDecimal(dgvRow.Cells["DonGia"].Value);
-                            worksheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0";
-                            worksheet.Cell(row, 4).Value = Convert.ToDecimal(dgvRow.Cells["ThanhTien"].Value);
-                            worksheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
-                            row++;
-                        }
-
-                        worksheet.Cell(row, 3).Value = "TỔNG THANH TOÁN:";
-                        worksheet.Cell(row, 3).Style.Font.Bold = true;
-                        worksheet.Cell(row, 4).Value = lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "");
-                        worksheet.Cell(row, 4).Style.Font.Bold = true;
-                        worksheet.Cell(row, 4).Style.Font.FontColor = XLColor.Red;
-                        worksheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
-
-                        worksheet.Columns().AdjustToContents();
-                        workbook.SaveAs(sfd.FileName);
+                        worksheet.Cells[row, 4] = Convert.ToDecimal(dgvRow.Cells["ThanhTien"].Value);
+                        ((Excel.Range)worksheet.Cells[row, 4]).NumberFormat = "#,##0";
+                        ((Excel.Range)worksheet.Cells[row, 4]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                        row++;
                     }
+
+                    // Add borders to data range
+                    Excel.Range dataRange = worksheet.Range[worksheet.Cells[rowStart, 1], worksheet.Cells[row - 1, 4]];
+                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    ReleaseObject(dataRange);
+
+                    // Total row
+                    worksheet.Cells[row, 3] = "TỔNG THANH TOÁN:";
+                    ((Excel.Range)worksheet.Cells[row, 3]).Font.Bold = true;
+                    ((Excel.Range)worksheet.Cells[row, 3]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+
+                    string tongTienStr = lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "");
+                    worksheet.Cells[row, 4] = decimal.Parse(tongTienStr);
+                    Excel.Range totalCell = (Excel.Range)worksheet.Cells[row, 4];
+                    totalCell.Font.Bold = true;
+                    totalCell.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+                    totalCell.NumberFormat = "#,##0";
+                    totalCell.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                    ReleaseObject(totalCell);
+
+                    // Auto-fit columns
+                    worksheet.Columns.AutoFit();
+                    worksheet.UsedRange.WrapText = false;
+
+                    // Adjust column widths for better appearance
+                    Excel.Range col1 = (Excel.Range)worksheet.Columns[1];
+                    col1.ColumnWidth = Math.Max((double)col1.ColumnWidth * 1.1, 25);
+                    ReleaseObject(col1);
+
+                    Excel.Range col2 = (Excel.Range)worksheet.Columns[2];
+                    col2.ColumnWidth = Math.Max((double)col2.ColumnWidth * 1.1, 12);
+                    ReleaseObject(col2);
+
+                    Excel.Range col3 = (Excel.Range)worksheet.Columns[3];
+                    col3.ColumnWidth = Math.Max((double)col3.ColumnWidth * 1.1, 15);
+                    ReleaseObject(col3);
+
+                    Excel.Range col4 = (Excel.Range)worksheet.Columns[4];
+                    col4.ColumnWidth = Math.Max((double)col4.ColumnWidth * 1.1, 15);
+                    ReleaseObject(col4);
+
+                    workbook.SaveAs(sfd.FileName);
 
                     MessageBox.Show("Xuất hóa đơn thành công!");
                     System.Diagnostics.Process.Start(sfd.FileName);
@@ -361,6 +420,20 @@ namespace BTL_LTTQ.GUI
                 catch (Exception ex)
                 {
                     MessageBox.Show("Lỗi khi xuất file: " + ex.Message);
+                }
+                finally
+                {
+                    if (worksheet != null) ReleaseObject(worksheet);
+                    if (workbook != null)
+                    {
+                        workbook.Close(false);
+                        ReleaseObject(workbook);
+                    }
+                    if (excelApp != null)
+                    {
+                        excelApp.Quit();
+                        ReleaseObject(excelApp);
+                    }
                 }
             }
         }
@@ -448,6 +521,26 @@ namespace BTL_LTTQ.GUI
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true; // Block the character
+            }
+        }
+
+        private void ReleaseObject(object obj)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    obj = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+            }
+            finally
+            {
+                GC.Collect();
             }
         }
     }

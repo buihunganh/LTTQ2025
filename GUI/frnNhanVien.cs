@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Text.RegularExpressions; 
+using System.Text.RegularExpressions;
 using System.IO;
 using BTL_LTTQ.BLL;
-using ClosedXML.Excel; 
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BTL_LTTQ.GUI
 {
@@ -36,9 +36,9 @@ namespace BTL_LTTQ.GUI
         private void InitComboBoxFilter()
         {
             cmbLocTrangThai.Items.Clear();
-            cmbLocTrangThai.Items.Add("Tất cả");       
-            cmbLocTrangThai.Items.Add("Đang hoạt động"); 
-            cmbLocTrangThai.Items.Add("Đã nghỉ việc");   
+            cmbLocTrangThai.Items.Add("Tất cả");
+            cmbLocTrangThai.Items.Add("Đang hoạt động");
+            cmbLocTrangThai.Items.Add("Đã nghỉ việc");
 
             cmbLocTrangThai.SelectedIndexChanged += CmbLocTrangThai_SelectedIndexChanged;
         }
@@ -51,10 +51,10 @@ namespace BTL_LTTQ.GUI
         private void LoadData(string keyword = "")
         {
 
-            int statusFilter = -1; 
+            int statusFilter = -1;
 
-            if (cmbLocTrangThai.SelectedIndex == 1) statusFilter = 1; 
-            else if (cmbLocTrangThai.SelectedIndex == 2) statusFilter = 0; 
+            if (cmbLocTrangThai.SelectedIndex == 1) statusFilter = 1;
+            else if (cmbLocTrangThai.SelectedIndex == 2) statusFilter = 0;
 
             dgvNhanVien.DataSource = bllNhanVien.FindNhanVien(keyword, statusFilter);
 
@@ -136,7 +136,7 @@ namespace BTL_LTTQ.GUI
             btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             btn.ForeColor = Color.White;
             btn.Cursor = Cursors.Hand;
-            btn.Anchor = AnchorStyles.Top | AnchorStyles.Left; 
+            btn.Anchor = AnchorStyles.Top | AnchorStyles.Left;
 
             if (isDelete) btn.BackColor = Color.FromArgb(232, 90, 79);
             else btn.BackColor = Color.FromArgb(58, 61, 90);
@@ -145,7 +145,7 @@ namespace BTL_LTTQ.GUI
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            LoadData(txtSearch.Text.Trim()); 
+            LoadData(txtSearch.Text.Trim());
         }
 
         private void dgvNhanVien_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -189,12 +189,12 @@ namespace BTL_LTTQ.GUI
             try
             {
                 if (string.IsNullOrEmpty(txtMaNV.Text))
-                { 
+                {
                     bool ok = bllNhanVien.CreateNhanVien(txtHoTen.Text, txtTaiKhoan.Text, txtMatKhau.Text, chkIsAdmin.Checked, txtSDT.Text, txtEmail.Text, txtDiaChi.Text, dtpNgayVaoLam.Value);
                     if (ok) { MessageBox.Show("Thêm thành công!"); LoadData(txtSearch.Text); }
                 }
                 else
-                { 
+                {
                     bool ok = bllNhanVien.EditNhanVien(Convert.ToInt32(txtMaNV.Text), txtHoTen.Text, chkIsAdmin.Checked, chkTrangThai.Checked, txtSDT.Text, txtEmail.Text, txtDiaChi.Text, dtpNgayVaoLam.Value);
                     if (ok) { MessageBox.Show("Sửa thành công!"); LoadData(txtSearch.Text); }
                 }
@@ -236,34 +236,141 @@ namespace BTL_LTTQ.GUI
 
         private void ExportExcel(string filePath)
         {
-            using (var wb = new XLWorkbook())
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            Excel.Worksheet worksheet = null;
+
+            try
             {
-                var ws = wb.Worksheets.Add("NhanVien");
+                excelApp = new Excel.Application();
+                excelApp.Visible = false;
+                excelApp.DisplayAlerts = false;
+
+                workbook = excelApp.Workbooks.Add();
+                worksheet = (Excel.Worksheet)workbook.Worksheets[1];
+                worksheet.Name = "NhanVien";
+
+                // Title
+                Excel.Range titleRange = worksheet.Range["A1", "I1"];
+                titleRange.Merge();
+                titleRange.Value2 = "DANH SÁCH NHÂN VIÊN";
+                titleRange.Font.Bold = true;
+                titleRange.Font.Size = 16;
+                titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
+                titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(titleRange);
+
+                // Headers
+                int headerRow = 3;
+                int colIndex = 1;
                 for (int i = 0; i < dgvNhanVien.Columns.Count; i++)
                 {
                     if (dgvNhanVien.Columns[i].Visible)
                     {
-                        ws.Cell(1, i + 1).Value = dgvNhanVien.Columns[i].HeaderText;
-                        ws.Cell(1, i + 1).Style.Font.Bold = true;
-                        ws.Cell(1, i + 1).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                        worksheet.Cells[headerRow, colIndex] = dgvNhanVien.Columns[i].HeaderText;
+                        colIndex++;
                     }
                 }
+
+                int totalVisibleCols = colIndex - 1;
+                Excel.Range headerRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[headerRow, totalVisibleCols]];
+                headerRange.Font.Bold = true;
+                headerRange.Font.Size = 11;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                ReleaseObject(headerRange);
+
+                // Data rows
+                int row = headerRow + 1;
                 for (int i = 0; i < dgvNhanVien.Rows.Count; i++)
                 {
+                    colIndex = 1;
                     for (int j = 0; j < dgvNhanVien.Columns.Count; j++)
                     {
                         if (dgvNhanVien.Columns[j].Visible && dgvNhanVien.Rows[i].Cells[j].Value != null)
                         {
-                            if (dgvNhanVien.Columns[j].Name == "NgayVaoLam") ws.Cell(i + 2, j + 1).Value = Convert.ToDateTime(dgvNhanVien.Rows[i].Cells[j].Value).ToString("dd/MM/yyyy");
-                            else ws.Cell(i + 2, j + 1).Value = dgvNhanVien.Rows[i].Cells[j].Value.ToString();
+                            if (dgvNhanVien.Columns[j].Name == "NgayVaoLam")
+                            {
+                                worksheet.Cells[row, colIndex] = Convert.ToDateTime(dgvNhanVien.Rows[i].Cells[j].Value).ToString("dd/MM/yyyy");
+                            }
+                            else
+                            {
+                                worksheet.Cells[row, colIndex] = dgvNhanVien.Rows[i].Cells[j].Value.ToString();
+                            }
+                            colIndex++;
+                        }
+                        else if (dgvNhanVien.Columns[j].Visible)
+                        {
+                            colIndex++;
                         }
                     }
+                    row++;
                 }
-                ws.Columns().AdjustToContents();
-                wb.SaveAs(filePath);
+
+                // Add borders to data range
+                if (row > headerRow + 1)
+                {
+                    Excel.Range dataRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[row - 1, totalVisibleCols]];
+                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    ReleaseObject(dataRange);
+                }
+
+                // Auto-fit columns
+                worksheet.Columns.AutoFit();
+                worksheet.UsedRange.WrapText = false;
+
+                // Adjust column widths for better appearance
+                for (int i = 1; i <= totalVisibleCols; i++)
+                {
+                    Excel.Range col = (Excel.Range)worksheet.Columns[i];
+                    col.ColumnWidth = Math.Max((double)col.ColumnWidth * 1.1, 12);
+                    ReleaseObject(col);
+                }
+
+                workbook.SaveAs(filePath);
+
+                MessageBox.Show("Xuất file thành công!");
+                System.Diagnostics.Process.Start(filePath);
             }
-            MessageBox.Show("Xuất file thành công!");
-            System.Diagnostics.Process.Start(filePath);
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi xuất file: " + ex.Message);
+            }
+            finally
+            {
+                if (worksheet != null) ReleaseObject(worksheet);
+                if (workbook != null)
+                {
+                    workbook.Close(false);
+                    ReleaseObject(workbook);
+                }
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    ReleaseObject(excelApp);
+                }
+            }
+        }
+
+        private void ReleaseObject(object obj)
+        {
+            try
+            {
+                if (obj != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    obj = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+            }
+            finally
+            {
+                GC.Collect();
+            }
         }
     }
 }
