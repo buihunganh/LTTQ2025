@@ -30,7 +30,7 @@ namespace BTL_LTTQ
             InitializeComponent();
             _currentUser = user;
             _projectRootPath = GetProjectRootPath();
-            SetupAvatarCircular(); // Setup avatar hình tròn
+            SetupAvatarCircular();
             ApplyUserContext();
             ConfigureMenuButtons();
             _reportService = IsInDesignMode() ? null : new ReportService();
@@ -40,7 +40,7 @@ namespace BTL_LTTQ
 
         private void SetupAvatarCircular()
         {
-            // Tạo hình tròn cho avatar
+
             if (picAvatar != null)
             {
                 picAvatar.Paint += (s, e) =>
@@ -50,7 +50,7 @@ namespace BTL_LTTQ
                         path.AddEllipse(0, 0, picAvatar.Width - 1, picAvatar.Height - 1);
                         picAvatar.Region = new Region(path);
 
-                        // Vẽ viền
+
                         e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                         using (var pen = new Pen(Color.FromArgb(232, 90, 79), 3))
                         {
@@ -59,7 +59,7 @@ namespace BTL_LTTQ
                     }
                 };
 
-                // Tạo avatar mặc định với chữ cái đầu tên người dùng
+
                 CreateDefaultAvatar();
             }
         }
@@ -75,7 +75,7 @@ namespace BTL_LTTQ
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                // Gradient background
+
                 using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(
                     new Rectangle(0, 0, size, size),
                     Color.FromArgb(102, 106, 148),
@@ -85,8 +85,7 @@ namespace BTL_LTTQ
                     g.FillEllipse(brush, 0, 0, size, size);
                 }
 
-                // Chữ cái đầu của tên
-                string initial = "A"; // Mặc định
+                string initial = "A";
                 if (_currentUser != null && !string.IsNullOrEmpty(_currentUser.FullName))
                 {
                     var parts = _currentUser.FullName.Trim().Split(' ');
@@ -118,7 +117,7 @@ namespace BTL_LTTQ
             lblUser.Text = displayName;
             lblRole.Text = roleLabel;
 
-            // Ẩn các chức năng chỉ dành cho admin
+
             bool isAdmin = _currentUser?.IsAdmin ?? false;
             if (btnStaff != null)
             {
@@ -126,7 +125,7 @@ namespace BTL_LTTQ
                 btnStaff.Enabled = isAdmin;
             }
 
-            // Load avatar từ file (đã upload trong Settings), nếu không có thì dùng mặc định
+
             LoadAvatarFromFile();
         }
 
@@ -166,13 +165,13 @@ namespace BTL_LTTQ
 
         private void btnQuanLyHoaDon_Click(object sender, EventArgs e)
         {
-            // 1. Hiệu ứng đổi màu nút đang chọn
+
             if (sender is Button btn)
             {
                 SetActiveMenuButton(btn);
             }
 
-            // 2. Mở form Quản Lý Hóa Đơn (Danh sách)
+
             ShowContentForm(new BTL_LTTQ.GUI.frmQuanLyHoaDon(_currentUser));
         }
 
@@ -181,20 +180,20 @@ namespace BTL_LTTQ
         /// </summary>
         private void ShowContentForm(Form contentForm)
         {
-            // Đóng form hiện tại nếu có
+
             if (_activeContentForm != null)
             {
                 _activeContentForm.Close();
                 _activeContentForm.Dispose();
             }
 
-            // Cấu hình form mới như một child form
+
             _activeContentForm = contentForm;
             contentForm.TopLevel = false;
             contentForm.FormBorderStyle = FormBorderStyle.None;
             contentForm.Dock = DockStyle.Fill;
 
-            // Thêm form vào panelContent
+
             panelContent.Controls.Clear();
             panelContent.Controls.Add(contentForm);
             contentForm.Show();
@@ -205,7 +204,7 @@ namespace BTL_LTTQ
         /// </summary>
         private void ShowHomeContent()
         {
-            // Đóng form con hiện tại nếu có
+
             if (_activeContentForm != null)
             {
                 _activeContentForm.Close();
@@ -213,7 +212,7 @@ namespace BTL_LTTQ
                 _activeContentForm = null;
             }
 
-            // Hiển thị các control của Dashboard
+
             panelContent.Controls.Clear();
             panelContent.Controls.Add(panelDashboard);
             panelContent.Controls.Add(panelQuickActions);
@@ -222,7 +221,7 @@ namespace BTL_LTTQ
             panelContent.Controls.Add(lblContentSubtitle);
             panelContent.Controls.Add(lblContentTitle);
 
-            // Đảm bảo tất cả control đều visible
+
             lblContentTitle.Visible = true;
             lblContentSubtitle.Visible = true;
             panelDashboard.Visible = true;
@@ -230,7 +229,7 @@ namespace BTL_LTTQ
             panelRealtime.Visible = true;
             panelGreeting.Visible = true;
 
-            // Đưa các control lên trước
+
             lblContentTitle.BringToFront();
             lblContentSubtitle.BringToFront();
             panelDashboard.BringToFront();
@@ -238,13 +237,13 @@ namespace BTL_LTTQ
             panelRealtime.BringToFront();
             panelGreeting.BringToFront();
 
-            // Cập nhật dữ liệu dashboard
+
             UpdateDashboardOverview();
         }
 
         private void ConfigureMenuButtons()
         {
-            // Lưu style mặc định của các button menu để có thể reset sau này
+
             var buttons = new[] { btnDashboard, btnProduct, btnInventory, btnPos, btnInvoice, btnCustomer, btnStaff, btnReport };
 
             foreach (var button in buttons)
@@ -260,7 +259,7 @@ namespace BTL_LTTQ
                 }
             }
 
-            // Đặt Dashboard là button mặc định được chọn
+
             SetActiveMenuButton(btnDashboard);
         }
 
@@ -276,7 +275,7 @@ namespace BTL_LTTQ
 
             var overview = _reportService.GetTodayOverview(DateTime.Now);
 
-            // Cập nhật các chỉ số
+
             lblRevenueTodayValue.Text = $"{overview.TodayRevenue:N0} đ";
             lblOrdersTodayValue.Text = overview.TodayOrders.ToString();
             lblTopProductValue.Text = overview.TopProductName;
@@ -284,7 +283,7 @@ namespace BTL_LTTQ
 
             LoadRealtimeNotifications();
 
-            // Cập nhật thông tin chào mừng
+
             var userName = _currentUser?.FullName ?? "Bạn";
             lblGreeting.Text = $"Xin chào, {userName}!";
             lblWorkingDate.Text = $"Ngày làm việc: {DateTime.Now:dd/MM/yyyy (dddd)}";
@@ -309,10 +308,10 @@ namespace BTL_LTTQ
                 return;
             }
 
-            // Reset button cũ về style mặc định
+
             ResetMenuButton(_activeMenuButton);
 
-            // Áp dụng style highlight cho button mới
+
             _activeMenuButton = button;
             button.BackColor = Color.FromArgb(102, 106, 148);
             button.ForeColor = Color.White;
@@ -339,7 +338,7 @@ namespace BTL_LTTQ
             var settingsForm = new frmSettings(_currentUser);
             ShowContentForm(settingsForm);
 
-            // Reload avatar sau khi đóng form Settings (nếu user đã upload ảnh mới)
+
             settingsForm.FormClosed += (s, args) =>
             {
                 LoadAvatarFromFile();
@@ -380,7 +379,7 @@ namespace BTL_LTTQ
 
         private void btnStaff_Click(object sender, EventArgs e)
         {
-            // Kiểm tra quyền admin
+
             if (_currentUser == null || !_currentUser.IsAdmin)
             {
                 MessageBox.Show(
@@ -433,7 +432,7 @@ namespace BTL_LTTQ
                 SetActiveMenuButton(btn);
             }
 
-            // 2. Gọi form Nhập hàng hiện lên màn hình chính
+
             ShowContentForm(new BTL_LTTQ.GUI.frmNhapHang());
         }
 
@@ -453,7 +452,7 @@ namespace BTL_LTTQ
         {
             try
             {
-                // Lấy profile từ DAL để có AvatarPath
+
                 using (var dataProcesser = new DataProcesser())
                 {
                     var profile = dataProcesser.GetEmployeeProfile(_currentUser?.EmployeeId ?? 0);
@@ -463,22 +462,22 @@ namespace BTL_LTTQ
                         string fullPath = GetAvatarFullPath(profile.AvatarPath);
                         if (!string.IsNullOrEmpty(fullPath) && System.IO.File.Exists(fullPath))
                         {
-                            // Tạo một bản sao của ảnh để tránh khóa file
+
                             using (var img = Image.FromFile(fullPath))
                             {
                                 picAvatar.Image = new Bitmap(img);
                             }
-                            return; // Đã load được từ file
+                            return;
                         }
                     }
                 }
             }
             catch
             {
-                // Nếu lỗi thì dùng avatar mặc định
+
             }
 
-            // Nếu không có avatar, dùng avatar mặc định
+
             CreateDefaultAvatar();
         }
 
@@ -489,21 +488,21 @@ namespace BTL_LTTQ
                 return null;
             }
 
-            // Ưu tiên thư mục gốc dự án (Resources thực tế)
+
             var projectPath = System.IO.Path.Combine(_projectRootPath, relativePath);
             if (System.IO.File.Exists(projectPath))
             {
                 return projectPath;
             }
 
-            // Fallback: thư mục thực thi (trong trường hợp ảnh cũ vẫn nằm ở bin)
+
             var startupPath = System.IO.Path.Combine(Application.StartupPath, relativePath);
             if (System.IO.File.Exists(startupPath))
             {
                 return startupPath;
             }
 
-            return projectPath; // trả về path dự kiến để caller thử tạo nếu cần
+            return projectPath;
         }
 
         private static string GetProjectRootPath()
@@ -516,7 +515,7 @@ namespace BTL_LTTQ
             }
             catch
             {
-                // Nếu lỗi thì giữ nguyên StartupPath
+
             }
 
             return root;
