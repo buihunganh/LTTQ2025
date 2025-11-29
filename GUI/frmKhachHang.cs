@@ -278,7 +278,7 @@ namespace BTL_LTTQ.GUI
                     obj = null;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 obj = null;
             }
