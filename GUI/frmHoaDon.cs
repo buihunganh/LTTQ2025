@@ -12,7 +12,6 @@ namespace BTL_LTTQ.GUI
         private SalesBLL _bll = new SalesBLL();
         private BTL_LTTQ.DTO.LoginResult _currentUser;
 
-        // Business variables
         private string _maHDString = "";
         private string _ngayBan = "";
         private string _tenNV = "";
@@ -27,7 +26,6 @@ namespace BTL_LTTQ.GUI
         private int _idHoaDonVuaLuu = 0;
         private bool _isEditMode = false;
 
-        // Constructor for new invoice from POS
         public frmHoaDon(DataTable gioHangTuPOS, BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
             InitializeComponent();
@@ -52,7 +50,6 @@ namespace BTL_LTTQ.GUI
             CalculateTotal();
         }
 
-        // Constructor for viewing existing invoice
         public frmHoaDon(int maHD, BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
             InitializeComponent();
@@ -111,7 +108,6 @@ namespace BTL_LTTQ.GUI
                     btnThemKhach.Visible = false;
                     dgvChiTiet.ReadOnly = true;
 
-                    // Only admin can cancel invoices
                     bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
                     btnSua.Visible = isAdmin;
                     btnHuyHoaDon.Visible = isAdmin;
@@ -129,6 +125,38 @@ namespace BTL_LTTQ.GUI
             if (dgvChiTiet.Columns.Contains("MaCTSP")) dgvChiTiet.Columns["MaCTSP"].Visible = false;
             if (dgvChiTiet.Columns.Contains("DonGia")) dgvChiTiet.Columns["DonGia"].DefaultCellStyle.Format = "N0";
             if (dgvChiTiet.Columns.Contains("ThanhTien")) dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Format = "N0";
+
+            dgvChiTiet.CellValueChanged += DgvChiTiet_CellValueChanged;
+        }
+
+        private void DgvChiTiet_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                DataGridViewRow row = dgvChiTiet.Rows[e.RowIndex];
+                string columnName = dgvChiTiet.Columns[e.ColumnIndex].Name;
+
+                if (columnName == "SoLuong" || columnName == "GiamGia")
+                {
+                    int soLuong = row.Cells["SoLuong"].Value != null ? Convert.ToInt32(row.Cells["SoLuong"].Value) : 0;
+                    decimal donGia = row.Cells["DonGia"].Value != null ? Convert.ToDecimal(row.Cells["DonGia"].Value) : 0;
+                    decimal giamGia = row.Cells["GiamGia"].Value != null ? Convert.ToDecimal(row.Cells["GiamGia"].Value) : 0;
+
+                    decimal thanhTien = soLuong * donGia - giamGia;
+                    row.Cells["ThanhTien"].Value = thanhTien;
+
+                    if (!dgvChiTiet.ReadOnly)
+                    {
+                        DataRow dataRow = ((DataRowView)row.DataBoundItem).Row;
+                        dataRow["ThanhTien"] = thanhTien;
+                    }
+
+                    CalculateTotal();
+                }
+            }
+            catch { }
         }
 
         private void CalculateTotal()
@@ -199,7 +227,7 @@ namespace BTL_LTTQ.GUI
 
                 decimal tongHang = 0;
                 foreach (DataRow r in _dtChiTiet.Rows) tongHang += Convert.ToDecimal(r["ThanhTien"]);
-                decimal thanhToan = tongHang; // No discount
+                decimal thanhToan = tongHang; 
 
                 if (_isEditMode && _idHoaDonVuaLuu > 0)
                 {
@@ -246,7 +274,6 @@ namespace BTL_LTTQ.GUI
                         dtChiTietMoi.Rows.Add(maCTSP, row.Cells["TenSP"].Value, soLuong, donGia, giamGiaSP, thanhTien);
                     }
 
-                    // Update customer info before updating invoice
                     string newSDT = txtSDT.Text.Trim();
                     string newDiaChi = txtDiaChi.Text.Trim();
                     _bll.UpdateKhachHangInfo(maKH, newSDT, newDiaChi);
@@ -302,28 +329,24 @@ namespace BTL_LTTQ.GUI
                 Excel.Application excelApp = null;
                 Excel.Workbook workbook = null;
                 Excel.Worksheet worksheet = null;
-
+                
                 try
                 {
                     excelApp = new Excel.Application();
                     excelApp.Visible = false;
                     excelApp.DisplayAlerts = false;
-
+                    
                     workbook = excelApp.Workbooks.Add();
                     worksheet = (Excel.Worksheet)workbook.Worksheets[1];
                     worksheet.Name = "HoaDon";
 
-                    // Title
                     Excel.Range titleRange = worksheet.Range["A1", "D1"];
                     titleRange.Merge();
                     titleRange.Value2 = "HÓA ĐƠN BÁN HÀNG";
                     titleRange.Font.Bold = true;
                     titleRange.Font.Size = 16;
-                    titleRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.FromArgb(232, 90, 79));
                     titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                    ReleaseObject(titleRange);
 
-                    // Invoice information
                     worksheet.Cells[3, 1] = "Mã HĐ:";
                     worksheet.Cells[3, 2] = txtMaHD.Text;
                     worksheet.Cells[4, 1] = "Ngày:";
@@ -337,82 +360,43 @@ namespace BTL_LTTQ.GUI
                     worksheet.Cells[8, 1] = "Địa chỉ:";
                     worksheet.Cells[8, 2] = txtDiaChi.Text;
 
-                    // Table header
                     int rowStart = 10;
                     worksheet.Cells[rowStart, 1] = "Tên Hàng";
                     worksheet.Cells[rowStart, 2] = "Số Lượng";
                     worksheet.Cells[rowStart, 3] = "Đơn Giá";
                     worksheet.Cells[rowStart, 4] = "Thành Tiền";
-
+                    
                     Excel.Range headerRange = worksheet.Range[worksheet.Cells[rowStart, 1], worksheet.Cells[rowStart, 4]];
                     headerRange.Font.Bold = true;
-                    headerRange.Font.Size = 11;
                     headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                    ReleaseObject(headerRange);
 
-                    // Detail rows
                     int row = rowStart + 1;
                     foreach (DataGridViewRow dgvRow in dgvChiTiet.Rows)
                     {
                         if (dgvRow.IsNewRow) continue;
                         worksheet.Cells[row, 1] = dgvRow.Cells["TenSP"].Value?.ToString();
                         worksheet.Cells[row, 2] = Convert.ToInt32(dgvRow.Cells["SoLuong"].Value);
-                        ((Excel.Range)worksheet.Cells[row, 2]).NumberFormat = "#,##0";
-                        ((Excel.Range)worksheet.Cells[row, 2]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
-
                         worksheet.Cells[row, 3] = Convert.ToDecimal(dgvRow.Cells["DonGia"].Value);
-                        ((Excel.Range)worksheet.Cells[row, 3]).NumberFormat = "#,##0";
-                        ((Excel.Range)worksheet.Cells[row, 3]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
-
+                        worksheet.Cells[row, 3].NumberFormat = "#,##0";
                         worksheet.Cells[row, 4] = Convert.ToDecimal(dgvRow.Cells["ThanhTien"].Value);
-                        ((Excel.Range)worksheet.Cells[row, 4]).NumberFormat = "#,##0";
-                        ((Excel.Range)worksheet.Cells[row, 4]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                        worksheet.Cells[row, 4].NumberFormat = "#,##0";
                         row++;
                     }
 
-                    // Add borders to data range
-                    Excel.Range dataRange = worksheet.Range[worksheet.Cells[rowStart, 1], worksheet.Cells[row - 1, 4]];
-                    dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-                    dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
-                    ReleaseObject(dataRange);
-
-                    // Total row
                     worksheet.Cells[row, 3] = "TỔNG THANH TOÁN:";
-                    ((Excel.Range)worksheet.Cells[row, 3]).Font.Bold = true;
-                    ((Excel.Range)worksheet.Cells[row, 3]).HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                    worksheet.Cells[row, 3].Font.Bold = true;
+                    
+                    string tongTienValue = lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "");
+                    worksheet.Cells[row, 4] = tongTienValue;
+                    worksheet.Cells[row, 4].Font.Bold = true;
+                    worksheet.Cells[row, 4].Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+                    worksheet.Cells[row, 4].NumberFormat = "#,##0";
 
-                    string tongTienStr = lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "");
-                    worksheet.Cells[row, 4] = decimal.Parse(tongTienStr);
-                    Excel.Range totalCell = (Excel.Range)worksheet.Cells[row, 4];
-                    totalCell.Font.Bold = true;
-                    totalCell.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
-                    totalCell.NumberFormat = "#,##0";
-                    totalCell.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
-                    ReleaseObject(totalCell);
-
-                    // Auto-fit columns
                     worksheet.Columns.AutoFit();
-                    worksheet.UsedRange.WrapText = false;
-
-                    // Adjust column widths for better appearance
-                    Excel.Range col1 = (Excel.Range)worksheet.Columns[1];
-                    col1.ColumnWidth = Math.Max((double)col1.ColumnWidth * 1.1, 25);
-                    ReleaseObject(col1);
-
-                    Excel.Range col2 = (Excel.Range)worksheet.Columns[2];
-                    col2.ColumnWidth = Math.Max((double)col2.ColumnWidth * 1.1, 12);
-                    ReleaseObject(col2);
-
-                    Excel.Range col3 = (Excel.Range)worksheet.Columns[3];
-                    col3.ColumnWidth = Math.Max((double)col3.ColumnWidth * 1.1, 15);
-                    ReleaseObject(col3);
-
-                    Excel.Range col4 = (Excel.Range)worksheet.Columns[4];
-                    col4.ColumnWidth = Math.Max((double)col4.ColumnWidth * 1.1, 15);
-                    ReleaseObject(col4);
 
                     workbook.SaveAs(sfd.FileName);
+                    workbook.Close(false);
+                    excelApp.Quit();
 
                     MessageBox.Show("Xuất hóa đơn thành công!");
                     System.Diagnostics.Process.Start(sfd.FileName);
@@ -423,24 +407,15 @@ namespace BTL_LTTQ.GUI
                 }
                 finally
                 {
-                    if (worksheet != null) ReleaseObject(worksheet);
-                    if (workbook != null)
-                    {
-                        workbook.Close(false);
-                        ReleaseObject(workbook);
-                    }
-                    if (excelApp != null)
-                    {
-                        excelApp.Quit();
-                        ReleaseObject(excelApp);
-                    }
+                    if (worksheet != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(worksheet);
+                    if (workbook != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+                    if (excelApp != null) System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
                 }
             }
         }
 
         private void BtnSua_Click(object sender, EventArgs e)
         {
-            // Check admin permission before editing invoice
             bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
             if (!isAdmin)
             {
@@ -472,7 +447,6 @@ namespace BTL_LTTQ.GUI
 
         private void BtnHuyHoaDon_Click(object sender, EventArgs e)
         {
-            // Check admin permission before canceling invoice
             bool isAdmin = _currentUser != null && _currentUser.IsAdmin;
             if (!isAdmin)
             {
@@ -515,32 +489,56 @@ namespace BTL_LTTQ.GUI
             this.Close();
         }
 
-        private void TxtSDT_KeyPress(object sender, KeyPressEventArgs e)
+        private void BtnXoaSP_Click(object sender, EventArgs e)
         {
-            // Only allow digits, backspace, and control characters
-            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            if (_isEditMode || btnLuu.Visible)
             {
-                e.Handled = true; // Block the character
+                if (dgvChiTiet.CurrentRow == null || dgvChiTiet.CurrentRow.Index < 0)
+                {
+                    MessageBox.Show("Vui lòng chọn sản phẩm cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                DialogResult result = MessageBox.Show(
+                    "Bạn có chắc muốn xóa sản phẩm này khỏi hóa đơn?",
+                    "Xác nhận xóa",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        int rowIndex = dgvChiTiet.CurrentRow.Index;
+                        
+                        // Remove from DataTable
+                        if (_dtChiTiet != null && rowIndex < _dtChiTiet.Rows.Count)
+                        {
+                            _dtChiTiet.Rows.RemoveAt(rowIndex);
+                            
+                            // Recalculate total
+                            CalculateTotal();
+                            
+                            MessageBox.Show("Đã xóa sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi khi xóa sản phẩm: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chỉ có thể xóa sản phẩm khi đang tạo mới hoặc chỉnh sửa hóa đơn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        private void ReleaseObject(object obj)
+        private void TxtSDT_KeyPress(object sender, KeyPressEventArgs e)
         {
-            try
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
-                if (obj != null)
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
-                    obj = null;
-                }
-            }
-            catch
-            {
-                obj = null;
-            }
-            finally
-            {
-                GC.Collect();
+                e.Handled = true; 
             }
         }
     }

@@ -15,7 +15,6 @@ namespace BTL_LTTQ.GUI
             InitializeComponent();
             _currentUser = currentUser;
             
-            // Initialize date filters
             dtpFrom.Value = DateTime.Now.AddDays(-30);
             dtpTo.Value = DateTime.Now;
         }
@@ -33,14 +32,11 @@ namespace BTL_LTTQ.GUI
                 DataTable dt = _bll.FindInvoices(dtpFrom.Value, dtpTo.Value, txtTenNV.Text.Trim(), txtTenKH.Text.Trim());
                 dgvHoaDon.DataSource = dt;
 
-                // Hide ID column, only show display code
                 if (dgvHoaDon.Columns.Contains("MaHD")) dgvHoaDon.Columns["MaHD"].Visible = false;
 
-                // Format currency
                 if (dgvHoaDon.Columns.Contains("TongTien"))
                     dgvHoaDon.Columns["TongTien"].DefaultCellStyle.Format = "N0";
 
-                // Rename columns for better display
                 dgvHoaDon.Columns["MaHoaDon"].HeaderText = "Mã HĐ";
                 dgvHoaDon.Columns["NgayLap"].HeaderText = "Ngày Lập";
                 dgvHoaDon.Columns["TenNhanVien"].HeaderText = "Nhân Viên";
@@ -60,7 +56,7 @@ namespace BTL_LTTQ.GUI
                 int maHD = Convert.ToInt32(dgvHoaDon.Rows[e.RowIndex].Cells["MaHD"].Value);
                 frmHoaDon f = new frmHoaDon(maHD, _currentUser);
                 f.ShowDialog();
-                LoadData(); // Refresh after closing invoice form
+                LoadData(); 
             }
         }
 
@@ -78,13 +74,12 @@ namespace BTL_LTTQ.GUI
 
         private void cboMaHD_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Check if SelectedValue is not null and is actually an integer (not a DataRowView during binding)
             if (cboMaHD.SelectedValue != null && cboMaHD.SelectedValue is int)
             {
                 int maHD = (int)cboMaHD.SelectedValue;
                 frmHoaDon f = new frmHoaDon(maHD, _currentUser);
                 f.ShowDialog();
-                LoadData(); // Refresh after closing invoice form
+                LoadData(); 
             }
         }
     }

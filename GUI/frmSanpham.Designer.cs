@@ -80,10 +80,10 @@
             this.panelRoot.Controls.Add(this.lblTitle);
             this.panelRoot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelRoot.Location = new System.Drawing.Point(0, 0);
-            this.panelRoot.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelRoot.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelRoot.Name = "panelRoot";
-            this.panelRoot.Padding = new System.Windows.Forms.Padding(24, 25, 24, 25);
-            this.panelRoot.Size = new System.Drawing.Size(1312, 720);
+            this.panelRoot.Padding = new System.Windows.Forms.Padding(18, 20, 18, 20);
+            this.panelRoot.Size = new System.Drawing.Size(984, 585);
             this.panelRoot.TabIndex = 0;
             // 
             // dgvProducts
@@ -96,8 +96,8 @@
             this.dgvProducts.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.dgvProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvProducts.Location = new System.Drawing.Point(12, 508);
-            this.dgvProducts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dgvProducts.Location = new System.Drawing.Point(9, 413);
+            this.dgvProducts.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgvProducts.MultiSelect = false;
             this.dgvProducts.Name = "dgvProducts";
             this.dgvProducts.ReadOnly = true;
@@ -105,7 +105,7 @@
             this.dgvProducts.RowHeadersWidth = 51;
             this.dgvProducts.RowTemplate.Height = 28;
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProducts.Size = new System.Drawing.Size(1070, 187);
+            this.dgvProducts.Size = new System.Drawing.Size(802, 152);
             this.dgvProducts.TabIndex = 4;
             this.dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
             // 
@@ -126,11 +126,11 @@
             this.grpFilter.Controls.Add(this.lblSearch);
             this.grpFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpFilter.ForeColor = System.Drawing.Color.Gainsboro;
-            this.grpFilter.Location = new System.Drawing.Point(12, 390);
-            this.grpFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpFilter.Location = new System.Drawing.Point(9, 317);
+            this.grpFilter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.grpFilter.Name = "grpFilter";
-            this.grpFilter.Padding = new System.Windows.Forms.Padding(16, 14, 16, 14);
-            this.grpFilter.Size = new System.Drawing.Size(1070, 102);
+            this.grpFilter.Padding = new System.Windows.Forms.Padding(12, 11, 12, 11);
+            this.grpFilter.Size = new System.Drawing.Size(802, 83);
             this.grpFilter.TabIndex = 3;
             this.grpFilter.TabStop = false;
             this.grpFilter.Text = "Lọc sản phẩm";
@@ -142,19 +142,20 @@
             this.cmbFilterStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbFilterStatus.ForeColor = System.Drawing.Color.White;
             this.cmbFilterStatus.FormattingEnabled = true;
-            this.cmbFilterStatus.Location = new System.Drawing.Point(737, 52);
-            this.cmbFilterStatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbFilterStatus.Location = new System.Drawing.Point(553, 42);
+            this.cmbFilterStatus.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbFilterStatus.Name = "cmbFilterStatus";
-            this.cmbFilterStatus.Size = new System.Drawing.Size(150, 28);
+            this.cmbFilterStatus.Size = new System.Drawing.Size(114, 23);
             this.cmbFilterStatus.TabIndex = 10;
             // 
             // lblFilterStatus
             // 
             this.lblFilterStatus.AutoSize = true;
             this.lblFilterStatus.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblFilterStatus.Location = new System.Drawing.Point(742, 32);
+            this.lblFilterStatus.Location = new System.Drawing.Point(556, 26);
+            this.lblFilterStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFilterStatus.Name = "lblFilterStatus";
-            this.lblFilterStatus.Size = new System.Drawing.Size(78, 20);
+            this.lblFilterStatus.Size = new System.Drawing.Size(63, 15);
             this.lblFilterStatus.TabIndex = 9;
             this.lblFilterStatus.Text = "Trạng thái:";
             // 
@@ -169,10 +170,10 @@
             "",
             "Giá tăng dần",
             "Giá giảm dần"});
-            this.cmbFilterPriceType.Location = new System.Drawing.Point(598, 52);
-            this.cmbFilterPriceType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbFilterPriceType.Location = new System.Drawing.Point(448, 42);
+            this.cmbFilterPriceType.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbFilterPriceType.Name = "cmbFilterPriceType";
-            this.cmbFilterPriceType.Size = new System.Drawing.Size(120, 28);
+            this.cmbFilterPriceType.Size = new System.Drawing.Size(91, 23);
             this.cmbFilterPriceType.TabIndex = 7;
             this.cmbFilterPriceType.SelectedIndexChanged += new System.EventHandler(this.Filter_Changed);
             // 
@@ -180,9 +181,10 @@
             // 
             this.lblFilterPrice.AutoSize = true;
             this.lblFilterPrice.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblFilterPrice.Location = new System.Drawing.Point(598, 32);
+            this.lblFilterPrice.Location = new System.Drawing.Point(448, 26);
+            this.lblFilterPrice.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFilterPrice.Name = "lblFilterPrice";
-            this.lblFilterPrice.Size = new System.Drawing.Size(65, 20);
+            this.lblFilterPrice.Size = new System.Drawing.Size(50, 15);
             this.lblFilterPrice.TabIndex = 6;
             this.lblFilterPrice.Text = "Sắp xếp:";
             // 
@@ -193,10 +195,10 @@
             this.cmbFilterLoai.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbFilterLoai.ForeColor = System.Drawing.Color.White;
             this.cmbFilterLoai.FormattingEnabled = true;
-            this.cmbFilterLoai.Location = new System.Drawing.Point(438, 52);
-            this.cmbFilterLoai.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbFilterLoai.Location = new System.Drawing.Point(328, 42);
+            this.cmbFilterLoai.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbFilterLoai.Name = "cmbFilterLoai";
-            this.cmbFilterLoai.Size = new System.Drawing.Size(150, 28);
+            this.cmbFilterLoai.Size = new System.Drawing.Size(114, 23);
             this.cmbFilterLoai.TabIndex = 5;
             this.cmbFilterLoai.SelectedIndexChanged += new System.EventHandler(this.Filter_Changed);
             // 
@@ -204,9 +206,10 @@
             // 
             this.lblFilterLoai.AutoSize = true;
             this.lblFilterLoai.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblFilterLoai.Location = new System.Drawing.Point(438, 32);
+            this.lblFilterLoai.Location = new System.Drawing.Point(328, 26);
+            this.lblFilterLoai.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFilterLoai.Name = "lblFilterLoai";
-            this.lblFilterLoai.Size = new System.Drawing.Size(40, 20);
+            this.lblFilterLoai.Size = new System.Drawing.Size(32, 15);
             this.lblFilterLoai.TabIndex = 4;
             this.lblFilterLoai.Text = "Loại:";
             // 
@@ -217,10 +220,10 @@
             this.cmbFilterSize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbFilterSize.ForeColor = System.Drawing.Color.White;
             this.cmbFilterSize.FormattingEnabled = true;
-            this.cmbFilterSize.Location = new System.Drawing.Point(292, 52);
-            this.cmbFilterSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbFilterSize.Location = new System.Drawing.Point(219, 42);
+            this.cmbFilterSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbFilterSize.Name = "cmbFilterSize";
-            this.cmbFilterSize.Size = new System.Drawing.Size(130, 28);
+            this.cmbFilterSize.Size = new System.Drawing.Size(98, 23);
             this.cmbFilterSize.TabIndex = 3;
             this.cmbFilterSize.SelectedIndexChanged += new System.EventHandler(this.Filter_Changed);
             // 
@@ -228,9 +231,10 @@
             // 
             this.lblFilterSize.AutoSize = true;
             this.lblFilterSize.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblFilterSize.Location = new System.Drawing.Point(292, 32);
+            this.lblFilterSize.Location = new System.Drawing.Point(219, 26);
+            this.lblFilterSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFilterSize.Name = "lblFilterSize";
-            this.lblFilterSize.Size = new System.Drawing.Size(39, 20);
+            this.lblFilterSize.Size = new System.Drawing.Size(30, 15);
             this.lblFilterSize.TabIndex = 2;
             this.lblFilterSize.Text = "Size:";
             // 
@@ -239,10 +243,10 @@
             this.txtSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSearch.ForeColor = System.Drawing.Color.White;
-            this.txtSearch.Location = new System.Drawing.Point(19, 52);
-            this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtSearch.Location = new System.Drawing.Point(14, 42);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(250, 27);
+            this.txtSearch.Size = new System.Drawing.Size(188, 23);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
@@ -250,9 +254,10 @@
             // 
             this.lblSearch.AutoSize = true;
             this.lblSearch.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblSearch.Location = new System.Drawing.Point(19, 30);
+            this.lblSearch.Location = new System.Drawing.Point(14, 24);
+            this.lblSearch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(141, 20);
+            this.lblSearch.Size = new System.Drawing.Size(115, 15);
             this.lblSearch.TabIndex = 0;
             this.lblSearch.Text = "Tìm kiếm sản phẩm:";
             // 
@@ -266,11 +271,11 @@
             this.panelButtons.Controls.Add(this.btnDelete);
             this.panelButtons.Controls.Add(this.btnEdit);
             this.panelButtons.Controls.Add(this.btnAdd);
-            this.panelButtons.Location = new System.Drawing.Point(1088, 86);
-            this.panelButtons.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelButtons.Location = new System.Drawing.Point(816, 70);
+            this.panelButtons.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Padding = new System.Windows.Forms.Padding(11, 10, 11, 10);
-            this.panelButtons.Size = new System.Drawing.Size(200, 609);
+            this.panelButtons.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.panelButtons.Size = new System.Drawing.Size(150, 495);
             this.panelButtons.TabIndex = 2;
             // 
             // btnExport
@@ -282,10 +287,10 @@
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Location = new System.Drawing.Point(11, 260);
-            this.btnExport.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.btnExport.Location = new System.Drawing.Point(8, 211);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(179, 46);
+            this.btnExport.Size = new System.Drawing.Size(134, 37);
             this.btnExport.TabIndex = 4;
             this.btnExport.Text = "⬇ Xuất Excel";
             this.btnExport.UseVisualStyleBackColor = false;
@@ -300,10 +305,10 @@
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnRefresh.ForeColor = System.Drawing.Color.White;
-            this.btnRefresh.Location = new System.Drawing.Point(11, 207);
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.btnRefresh.Location = new System.Drawing.Point(8, 168);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(179, 46);
+            this.btnRefresh.Size = new System.Drawing.Size(134, 37);
             this.btnRefresh.TabIndex = 3;
             this.btnRefresh.Text = "⟳ Làm mới";
             this.btnRefresh.UseVisualStyleBackColor = false;
@@ -316,10 +321,10 @@
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnDelete.ForeColor = System.Drawing.Color.White;
-            this.btnDelete.Location = new System.Drawing.Point(11, 154);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.btnDelete.Location = new System.Drawing.Point(8, 125);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(179, 46);
+            this.btnDelete.Size = new System.Drawing.Size(134, 37);
             this.btnDelete.TabIndex = 2;
             this.btnDelete.Text = "🗑 Xóa";
             this.btnDelete.UseVisualStyleBackColor = false;
@@ -334,10 +339,10 @@
             this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEdit.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnEdit.ForeColor = System.Drawing.Color.White;
-            this.btnEdit.Location = new System.Drawing.Point(11, 101);
-            this.btnEdit.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.btnEdit.Location = new System.Drawing.Point(8, 82);
+            this.btnEdit.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(179, 46);
+            this.btnEdit.Size = new System.Drawing.Size(134, 37);
             this.btnEdit.TabIndex = 1;
             this.btnEdit.Text = "✏️ Sửa";
             this.btnEdit.UseVisualStyleBackColor = false;
@@ -352,10 +357,10 @@
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdd.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.Location = new System.Drawing.Point(11, 48);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.btnAdd.Location = new System.Drawing.Point(8, 39);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(179, 46);
+            this.btnAdd.Size = new System.Drawing.Size(134, 37);
             this.btnAdd.TabIndex = 0;
             this.btnAdd.Text = "➕ Thêm";
             this.btnAdd.UseVisualStyleBackColor = false;
@@ -391,21 +396,21 @@
             this.panelProductInfo.Controls.Add(this.lblProductName);
             this.panelProductInfo.Controls.Add(this.cmbProduct);
             this.panelProductInfo.Controls.Add(this.lblProduct);
-            this.panelProductInfo.Location = new System.Drawing.Point(24, 86);
-            this.panelProductInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelProductInfo.Location = new System.Drawing.Point(18, 70);
+            this.panelProductInfo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelProductInfo.Name = "panelProductInfo";
-            this.panelProductInfo.Padding = new System.Windows.Forms.Padding(20);
-            this.panelProductInfo.Size = new System.Drawing.Size(1048, 295);
+            this.panelProductInfo.Padding = new System.Windows.Forms.Padding(15, 16, 15, 16);
+            this.panelProductInfo.Size = new System.Drawing.Size(786, 240);
             this.panelProductInfo.TabIndex = 1;
             // 
             // picProductImage
             // 
             this.picProductImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.picProductImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picProductImage.Location = new System.Drawing.Point(700, 80);
-            this.picProductImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.picProductImage.Location = new System.Drawing.Point(525, 65);
+            this.picProductImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.picProductImage.Name = "picProductImage";
-            this.picProductImage.Size = new System.Drawing.Size(239, 200);
+            this.picProductImage.Size = new System.Drawing.Size(180, 163);
             this.picProductImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picProductImage.TabIndex = 22;
             this.picProductImage.TabStop = false;
@@ -415,19 +420,20 @@
             this.txtImagePath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtImagePath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtImagePath.ForeColor = System.Drawing.Color.White;
-            this.txtImagePath.Location = new System.Drawing.Point(700, 50);
-            this.txtImagePath.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtImagePath.Location = new System.Drawing.Point(525, 41);
+            this.txtImagePath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtImagePath.Name = "txtImagePath";
-            this.txtImagePath.Size = new System.Drawing.Size(239, 22);
+            this.txtImagePath.Size = new System.Drawing.Size(180, 20);
             this.txtImagePath.TabIndex = 21;
             // 
             // lblImage
             // 
             this.lblImage.AutoSize = true;
             this.lblImage.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblImage.Location = new System.Drawing.Point(700, 30);
+            this.lblImage.Location = new System.Drawing.Point(525, 24);
+            this.lblImage.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblImage.Name = "lblImage";
-            this.lblImage.Size = new System.Drawing.Size(62, 16);
+            this.lblImage.Size = new System.Drawing.Size(53, 13);
             this.lblImage.TabIndex = 20;
             this.lblImage.Text = "Hình ảnh:";
             // 
@@ -437,10 +443,10 @@
             this.btnUploadImage.FlatAppearance.BorderSize = 0;
             this.btnUploadImage.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUploadImage.ForeColor = System.Drawing.Color.White;
-            this.btnUploadImage.Location = new System.Drawing.Point(950, 50);
-            this.btnUploadImage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnUploadImage.Location = new System.Drawing.Point(712, 41);
+            this.btnUploadImage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnUploadImage.Name = "btnUploadImage";
-            this.btnUploadImage.Size = new System.Drawing.Size(85, 22);
+            this.btnUploadImage.Size = new System.Drawing.Size(64, 18);
             this.btnUploadImage.TabIndex = 24;
             this.btnUploadImage.Text = "Chọn ảnh";
             this.btnUploadImage.UseVisualStyleBackColor = false;
@@ -451,20 +457,21 @@
             this.txtDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDescription.ForeColor = System.Drawing.Color.White;
-            this.txtDescription.Location = new System.Drawing.Point(400, 281);
-            this.txtDescription.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtDescription.Location = new System.Drawing.Point(300, 228);
+            this.txtDescription.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(279, 50);
+            this.txtDescription.Size = new System.Drawing.Size(210, 41);
             this.txtDescription.TabIndex = 19;
             // 
             // lblDescription
             // 
             this.lblDescription.AutoSize = true;
             this.lblDescription.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblDescription.Location = new System.Drawing.Point(400, 260);
+            this.lblDescription.Location = new System.Drawing.Point(300, 211);
+            this.lblDescription.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(43, 16);
+            this.lblDescription.Size = new System.Drawing.Size(37, 13);
             this.lblDescription.TabIndex = 18;
             this.lblDescription.Text = "Mô tả:";
             // 
@@ -475,19 +482,20 @@
             this.cmbColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbColor.ForeColor = System.Drawing.Color.White;
             this.cmbColor.FormattingEnabled = true;
-            this.cmbColor.Location = new System.Drawing.Point(400, 220);
-            this.cmbColor.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbColor.Location = new System.Drawing.Point(300, 179);
+            this.cmbColor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbColor.Name = "cmbColor";
-            this.cmbColor.Size = new System.Drawing.Size(280, 24);
+            this.cmbColor.Size = new System.Drawing.Size(211, 21);
             this.cmbColor.TabIndex = 17;
             // 
             // lblColor
             // 
             this.lblColor.AutoSize = true;
             this.lblColor.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblColor.Location = new System.Drawing.Point(400, 199);
+            this.lblColor.Location = new System.Drawing.Point(300, 162);
+            this.lblColor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblColor.Name = "lblColor";
-            this.lblColor.Size = new System.Drawing.Size(61, 16);
+            this.lblColor.Size = new System.Drawing.Size(51, 13);
             this.lblColor.TabIndex = 16;
             this.lblColor.Text = "Màu sắc:";
             // 
@@ -498,19 +506,20 @@
             this.cmbSize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbSize.ForeColor = System.Drawing.Color.White;
             this.cmbSize.FormattingEnabled = true;
-            this.cmbSize.Location = new System.Drawing.Point(400, 160);
-            this.cmbSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbSize.Location = new System.Drawing.Point(300, 130);
+            this.cmbSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbSize.Name = "cmbSize";
-            this.cmbSize.Size = new System.Drawing.Size(280, 24);
+            this.cmbSize.Size = new System.Drawing.Size(211, 21);
             this.cmbSize.TabIndex = 15;
             // 
             // lblSize
             // 
             this.lblSize.AutoSize = true;
             this.lblSize.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblSize.Location = new System.Drawing.Point(400, 140);
+            this.lblSize.Location = new System.Drawing.Point(300, 114);
+            this.lblSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSize.Name = "lblSize";
-            this.lblSize.Size = new System.Drawing.Size(36, 16);
+            this.lblSize.Size = new System.Drawing.Size(30, 13);
             this.lblSize.TabIndex = 14;
             this.lblSize.Text = "Size:";
             // 
@@ -521,19 +530,20 @@
             this.cmbLoai.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbLoai.ForeColor = System.Drawing.Color.White;
             this.cmbLoai.FormattingEnabled = true;
-            this.cmbLoai.Location = new System.Drawing.Point(400, 100);
-            this.cmbLoai.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbLoai.Location = new System.Drawing.Point(300, 81);
+            this.cmbLoai.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbLoai.Name = "cmbLoai";
-            this.cmbLoai.Size = new System.Drawing.Size(280, 24);
+            this.cmbLoai.Size = new System.Drawing.Size(211, 21);
             this.cmbLoai.TabIndex = 13;
             // 
             // lblLoai
             // 
             this.lblLoai.AutoSize = true;
             this.lblLoai.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblLoai.Location = new System.Drawing.Point(400, 80);
+            this.lblLoai.Location = new System.Drawing.Point(300, 65);
+            this.lblLoai.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblLoai.Name = "lblLoai";
-            this.lblLoai.Size = new System.Drawing.Size(36, 16);
+            this.lblLoai.Size = new System.Drawing.Size(30, 13);
             this.lblLoai.TabIndex = 12;
             this.lblLoai.Text = "Loại:";
             // 
@@ -542,19 +552,20 @@
             this.txtQuantity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtQuantity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtQuantity.ForeColor = System.Drawing.Color.White;
-            this.txtQuantity.Location = new System.Drawing.Point(100, 281);
-            this.txtQuantity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtQuantity.Location = new System.Drawing.Point(75, 228);
+            this.txtQuantity.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtQuantity.Name = "txtQuantity";
-            this.txtQuantity.Size = new System.Drawing.Size(279, 22);
+            this.txtQuantity.Size = new System.Drawing.Size(210, 20);
             this.txtQuantity.TabIndex = 11;
             // 
             // lblQuantity
             // 
             this.lblQuantity.AutoSize = true;
             this.lblQuantity.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblQuantity.Location = new System.Drawing.Point(20, 281);
+            this.lblQuantity.Location = new System.Drawing.Point(15, 228);
+            this.lblQuantity.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblQuantity.Name = "lblQuantity";
-            this.lblQuantity.Size = new System.Drawing.Size(63, 16);
+            this.lblQuantity.Size = new System.Drawing.Size(52, 13);
             this.lblQuantity.TabIndex = 10;
             this.lblQuantity.Text = "Số lượng:";
             // 
@@ -563,19 +574,20 @@
             this.txtSellingPrice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtSellingPrice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSellingPrice.ForeColor = System.Drawing.Color.White;
-            this.txtSellingPrice.Location = new System.Drawing.Point(100, 220);
-            this.txtSellingPrice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtSellingPrice.Location = new System.Drawing.Point(75, 179);
+            this.txtSellingPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtSellingPrice.Name = "txtSellingPrice";
-            this.txtSellingPrice.Size = new System.Drawing.Size(279, 22);
+            this.txtSellingPrice.Size = new System.Drawing.Size(210, 20);
             this.txtSellingPrice.TabIndex = 9;
             // 
             // lblSellingPrice
             // 
             this.lblSellingPrice.AutoSize = true;
             this.lblSellingPrice.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblSellingPrice.Location = new System.Drawing.Point(20, 220);
+            this.lblSellingPrice.Location = new System.Drawing.Point(15, 179);
+            this.lblSellingPrice.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSellingPrice.Name = "lblSellingPrice";
-            this.lblSellingPrice.Size = new System.Drawing.Size(57, 16);
+            this.lblSellingPrice.Size = new System.Drawing.Size(47, 13);
             this.lblSellingPrice.TabIndex = 8;
             this.lblSellingPrice.Text = "Giá bán:";
             // 
@@ -584,19 +596,20 @@
             this.txtImportPrice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtImportPrice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtImportPrice.ForeColor = System.Drawing.Color.White;
-            this.txtImportPrice.Location = new System.Drawing.Point(100, 160);
-            this.txtImportPrice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtImportPrice.Location = new System.Drawing.Point(75, 130);
+            this.txtImportPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtImportPrice.Name = "txtImportPrice";
-            this.txtImportPrice.Size = new System.Drawing.Size(279, 22);
+            this.txtImportPrice.Size = new System.Drawing.Size(210, 20);
             this.txtImportPrice.TabIndex = 7;
             // 
             // lblImportPrice
             // 
             this.lblImportPrice.AutoSize = true;
             this.lblImportPrice.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblImportPrice.Location = new System.Drawing.Point(20, 160);
+            this.lblImportPrice.Location = new System.Drawing.Point(15, 130);
+            this.lblImportPrice.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblImportPrice.Name = "lblImportPrice";
-            this.lblImportPrice.Size = new System.Drawing.Size(64, 16);
+            this.lblImportPrice.Size = new System.Drawing.Size(53, 13);
             this.lblImportPrice.TabIndex = 6;
             this.lblImportPrice.Text = "Giá nhập:";
             // 
@@ -605,19 +618,20 @@
             this.txtProductCode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtProductCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtProductCode.ForeColor = System.Drawing.Color.White;
-            this.txtProductCode.Location = new System.Drawing.Point(100, 100);
-            this.txtProductCode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtProductCode.Location = new System.Drawing.Point(75, 81);
+            this.txtProductCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtProductCode.Name = "txtProductCode";
-            this.txtProductCode.Size = new System.Drawing.Size(279, 22);
+            this.txtProductCode.Size = new System.Drawing.Size(210, 20);
             this.txtProductCode.TabIndex = 5;
             // 
             // lblProductCode
             // 
             this.lblProductCode.AutoSize = true;
             this.lblProductCode.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblProductCode.Location = new System.Drawing.Point(20, 100);
+            this.lblProductCode.Location = new System.Drawing.Point(15, 81);
+            this.lblProductCode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProductCode.Name = "lblProductCode";
-            this.lblProductCode.Size = new System.Drawing.Size(58, 16);
+            this.lblProductCode.Size = new System.Drawing.Size(47, 13);
             this.lblProductCode.TabIndex = 4;
             this.lblProductCode.Text = "Mã giày:";
             // 
@@ -626,19 +640,20 @@
             this.txtProductName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.txtProductName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtProductName.ForeColor = System.Drawing.Color.White;
-            this.txtProductName.Location = new System.Drawing.Point(100, 50);
-            this.txtProductName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtProductName.Location = new System.Drawing.Point(75, 41);
+            this.txtProductName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtProductName.Name = "txtProductName";
-            this.txtProductName.Size = new System.Drawing.Size(279, 22);
+            this.txtProductName.Size = new System.Drawing.Size(210, 20);
             this.txtProductName.TabIndex = 3;
             // 
             // lblProductName
             // 
             this.lblProductName.AutoSize = true;
             this.lblProductName.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblProductName.Location = new System.Drawing.Point(20, 50);
+            this.lblProductName.Location = new System.Drawing.Point(15, 41);
+            this.lblProductName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProductName.Name = "lblProductName";
-            this.lblProductName.Size = new System.Drawing.Size(63, 16);
+            this.lblProductName.Size = new System.Drawing.Size(51, 13);
             this.lblProductName.TabIndex = 2;
             this.lblProductName.Text = "Tên giày:";
             // 
@@ -649,10 +664,10 @@
             this.cmbProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbProduct.ForeColor = System.Drawing.Color.White;
             this.cmbProduct.FormattingEnabled = true;
-            this.cmbProduct.Location = new System.Drawing.Point(100, 10);
-            this.cmbProduct.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbProduct.Location = new System.Drawing.Point(75, 8);
+            this.cmbProduct.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbProduct.Name = "cmbProduct";
-            this.cmbProduct.Size = new System.Drawing.Size(280, 24);
+            this.cmbProduct.Size = new System.Drawing.Size(211, 21);
             this.cmbProduct.TabIndex = 1;
             this.cmbProduct.SelectedIndexChanged += new System.EventHandler(this.cmbProduct_SelectedIndexChanged);
             // 
@@ -660,9 +675,10 @@
             // 
             this.lblProduct.AutoSize = true;
             this.lblProduct.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblProduct.Location = new System.Drawing.Point(20, 10);
+            this.lblProduct.Location = new System.Drawing.Point(15, 8);
+            this.lblProduct.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProduct.Name = "lblProduct";
-            this.lblProduct.Size = new System.Drawing.Size(72, 16);
+            this.lblProduct.Size = new System.Drawing.Size(58, 13);
             this.lblProduct.TabIndex = 0;
             this.lblProduct.Text = "Hãng giày:";
             // 
@@ -672,22 +688,23 @@
             this.lblTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.White;
-            this.lblTitle.Location = new System.Drawing.Point(24, 25);
+            this.lblTitle.Location = new System.Drawing.Point(18, 20);
+            this.lblTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblTitle.Size = new System.Drawing.Size(410, 62);
+            this.lblTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 13);
+            this.lblTitle.Size = new System.Drawing.Size(328, 50);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản lý sản phẩm (Giày)";
             // 
             // frmSanpham
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1312, 720);
+            this.ClientSize = new System.Drawing.Size(984, 585);
             this.Controls.Add(this.panelRoot);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(1327, 752);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(999, 618);
             this.Name = "frmSanpham";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Quản lý sản phẩm";

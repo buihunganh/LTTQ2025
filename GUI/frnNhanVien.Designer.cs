@@ -20,6 +20,8 @@
             this.panelRoot = new System.Windows.Forms.Panel();
             this.dgvNhanVien = new System.Windows.Forms.DataGridView();
             this.grpFilter = new System.Windows.Forms.GroupBox();
+            this.lblLoc = new System.Windows.Forms.Label();
+            this.cmbLocTrangThai = new System.Windows.Forms.ComboBox();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblSearch = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
@@ -47,8 +49,6 @@
             this.lblHoTen = new System.Windows.Forms.Label();
             this.txtMaNV = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.cmbLocTrangThai = new System.Windows.Forms.ComboBox();
-            this.lblLoc = new System.Windows.Forms.Label();
             this.panelRoot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNhanVien)).BeginInit();
             this.grpFilter.SuspendLayout();
@@ -75,8 +75,8 @@
             // 
             // dgvNhanVien
             // 
-            this.dgvNhanVien.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvNhanVien.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvNhanVien.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.dgvNhanVien.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -94,7 +94,7 @@
             // 
             // grpFilter
             // 
-            this.grpFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.grpFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpFilter.BackColor = System.Drawing.Color.Transparent;
             this.grpFilter.Controls.Add(this.lblLoc);
@@ -111,6 +111,24 @@
             this.grpFilter.TabIndex = 3;
             this.grpFilter.TabStop = false;
             this.grpFilter.Text = "Lọc / Tìm kiếm";
+            // 
+            // lblLoc
+            // 
+            this.lblLoc.AutoSize = true;
+            this.lblLoc.Location = new System.Drawing.Point(380, 22);
+            this.lblLoc.Name = "lblLoc";
+            this.lblLoc.Size = new System.Drawing.Size(63, 15);
+            this.lblLoc.TabIndex = 3;
+            this.lblLoc.Text = "Trạng thái:";
+            // 
+            // cmbLocTrangThai
+            // 
+            this.cmbLocTrangThai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLocTrangThai.FormattingEnabled = true;
+            this.cmbLocTrangThai.Location = new System.Drawing.Point(380, 42);
+            this.cmbLocTrangThai.Name = "cmbLocTrangThai";
+            this.cmbLocTrangThai.Size = new System.Drawing.Size(163, 23);
+            this.cmbLocTrangThai.TabIndex = 2;
             // 
             // txtSearch
             // 
@@ -133,7 +151,7 @@
             // 
             // panelButtons
             // 
-            this.panelButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.panelButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelButtons.BackColor = System.Drawing.Color.Transparent;
             this.panelButtons.Controls.Add(this.btnXuatFile);
@@ -229,7 +247,7 @@
             // 
             // panelProductInfo
             // 
-            this.panelProductInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.panelProductInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelProductInfo.BackColor = System.Drawing.Color.Transparent;
             this.panelProductInfo.Controls.Add(this.chkIsAdmin);
@@ -405,7 +423,7 @@
             // 
             // txtMaNV
             // 
-            this.txtMaNV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtMaNV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMaNV.Location = new System.Drawing.Point(488, -4);
             this.txtMaNV.Margin = new System.Windows.Forms.Padding(2);
@@ -427,24 +445,6 @@
             this.lblTitle.Size = new System.Drawing.Size(245, 50);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Quản lý nhân viên";
-            // 
-            // cmbLocTrangThai
-            // 
-            this.cmbLocTrangThai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLocTrangThai.FormattingEnabled = true;
-            this.cmbLocTrangThai.Location = new System.Drawing.Point(380, 42);
-            this.cmbLocTrangThai.Name = "cmbLocTrangThai";
-            this.cmbLocTrangThai.Size = new System.Drawing.Size(163, 23);
-            this.cmbLocTrangThai.TabIndex = 2;
-            // 
-            // lblLoc
-            // 
-            this.lblLoc.AutoSize = true;
-            this.lblLoc.Location = new System.Drawing.Point(380, 22);
-            this.lblLoc.Name = "lblLoc";
-            this.lblLoc.Size = new System.Drawing.Size(63, 15);
-            this.lblLoc.TabIndex = 3;
-            this.lblLoc.Text = "Trạng thái:";
             // 
             // frnNhanVien
             // 

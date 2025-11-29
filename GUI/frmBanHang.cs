@@ -34,6 +34,17 @@ namespace BTL_LTTQ.GUI
             _dtGioHang.Columns.Add("ThanhTien", typeof(decimal));
 
             dgvGioHang.DataSource = _dtGioHang;
+            CalculateTotal();
+        }
+
+        private void CalculateTotal()
+        {
+            decimal total = 0;
+            foreach (DataRow row in _dtGioHang.Rows)
+            {
+                total += Convert.ToDecimal(row["ThanhTien"]);
+            }
+            lblTongTien.Text = $"Tổng tiền: {total:N0} VNĐ";
         }
 
         private void frmBanHang_Load(object sender, EventArgs e)
@@ -68,10 +79,12 @@ namespace BTL_LTTQ.GUI
 
             foreach (DataRow r in _dtGioHang.Rows)
             {
-                if ((int)r["MaCTSP"] == (int)cboSanPham.SelectedValue)
+                if ((int)r["MaCTSP"] == (int)cboSanPham.SelectedValue && 
+                    (int)r["GiamGia"] == giamGia)
                 {
                     r["SoLuong"] = (int)r["SoLuong"] + slMua;
                     r["ThanhTien"] = (decimal)r["ThanhTien"] + thanhTien;
+                    CalculateTotal();
                     return;
                 }
             }
@@ -79,11 +92,17 @@ namespace BTL_LTTQ.GUI
             _dtGioHang.Rows.Add(cboSanPham.SelectedValue, cboSanPham.Text, slMua, giaBan, giamGia, thanhTien);
             numSoLuong.Value = 1;
             numGiamGiaSP.Value = 0;
+            
+            CalculateTotal();
         }
 
         private void DgvGioHang_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0) _dtGioHang.Rows.RemoveAt(e.RowIndex);
+            if (e.RowIndex >= 0)
+            {
+                _dtGioHang.Rows.RemoveAt(e.RowIndex);
+                CalculateTotal();
+            }
         }
 
         private void btnGoToInvoice_Click(object sender, EventArgs e)

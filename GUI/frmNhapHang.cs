@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Drawing; // Cần thư viện này để xử lý màu sắc
+using System.Drawing; 
 using System.Windows.Forms;
 using BTL_LTTQ.BLL;
 
@@ -11,12 +11,12 @@ namespace BTL_LTTQ.GUI
         private InventoryBLL _bll = new InventoryBLL();
         private DataTable _dtChiTietNhap;
 
-        private readonly Color COLOR_ROOT = Color.FromArgb(45, 47, 72);       // Nền chính
-        private readonly Color COLOR_CARD = Color.FromArgb(58, 60, 92);       // Nền panel con
-        private readonly Color COLOR_ACCENT = Color.FromArgb(232, 90, 79);    // Màu cam chủ đạo
-        private readonly Color COLOR_TEXT_MAIN = Color.White;                 // Chữ chính
-        private readonly Color COLOR_TEXT_SUB = Color.Gainsboro;              // Chữ phụ
-        private readonly Color COLOR_GRID_BG = Color.FromArgb(55, 57, 82);    // Nền lưới
+        private readonly Color COLOR_ROOT = Color.FromArgb(45, 47, 72);       
+        private readonly Color COLOR_CARD = Color.FromArgb(58, 60, 92);       
+        private readonly Color COLOR_ACCENT = Color.FromArgb(232, 90, 79);    
+        private readonly Color COLOR_TEXT_MAIN = Color.White;                 
+        private readonly Color COLOR_TEXT_SUB = Color.Gainsboro;              
+        private readonly Color COLOR_GRID_BG = Color.FromArgb(55, 57, 82);    
 
         public frmNhapHang()
         {
@@ -62,10 +62,8 @@ namespace BTL_LTTQ.GUI
         {
             try
             {
-                // 1. Áp dụng giao diện đồng bộ
                 SetupTheme();
 
-                // 2. Load dữ liệu
                 LoadComboBoxes();
                 LoadDashboard();
             }
@@ -183,7 +181,6 @@ namespace BTL_LTTQ.GUI
             dgvLichSu.DataSource = _bll.GetLichSuNhap();
             dgvTonKho.DataSource = _bll.GetAllInventory();
             
-            // Ẩn cột MaCTSP trong tab Tồn Kho
             if (dgvTonKho.Columns["MaCTSP"] != null)
                 dgvTonKho.Columns["MaCTSP"].Visible = false;
         }
@@ -230,7 +227,6 @@ namespace BTL_LTTQ.GUI
                 int maNCC = (int)cboNhaCungCap.SelectedValue;
                 decimal tongTien = decimal.Parse(lblTongTien.Text.Replace(" VNĐ", "").Replace(",", "").Replace(".", ""));
 
-                // Mã NV cứng, nếu có session thì thay vào
                 int maNV = 1;
 
                 bool ketQua = _bll.LuuPhieuNhap(maNCC, maNV, tongTien, _dtChiTietNhap);

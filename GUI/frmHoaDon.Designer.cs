@@ -47,6 +47,7 @@ namespace BTL_LTTQ.GUI
             this.btnIn = new System.Windows.Forms.Button();
             this.btnHuyHoaDon = new System.Windows.Forms.Button();
             this.btnDong = new System.Windows.Forms.Button();
+            this.btnXoaSP = new System.Windows.Forms.Button();
             this.grpInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChiTiet)).BeginInit();
             this.SuspendLayout();
@@ -136,26 +137,20 @@ namespace BTL_LTTQ.GUI
             this.lblNhanVien.Size = new System.Drawing.Size(94, 23);
             this.lblNhanVien.TabIndex = 6;
             this.lblNhanVien.Text = "Tên NV:";
-            // 
-            // txtMaKH
-            // 
+           
             this.txtMaKH.Location = new System.Drawing.Point(480, 32);
             this.txtMaKH.Name = "txtMaKH";
             this.txtMaKH.ReadOnly = true;
             this.txtMaKH.Size = new System.Drawing.Size(290, 30);
             this.txtMaKH.TabIndex = 9;
-            // 
-            // lblMaKH
-            // 
+         
             this.lblMaKH.AutoSize = true;
             this.lblMaKH.Location = new System.Drawing.Point(360, 35);
             this.lblMaKH.Name = "lblMaKH";
             this.lblMaKH.Size = new System.Drawing.Size(98, 23);
             this.lblMaKH.TabIndex = 8;
             this.lblMaKH.Text = "Mã KH:";
-            // 
-            // cboKhachHang
-            // 
+         
             this.cboKhachHang.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cboKhachHang.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboKhachHang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
@@ -165,18 +160,14 @@ namespace BTL_LTTQ.GUI
             this.cboKhachHang.Size = new System.Drawing.Size(250, 31);
             this.cboKhachHang.TabIndex = 11;
             this.cboKhachHang.SelectedIndexChanged += new System.EventHandler(this.CboKhachHang_SelectedIndexChanged);
-            // 
-            // lblKhachHang
-            // 
+           
             this.lblKhachHang.AutoSize = true;
             this.lblKhachHang.Location = new System.Drawing.Point(360, 70);
             this.lblKhachHang.Name = "lblKhachHang";
             this.lblKhachHang.Size = new System.Drawing.Size(107, 23);
             this.lblKhachHang.TabIndex = 10;
             this.lblKhachHang.Text = "Tên KH:";
-            // 
-            // btnThemKhach
-            // 
+          
             this.btnThemKhach.BackColor = System.Drawing.Color.OrangeRed;
             this.btnThemKhach.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnThemKhach.ForeColor = System.Drawing.Color.White;
@@ -187,44 +178,34 @@ namespace BTL_LTTQ.GUI
             this.btnThemKhach.Text = "+";
             this.btnThemKhach.UseVisualStyleBackColor = false;
             this.btnThemKhach.Click += new System.EventHandler(this.BtnThemKhach_Click);
-            // 
-            // txtSDT
-            // 
+           
             this.txtSDT.Location = new System.Drawing.Point(480, 102);
             this.txtSDT.Name = "txtSDT";
             this.txtSDT.ReadOnly = true;
             this.txtSDT.Size = new System.Drawing.Size(290, 30);
             this.txtSDT.TabIndex = 14;
             this.txtSDT.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtSDT_KeyPress);
-            // 
-            // lblSDT
-            // 
+        
             this.lblSDT.AutoSize = true;
             this.lblSDT.Location = new System.Drawing.Point(360, 105);
             this.lblSDT.Name = "lblSDT";
             this.lblSDT.Size = new System.Drawing.Size(44, 23);
             this.lblSDT.TabIndex = 13;
             this.lblSDT.Text = "SĐT:";
-            // 
-            // txtDiaChi
-            // 
+          
             this.txtDiaChi.Location = new System.Drawing.Point(480, 137);
             this.txtDiaChi.Name = "txtDiaChi";
             this.txtDiaChi.ReadOnly = true;
             this.txtDiaChi.Size = new System.Drawing.Size(290, 30);
             this.txtDiaChi.TabIndex = 16;
-            // 
-            // lblDiaChi
-            // 
+          
             this.lblDiaChi.AutoSize = true;
             this.lblDiaChi.Location = new System.Drawing.Point(360, 140);
             this.lblDiaChi.Name = "lblDiaChi";
             this.lblDiaChi.Size = new System.Drawing.Size(66, 23);
             this.lblDiaChi.TabIndex = 15;
             this.lblDiaChi.Text = "Địa chỉ:";
-            // 
-            // dgvChiTiet
-            // 
+            
             this.dgvChiTiet.AllowUserToAddRows = false;
             this.dgvChiTiet.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvChiTiet.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
@@ -243,9 +224,19 @@ namespace BTL_LTTQ.GUI
             this.dgvChiTiet.RowTemplate.Height = 24;
             this.dgvChiTiet.Size = new System.Drawing.Size(850, 240);
             this.dgvChiTiet.TabIndex = 2;
-            // 
-            // lblTongTien
-            // 
+           
+            this.btnXoaSP.BackColor = System.Drawing.Color.OrangeRed;
+            this.btnXoaSP.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnXoaSP.ForeColor = System.Drawing.Color.White;
+            this.btnXoaSP.Location = new System.Drawing.Point(20, 545);
+            this.btnXoaSP.Name = "btnXoaSP";
+            this.btnXoaSP.Size = new System.Drawing.Size(150, 35);
+            this.btnXoaSP.TabIndex = 20;
+            this.btnXoaSP.Text = "Xóa Sản Phẩm";
+            this.btnXoaSP.UseVisualStyleBackColor = false;
+            this.btnXoaSP.Visible = true;
+            this.btnXoaSP.Click += new System.EventHandler(this.BtnXoaSP_Click);
+           
             this.lblTongTien.AutoSize = true;
             this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTongTien.ForeColor = System.Drawing.Color.Yellow;
@@ -254,9 +245,7 @@ namespace BTL_LTTQ.GUI
             this.lblTongTien.Size = new System.Drawing.Size(102, 41);
             this.lblTongTien.TabIndex = 3;
             this.lblTongTien.Text = "0 VNĐ";
-            // 
-            // btnLuu
-            // 
+            
             this.btnLuu.BackColor = System.Drawing.Color.Green;
             this.btnLuu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLuu.ForeColor = System.Drawing.Color.White;
@@ -267,9 +256,7 @@ namespace BTL_LTTQ.GUI
             this.btnLuu.Text = "Lưu Hóa Đơn";
             this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.BtnLuu_Click);
-            // 
-            // btnSua
-            // 
+           
             this.btnSua.BackColor = System.Drawing.Color.Blue;
             this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSua.ForeColor = System.Drawing.Color.White;
@@ -281,9 +268,7 @@ namespace BTL_LTTQ.GUI
             this.btnSua.UseVisualStyleBackColor = false;
             this.btnSua.Visible = false;
             this.btnSua.Click += new System.EventHandler(this.BtnSua_Click);
-            // 
-            // btnIn
-            // 
+           
             this.btnIn.BackColor = System.Drawing.Color.Orange;
             this.btnIn.Enabled = false;
             this.btnIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -295,9 +280,7 @@ namespace BTL_LTTQ.GUI
             this.btnIn.Text = "In Hóa Đơn";
             this.btnIn.UseVisualStyleBackColor = false;
             this.btnIn.Click += new System.EventHandler(this.BtnIn_Click);
-            // 
-            // btnHuyHoaDon
-            // 
+            
             this.btnHuyHoaDon.BackColor = System.Drawing.Color.Red;
             this.btnHuyHoaDon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHuyHoaDon.ForeColor = System.Drawing.Color.White;
@@ -309,9 +292,7 @@ namespace BTL_LTTQ.GUI
             this.btnHuyHoaDon.UseVisualStyleBackColor = false;
             this.btnHuyHoaDon.Visible = false;
             this.btnHuyHoaDon.Click += new System.EventHandler(this.BtnHuyHoaDon_Click);
-            // 
-            // btnDong
-            // 
+          
             this.btnDong.BackColor = System.Drawing.Color.Gray;
             this.btnDong.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDong.ForeColor = System.Drawing.Color.White;
@@ -322,9 +303,7 @@ namespace BTL_LTTQ.GUI
             this.btnDong.Text = "Đóng";
             this.btnDong.UseVisualStyleBackColor = false;
             this.btnDong.Click += new System.EventHandler(this.BtnDong_Click);
-            // 
-            // frmHoaDon
-            // 
+           
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
@@ -335,6 +314,7 @@ namespace BTL_LTTQ.GUI
             this.Controls.Add(this.btnSua);
             this.Controls.Add(this.btnLuu);
             this.Controls.Add(this.lblTongTien);
+            this.Controls.Add(this.btnXoaSP);
             this.Controls.Add(this.dgvChiTiet);
             this.Controls.Add(this.grpInfo);
             this.Controls.Add(this.title);
@@ -378,5 +358,6 @@ namespace BTL_LTTQ.GUI
         private System.Windows.Forms.Button btnIn;
         private System.Windows.Forms.Button btnHuyHoaDon;
         private System.Windows.Forms.Button btnDong;
+        private System.Windows.Forms.Button btnXoaSP;
     }
 }

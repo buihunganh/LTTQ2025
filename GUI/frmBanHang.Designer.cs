@@ -2,14 +2,10 @@ namespace BTL_LTTQ.GUI
 {
     partial class frmBanHang
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+        
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
+        
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
@@ -22,10 +18,7 @@ namespace BTL_LTTQ.GUI
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+        
         private void InitializeComponent()
         {
             this.pnlLeft = new System.Windows.Forms.Panel();
@@ -39,14 +32,15 @@ namespace BTL_LTTQ.GUI
             this.cboSanPham = new System.Windows.Forms.ComboBox();
             this.lblChonGiay = new System.Windows.Forms.Label();
             this.dgvGioHang = new System.Windows.Forms.DataGridView();
+            this.pnlBottom = new System.Windows.Forms.Panel();
+            this.lblTongTien = new System.Windows.Forms.Label();
             this.pnlLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numGiamGiaSP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSoLuong)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGioHang)).BeginInit();
+            this.pnlBottom.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pnlLeft
-            // 
+            
             this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.pnlLeft.Controls.Add(this.lblNote);
             this.pnlLeft.Controls.Add(this.btnGoToInvoice);
@@ -63,9 +57,7 @@ namespace BTL_LTTQ.GUI
             this.pnlLeft.Padding = new System.Windows.Forms.Padding(20);
             this.pnlLeft.Size = new System.Drawing.Size(350, 600);
             this.pnlLeft.TabIndex = 0;
-            // 
-            // lblNote
-            // 
+           
             this.lblNote.AutoSize = true;
             this.lblNote.ForeColor = System.Drawing.Color.Yellow;
             this.lblNote.Location = new System.Drawing.Point(20, 380);
@@ -73,9 +65,7 @@ namespace BTL_LTTQ.GUI
             this.lblNote.Size = new System.Drawing.Size(160, 16);
             this.lblNote.TabIndex = 8;
             this.lblNote.Text = "* Kích đúp dòng để xóa";
-            // 
-            // btnGoToInvoice
-            // 
+           
             this.btnGoToInvoice.BackColor = System.Drawing.Color.ForestGreen;
             this.btnGoToInvoice.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGoToInvoice.FlatAppearance.BorderSize = 0;
@@ -93,9 +83,7 @@ namespace BTL_LTTQ.GUI
             this.btnGoToInvoice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnGoToInvoice.UseVisualStyleBackColor = false;
             this.btnGoToInvoice.Click += new System.EventHandler(this.btnGoToInvoice_Click);
-            // 
-            // btnAdd
-            // 
+          
             this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(90)))), ((int)(((byte)(79)))));
             this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdd.FlatAppearance.BorderSize = 0;
@@ -113,16 +101,12 @@ namespace BTL_LTTQ.GUI
             this.btnAdd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnAdd.UseVisualStyleBackColor = false;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // numGiamGiaSP
-            // 
+        
             this.numGiamGiaSP.Location = new System.Drawing.Point(20, 175);
             this.numGiamGiaSP.Name = "numGiamGiaSP";
             this.numGiamGiaSP.Size = new System.Drawing.Size(300, 22);
             this.numGiamGiaSP.TabIndex = 5;
-            // 
-            // lblGiamGia
-            // 
+       
             this.lblGiamGia.AutoSize = true;
             this.lblGiamGia.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblGiamGia.Location = new System.Drawing.Point(20, 150);
@@ -130,9 +114,7 @@ namespace BTL_LTTQ.GUI
             this.lblGiamGia.Size = new System.Drawing.Size(95, 16);
             this.lblGiamGia.TabIndex = 4;
             this.lblGiamGia.Text = "Giảm giá (%):";
-            // 
-            // numSoLuong
-            // 
+          
             this.numSoLuong.Location = new System.Drawing.Point(20, 110);
             this.numSoLuong.Minimum = new decimal(new int[] {
             1,
@@ -147,9 +129,7 @@ namespace BTL_LTTQ.GUI
             0,
             0,
             0});
-            // 
-            // lblSoLuong
-            // 
+           
             this.lblSoLuong.AutoSize = true;
             this.lblSoLuong.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblSoLuong.Location = new System.Drawing.Point(20, 85);
@@ -157,18 +137,14 @@ namespace BTL_LTTQ.GUI
             this.lblSoLuong.Size = new System.Drawing.Size(67, 16);
             this.lblSoLuong.TabIndex = 2;
             this.lblSoLuong.Text = "Số lượng:";
-            // 
-            // cboSanPham
-            // 
+           
             this.cboSanPham.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboSanPham.FormattingEnabled = true;
             this.cboSanPham.Location = new System.Drawing.Point(20, 45);
             this.cboSanPham.Name = "cboSanPham";
             this.cboSanPham.Size = new System.Drawing.Size(300, 24);
             this.cboSanPham.TabIndex = 1;
-            // 
-            // lblChonGiay
-            // 
+          
             this.lblChonGiay.AutoSize = true;
             this.lblChonGiay.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblChonGiay.Location = new System.Drawing.Point(20, 20);
@@ -176,9 +152,7 @@ namespace BTL_LTTQ.GUI
             this.lblChonGiay.Size = new System.Drawing.Size(72, 16);
             this.lblChonGiay.TabIndex = 0;
             this.lblChonGiay.Text = "Chọn giày:";
-            // 
-            // dgvGioHang
-            // 
+  
             this.dgvGioHang.AllowUserToAddRows = false;
             this.dgvGioHang.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvGioHang.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
@@ -192,17 +166,35 @@ namespace BTL_LTTQ.GUI
             this.dgvGioHang.Name = "dgvGioHang";
             this.dgvGioHang.RowHeadersWidth = 51;
             this.dgvGioHang.RowTemplate.Height = 24;
-            this.dgvGioHang.Size = new System.Drawing.Size(650, 600);
+            this.dgvGioHang.Size = new System.Drawing.Size(650, 540);
             this.dgvGioHang.TabIndex = 1;
             this.dgvGioHang.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvGioHang_CellDoubleClick);
-            // 
-            // frmBanHang
-            // 
+           
+            this.pnlBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
+            this.pnlBottom.Controls.Add(this.lblTongTien);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Location = new System.Drawing.Point(350, 540);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Size = new System.Drawing.Size(650, 60);
+            this.pnlBottom.TabIndex = 2;
+          
+            this.lblTongTien.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTongTien.ForeColor = System.Drawing.Color.Yellow;
+            this.lblTongTien.Location = new System.Drawing.Point(0, 0);
+            this.lblTongTien.Name = "lblTongTien";
+            this.lblTongTien.Size = new System.Drawing.Size(650, 60);
+            this.lblTongTien.TabIndex = 0;
+            this.lblTongTien.Text = "Tổng tiền: 0 VNĐ";
+            this.lblTongTien.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblTongTien.Padding = new System.Windows.Forms.Padding(0, 0, 20, 0);
+           
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(1000, 600);
             this.Controls.Add(this.dgvGioHang);
+            this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlLeft);
             this.Name = "frmBanHang";
             this.Text = "frmBanHang";
@@ -212,6 +204,7 @@ namespace BTL_LTTQ.GUI
             ((System.ComponentModel.ISupportInitialize)(this.numGiamGiaSP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSoLuong)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGioHang)).EndInit();
+            this.pnlBottom.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -229,5 +222,7 @@ namespace BTL_LTTQ.GUI
         private System.Windows.Forms.ComboBox cboSanPham;
         private System.Windows.Forms.Label lblChonGiay;
         private System.Windows.Forms.DataGridView dgvGioHang;
+        private System.Windows.Forms.Panel pnlBottom;
+        private System.Windows.Forms.Label lblTongTien;
     }
 }

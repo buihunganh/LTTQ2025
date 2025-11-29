@@ -145,7 +145,7 @@
             this.lblPasswordSectionTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 20);
             this.lblPasswordSectionTitle.Name = "lblPasswordSectionTitle";
             this.lblPasswordSectionTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 20);
-            this.lblPasswordSectionTitle.Size = new System.Drawing.Size(172, 55);
+            this.lblPasswordSectionTitle.Size = new System.Drawing.Size(140, 48);
             this.lblPasswordSectionTitle.TabIndex = 8;
             this.lblPasswordSectionTitle.Text = "Đổi mật khẩu";
             // 
@@ -190,7 +190,7 @@
             this.txtConfirmPassword.Location = new System.Drawing.Point(30, 270);
             this.txtConfirmPassword.Name = "txtConfirmPassword";
             this.txtConfirmPassword.PasswordChar = '●';
-            this.txtConfirmPassword.Size = new System.Drawing.Size(484, 32);
+            this.txtConfirmPassword.Size = new System.Drawing.Size(484, 27);
             this.txtConfirmPassword.TabIndex = 2;
             // 
             // lblConfirmPassword
@@ -200,7 +200,7 @@
             this.lblConfirmPassword.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblConfirmPassword.Location = new System.Drawing.Point(30, 240);
             this.lblConfirmPassword.Name = "lblConfirmPassword";
-            this.lblConfirmPassword.Size = new System.Drawing.Size(200, 23);
+            this.lblConfirmPassword.Size = new System.Drawing.Size(165, 19);
             this.lblConfirmPassword.TabIndex = 5;
             this.lblConfirmPassword.Text = "Xác nhận mật khẩu mới";
             // 
@@ -215,7 +215,7 @@
             this.txtNewPassword.Location = new System.Drawing.Point(30, 185);
             this.txtNewPassword.Name = "txtNewPassword";
             this.txtNewPassword.PasswordChar = '●';
-            this.txtNewPassword.Size = new System.Drawing.Size(484, 32);
+            this.txtNewPassword.Size = new System.Drawing.Size(484, 27);
             this.txtNewPassword.TabIndex = 1;
             // 
             // lblNewPassword
@@ -225,7 +225,7 @@
             this.lblNewPassword.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblNewPassword.Location = new System.Drawing.Point(30, 155);
             this.lblNewPassword.Name = "lblNewPassword";
-            this.lblNewPassword.Size = new System.Drawing.Size(123, 23);
+            this.lblNewPassword.Size = new System.Drawing.Size(101, 19);
             this.lblNewPassword.TabIndex = 3;
             this.lblNewPassword.Text = "Mật khẩu mới";
             // 
@@ -240,7 +240,7 @@
             this.txtOldPassword.Location = new System.Drawing.Point(30, 105);
             this.txtOldPassword.Name = "txtOldPassword";
             this.txtOldPassword.PasswordChar = '●';
-            this.txtOldPassword.Size = new System.Drawing.Size(484, 32);
+            this.txtOldPassword.Size = new System.Drawing.Size(484, 27);
             this.txtOldPassword.TabIndex = 0;
             // 
             // lblOldPassword
@@ -250,7 +250,7 @@
             this.lblOldPassword.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblOldPassword.Location = new System.Drawing.Point(30, 75);
             this.lblOldPassword.Name = "lblOldPassword";
-            this.lblOldPassword.Size = new System.Drawing.Size(109, 23);
+            this.lblOldPassword.Size = new System.Drawing.Size(90, 19);
             this.lblOldPassword.TabIndex = 0;
             this.lblOldPassword.Text = "Mật khẩu cũ";
             // 
@@ -341,7 +341,7 @@
             this.txtHireDate.Location = new System.Drawing.Point(30, 503);
             this.txtHireDate.Name = "txtHireDate";
             this.txtHireDate.ReadOnly = true;
-            this.txtHireDate.Size = new System.Drawing.Size(512, 32);
+            this.txtHireDate.Size = new System.Drawing.Size(512, 27);
             this.txtHireDate.TabIndex = 13;
             // 
             // lblHireDate
@@ -370,7 +370,7 @@
             this.lblAddress.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblAddress.Location = new System.Drawing.Point(30, 391);
             this.lblAddress.Name = "lblAddress";
-            this.lblAddress.Size = new System.Drawing.Size(65, 23);
+            this.lblAddress.Size = new System.Drawing.Size(54, 19);
             this.lblAddress.TabIndex = 6;
             this.lblAddress.Text = "Địa chỉ";
             // 
@@ -384,7 +384,7 @@
             this.txtEmail.ForeColor = System.Drawing.Color.White;
             this.txtEmail.Location = new System.Drawing.Point(30, 344);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(512, 32);
+            this.txtEmail.Size = new System.Drawing.Size(512, 27);
             this.txtEmail.TabIndex = 3;
             // 
             // lblEmail
@@ -394,7 +394,7 @@
             this.lblEmail.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblEmail.Location = new System.Drawing.Point(30, 318);
             this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(54, 23);
+            this.lblEmail.Size = new System.Drawing.Size(45, 19);
             this.lblEmail.TabIndex = 4;
             this.lblEmail.Text = "Email";
             // 
@@ -408,7 +408,7 @@
             this.txtPhone.ForeColor = System.Drawing.Color.White;
             this.txtPhone.Location = new System.Drawing.Point(30, 271);
             this.txtPhone.Name = "txtPhone";
-            this.txtPhone.Size = new System.Drawing.Size(512, 32);
+            this.txtPhone.Size = new System.Drawing.Size(512, 27);
             this.txtPhone.TabIndex = 2;
             this.txtPhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPhone_KeyPress);
             // 
@@ -419,7 +419,7 @@
             this.lblPhone.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblPhone.Location = new System.Drawing.Point(30, 245);
             this.lblPhone.Name = "lblPhone";
-            this.lblPhone.Size = new System.Drawing.Size(116, 23);
+            this.lblPhone.Size = new System.Drawing.Size(97, 19);
             this.lblPhone.TabIndex = 2;
             this.lblPhone.Text = "Số điện thoại";
             // 
@@ -433,7 +433,7 @@
             this.txtFullName.ForeColor = System.Drawing.Color.White;
             this.txtFullName.Location = new System.Drawing.Point(30, 198);
             this.txtFullName.Name = "txtFullName";
-            this.txtFullName.Size = new System.Drawing.Size(512, 32);
+            this.txtFullName.Size = new System.Drawing.Size(512, 27);
             this.txtFullName.TabIndex = 1;
             // 
             // lblFullName
@@ -443,7 +443,7 @@
             this.lblFullName.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblFullName.Location = new System.Drawing.Point(30, 172);
             this.lblFullName.Name = "lblFullName";
-            this.lblFullName.Size = new System.Drawing.Size(64, 23);
+            this.lblFullName.Size = new System.Drawing.Size(54, 19);
             this.lblFullName.TabIndex = 0;
             this.lblFullName.Text = "Họ tên";
             // 
@@ -457,7 +457,7 @@
             this.lblProfileSectionTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 20);
             this.lblProfileSectionTitle.Name = "lblProfileSectionTitle";
             this.lblProfileSectionTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 20);
-            this.lblProfileSectionTitle.Size = new System.Drawing.Size(226, 55);
+            this.lblProfileSectionTitle.Size = new System.Drawing.Size(184, 48);
             this.lblProfileSectionTitle.TabIndex = 0;
             this.lblProfileSectionTitle.Text = "Thông tin cá nhân";
             // 
@@ -495,7 +495,7 @@
             this.lblSubtitle.ForeColor = System.Drawing.Color.Gainsboro;
             this.lblSubtitle.Location = new System.Drawing.Point(4, 56);
             this.lblSubtitle.Name = "lblSubtitle";
-            this.lblSubtitle.Size = new System.Drawing.Size(453, 23);
+            this.lblSubtitle.Size = new System.Drawing.Size(365, 19);
             this.lblSubtitle.TabIndex = 1;
             this.lblSubtitle.Text = "Quản lý thông tin cá nhân và thay đổi mật khẩu tài khoản";
             // 
@@ -506,13 +506,13 @@
             this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(143, 50);
+            this.lblTitle.Size = new System.Drawing.Size(117, 41);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Cài đặt";
             // 
             // frmSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1180, 900);

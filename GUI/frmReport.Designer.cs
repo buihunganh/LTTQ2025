@@ -94,10 +94,10 @@ namespace BTL_LTTQ
             this.panelRoot.Controls.Add(this.lblHeader);
             this.panelRoot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelRoot.Location = new System.Drawing.Point(0, 0);
-            this.panelRoot.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panelRoot.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelRoot.Name = "panelRoot";
-            this.panelRoot.Padding = new System.Windows.Forms.Padding(24, 19, 24, 19);
-            this.panelRoot.Size = new System.Drawing.Size(1280, 720);
+            this.panelRoot.Padding = new System.Windows.Forms.Padding(18, 15, 18, 15);
+            this.panelRoot.Size = new System.Drawing.Size(960, 585);
             this.panelRoot.TabIndex = 0;
             // 
             // bodyLayout
@@ -108,12 +108,12 @@ namespace BTL_LTTQ
             this.bodyLayout.Controls.Add(this.chartRevenue, 0, 0);
             this.bodyLayout.Controls.Add(this.panelRight, 1, 0);
             this.bodyLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bodyLayout.Location = new System.Drawing.Point(24, 336);
-            this.bodyLayout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bodyLayout.Location = new System.Drawing.Point(18, 273);
+            this.bodyLayout.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bodyLayout.Name = "bodyLayout";
             this.bodyLayout.RowCount = 1;
             this.bodyLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.bodyLayout.Size = new System.Drawing.Size(1232, 365);
+            this.bodyLayout.Size = new System.Drawing.Size(924, 297);
             this.bodyLayout.TabIndex = 3;
             // 
             // chartRevenue
@@ -132,8 +132,8 @@ namespace BTL_LTTQ
             legend1.ForeColor = System.Drawing.Color.Gainsboro;
             legend1.Name = "Legend1";
             this.chartRevenue.Legends.Add(legend1);
-            this.chartRevenue.Location = new System.Drawing.Point(10, 8);
-            this.chartRevenue.Margin = new System.Windows.Forms.Padding(10, 8, 10, 8);
+            this.chartRevenue.Location = new System.Drawing.Point(8, 6);
+            this.chartRevenue.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
             this.chartRevenue.Name = "chartRevenue";
             this.chartRevenue.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SeaGreen;
             series1.BorderWidth = 3;
@@ -154,7 +154,7 @@ namespace BTL_LTTQ
             series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
             this.chartRevenue.Series.Add(series1);
             this.chartRevenue.Series.Add(series2);
-            this.chartRevenue.Size = new System.Drawing.Size(719, 349);
+            this.chartRevenue.Size = new System.Drawing.Size(538, 285);
             this.chartRevenue.TabIndex = 0;
             this.chartRevenue.Text = "chart1";
             // 
@@ -166,11 +166,11 @@ namespace BTL_LTTQ
             this.panelRight.Controls.Add(this.lblTopProducts);
             this.panelRight.Controls.Add(this.dgvTopProducts);
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelRight.Location = new System.Drawing.Point(739, 0);
+            this.panelRight.Location = new System.Drawing.Point(554, 0);
             this.panelRight.Margin = new System.Windows.Forms.Padding(0);
             this.panelRight.Name = "panelRight";
-            this.panelRight.Padding = new System.Windows.Forms.Padding(10, 8, 10, 8);
-            this.panelRight.Size = new System.Drawing.Size(493, 365);
+            this.panelRight.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
+            this.panelRight.Size = new System.Drawing.Size(370, 297);
             this.panelRight.TabIndex = 1;
             // 
             // lblTopCustomers
@@ -178,9 +178,10 @@ namespace BTL_LTTQ
             this.lblTopCustomers.AutoSize = true;
             this.lblTopCustomers.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblTopCustomers.ForeColor = System.Drawing.Color.White;
-            this.lblTopCustomers.Location = new System.Drawing.Point(13, 146);
+            this.lblTopCustomers.Location = new System.Drawing.Point(10, 119);
+            this.lblTopCustomers.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTopCustomers.Name = "lblTopCustomers";
-            this.lblTopCustomers.Size = new System.Drawing.Size(163, 23);
+            this.lblTopCustomers.Size = new System.Drawing.Size(136, 19);
             this.lblTopCustomers.TabIndex = 3;
             this.lblTopCustomers.Text = "Top khách hàng (5)";
             // 
@@ -192,8 +193,8 @@ namespace BTL_LTTQ
             this.dgvTopCustomers.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.dgvTopCustomers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvTopCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvTopCustomers.Location = new System.Drawing.Point(16, 167);
-            this.dgvTopCustomers.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dgvTopCustomers.Location = new System.Drawing.Point(12, 136);
+            this.dgvTopCustomers.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgvTopCustomers.MultiSelect = false;
             this.dgvTopCustomers.Name = "dgvTopCustomers";
             this.dgvTopCustomers.ReadOnly = true;
@@ -201,7 +202,7 @@ namespace BTL_LTTQ
             this.dgvTopCustomers.RowHeadersWidth = 51;
             this.dgvTopCustomers.RowTemplate.Height = 28;
             this.dgvTopCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvTopCustomers.Size = new System.Drawing.Size(448, 134);
+            this.dgvTopCustomers.Size = new System.Drawing.Size(336, 109);
             this.dgvTopCustomers.TabIndex = 2;
             // 
             // lblTopProducts
@@ -209,9 +210,10 @@ namespace BTL_LTTQ
             this.lblTopProducts.AutoSize = true;
             this.lblTopProducts.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.lblTopProducts.ForeColor = System.Drawing.Color.White;
-            this.lblTopProducts.Location = new System.Drawing.Point(13, 10);
+            this.lblTopProducts.Location = new System.Drawing.Point(10, 8);
+            this.lblTopProducts.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTopProducts.Name = "lblTopProducts";
-            this.lblTopProducts.Size = new System.Drawing.Size(183, 23);
+            this.lblTopProducts.Size = new System.Drawing.Size(153, 19);
             this.lblTopProducts.TabIndex = 1;
             this.lblTopProducts.Text = "Top sản phẩm bán (5)";
             // 
@@ -223,8 +225,8 @@ namespace BTL_LTTQ
             this.dgvTopProducts.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
             this.dgvTopProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvTopProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvTopProducts.Location = new System.Drawing.Point(16, 31);
-            this.dgvTopProducts.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dgvTopProducts.Location = new System.Drawing.Point(12, 25);
+            this.dgvTopProducts.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgvTopProducts.MultiSelect = false;
             this.dgvTopProducts.Name = "dgvTopProducts";
             this.dgvTopProducts.ReadOnly = true;
@@ -232,7 +234,7 @@ namespace BTL_LTTQ
             this.dgvTopProducts.RowHeadersWidth = 51;
             this.dgvTopProducts.RowTemplate.Height = 28;
             this.dgvTopProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvTopProducts.Size = new System.Drawing.Size(448, 130);
+            this.dgvTopProducts.Size = new System.Drawing.Size(336, 106);
             this.dgvTopProducts.TabIndex = 0;
             // 
             // tableSummary
@@ -247,13 +249,13 @@ namespace BTL_LTTQ
             this.tableSummary.Controls.Add(this.panelOrderCard, 2, 0);
             this.tableSummary.Controls.Add(this.panelCustomerCard, 3, 0);
             this.tableSummary.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableSummary.Location = new System.Drawing.Point(24, 164);
-            this.tableSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableSummary.Location = new System.Drawing.Point(18, 133);
+            this.tableSummary.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tableSummary.Name = "tableSummary";
-            this.tableSummary.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.tableSummary.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.tableSummary.RowCount = 1;
             this.tableSummary.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableSummary.Size = new System.Drawing.Size(1232, 172);
+            this.tableSummary.Size = new System.Drawing.Size(924, 140);
             this.tableSummary.TabIndex = 2;
             // 
             // panelRevenueCard
@@ -266,20 +268,21 @@ namespace BTL_LTTQ
             this.panelRevenueCard.Controls.Add(this.lblRevenueValue);
             this.panelRevenueCard.Controls.Add(this.lblRevenueTitle);
             this.panelRevenueCard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelRevenueCard.Location = new System.Drawing.Point(8, 9);
-            this.panelRevenueCard.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+            this.panelRevenueCard.Location = new System.Drawing.Point(6, 7);
+            this.panelRevenueCard.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.panelRevenueCard.Name = "panelRevenueCard";
-            this.panelRevenueCard.Padding = new System.Windows.Forms.Padding(18, 13, 18, 13);
-            this.panelRevenueCard.Size = new System.Drawing.Size(292, 157);
+            this.panelRevenueCard.Padding = new System.Windows.Forms.Padding(14, 11, 14, 11);
+            this.panelRevenueCard.Size = new System.Drawing.Size(219, 128);
             this.panelRevenueCard.TabIndex = 0;
             // 
             // panelRevenueAccent
             // 
             this.panelRevenueAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(126)))), ((int)(((byte)(107)))));
             this.panelRevenueAccent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelRevenueAccent.Location = new System.Drawing.Point(18, 138);
+            this.panelRevenueAccent.Location = new System.Drawing.Point(14, 108);
+            this.panelRevenueAccent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelRevenueAccent.Name = "panelRevenueAccent";
-            this.panelRevenueAccent.Size = new System.Drawing.Size(254, 3);
+            this.panelRevenueAccent.Size = new System.Drawing.Size(189, 2);
             this.panelRevenueAccent.TabIndex = 4;
             // 
             // lblRevenueDelta
@@ -288,9 +291,10 @@ namespace BTL_LTTQ
             this.lblRevenueDelta.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRevenueDelta.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Italic);
             this.lblRevenueDelta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(192)))), ((int)(((byte)(215)))));
-            this.lblRevenueDelta.Location = new System.Drawing.Point(18, 118);
+            this.lblRevenueDelta.Location = new System.Drawing.Point(14, 93);
+            this.lblRevenueDelta.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblRevenueDelta.Name = "lblRevenueDelta";
-            this.lblRevenueDelta.Size = new System.Drawing.Size(122, 20);
+            this.lblRevenueDelta.Size = new System.Drawing.Size(99, 15);
             this.lblRevenueDelta.TabIndex = 3;
             this.lblRevenueDelta.Text = "So với kỳ trước: --";
             // 
@@ -300,10 +304,10 @@ namespace BTL_LTTQ
             this.lblRevenueSub.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRevenueSub.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblRevenueSub.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRevenueSub.Location = new System.Drawing.Point(18, 98);
-            this.lblRevenueSub.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.lblRevenueSub.Location = new System.Drawing.Point(14, 78);
+            this.lblRevenueSub.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.lblRevenueSub.Name = "lblRevenueSub";
-            this.lblRevenueSub.Size = new System.Drawing.Size(98, 20);
+            this.lblRevenueSub.Size = new System.Drawing.Size(77, 15);
             this.lblRevenueSub.TabIndex = 2;
             this.lblRevenueSub.Text = "Giá trị TB: 0 đ";
             // 
@@ -313,10 +317,10 @@ namespace BTL_LTTQ
             this.lblRevenueValue.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRevenueValue.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
             this.lblRevenueValue.ForeColor = System.Drawing.Color.White;
-            this.lblRevenueValue.Location = new System.Drawing.Point(18, 38);
-            this.lblRevenueValue.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblRevenueValue.Location = new System.Drawing.Point(14, 31);
+            this.lblRevenueValue.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.lblRevenueValue.Name = "lblRevenueValue";
-            this.lblRevenueValue.Size = new System.Drawing.Size(90, 60);
+            this.lblRevenueValue.Size = new System.Drawing.Size(72, 47);
             this.lblRevenueValue.TabIndex = 1;
             this.lblRevenueValue.Text = "0 đ";
             this.lblRevenueValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -327,10 +331,10 @@ namespace BTL_LTTQ
             this.lblRevenueTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblRevenueTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblRevenueTitle.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblRevenueTitle.Location = new System.Drawing.Point(18, 13);
-            this.lblRevenueTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.lblRevenueTitle.Location = new System.Drawing.Point(14, 11);
+            this.lblRevenueTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.lblRevenueTitle.Name = "lblRevenueTitle";
-            this.lblRevenueTitle.Size = new System.Drawing.Size(103, 25);
+            this.lblRevenueTitle.Size = new System.Drawing.Size(82, 20);
             this.lblRevenueTitle.TabIndex = 0;
             this.lblRevenueTitle.Text = "Doanh thu";
             // 
@@ -344,20 +348,21 @@ namespace BTL_LTTQ
             this.panelProfitCard.Controls.Add(this.lblProfitValue);
             this.panelProfitCard.Controls.Add(this.lblProfitTitle);
             this.panelProfitCard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelProfitCard.Location = new System.Drawing.Point(316, 9);
-            this.panelProfitCard.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+            this.panelProfitCard.Location = new System.Drawing.Point(237, 7);
+            this.panelProfitCard.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.panelProfitCard.Name = "panelProfitCard";
-            this.panelProfitCard.Padding = new System.Windows.Forms.Padding(18, 13, 18, 13);
-            this.panelProfitCard.Size = new System.Drawing.Size(292, 157);
+            this.panelProfitCard.Padding = new System.Windows.Forms.Padding(14, 11, 14, 11);
+            this.panelProfitCard.Size = new System.Drawing.Size(219, 128);
             this.panelProfitCard.TabIndex = 1;
             // 
             // panelProfitAccent
             // 
             this.panelProfitAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(176)))), ((int)(((byte)(107)))));
             this.panelProfitAccent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelProfitAccent.Location = new System.Drawing.Point(18, 138);
+            this.panelProfitAccent.Location = new System.Drawing.Point(14, 108);
+            this.panelProfitAccent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelProfitAccent.Name = "panelProfitAccent";
-            this.panelProfitAccent.Size = new System.Drawing.Size(254, 3);
+            this.panelProfitAccent.Size = new System.Drawing.Size(189, 2);
             this.panelProfitAccent.TabIndex = 4;
             // 
             // lblProfitDelta
@@ -366,9 +371,10 @@ namespace BTL_LTTQ
             this.lblProfitDelta.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblProfitDelta.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Italic);
             this.lblProfitDelta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(192)))), ((int)(((byte)(215)))));
-            this.lblProfitDelta.Location = new System.Drawing.Point(18, 118);
+            this.lblProfitDelta.Location = new System.Drawing.Point(14, 93);
+            this.lblProfitDelta.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProfitDelta.Name = "lblProfitDelta";
-            this.lblProfitDelta.Size = new System.Drawing.Size(122, 20);
+            this.lblProfitDelta.Size = new System.Drawing.Size(99, 15);
             this.lblProfitDelta.TabIndex = 3;
             this.lblProfitDelta.Text = "So với kỳ trước: --";
             // 
@@ -378,10 +384,10 @@ namespace BTL_LTTQ
             this.lblProfitSub.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblProfitSub.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblProfitSub.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblProfitSub.Location = new System.Drawing.Point(18, 98);
-            this.lblProfitSub.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.lblProfitSub.Location = new System.Drawing.Point(14, 78);
+            this.lblProfitSub.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.lblProfitSub.Name = "lblProfitSub";
-            this.lblProfitSub.Size = new System.Drawing.Size(79, 20);
+            this.lblProfitSub.Size = new System.Drawing.Size(64, 15);
             this.lblProfitSub.TabIndex = 2;
             this.lblProfitSub.Text = "Tỉ suất: 0%";
             // 
@@ -391,10 +397,10 @@ namespace BTL_LTTQ
             this.lblProfitValue.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblProfitValue.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
             this.lblProfitValue.ForeColor = System.Drawing.Color.White;
-            this.lblProfitValue.Location = new System.Drawing.Point(18, 38);
-            this.lblProfitValue.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblProfitValue.Location = new System.Drawing.Point(14, 31);
+            this.lblProfitValue.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.lblProfitValue.Name = "lblProfitValue";
-            this.lblProfitValue.Size = new System.Drawing.Size(90, 60);
+            this.lblProfitValue.Size = new System.Drawing.Size(72, 47);
             this.lblProfitValue.TabIndex = 1;
             this.lblProfitValue.Text = "0 đ";
             // 
@@ -404,10 +410,10 @@ namespace BTL_LTTQ
             this.lblProfitTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblProfitTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblProfitTitle.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblProfitTitle.Location = new System.Drawing.Point(18, 13);
-            this.lblProfitTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.lblProfitTitle.Location = new System.Drawing.Point(14, 11);
+            this.lblProfitTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.lblProfitTitle.Name = "lblProfitTitle";
-            this.lblProfitTitle.Size = new System.Drawing.Size(97, 25);
+            this.lblProfitTitle.Size = new System.Drawing.Size(77, 20);
             this.lblProfitTitle.TabIndex = 0;
             this.lblProfitTitle.Text = "Lợi nhuận";
             // 
@@ -421,20 +427,21 @@ namespace BTL_LTTQ
             this.panelOrderCard.Controls.Add(this.lblOrderValue);
             this.panelOrderCard.Controls.Add(this.lblOrderTitle);
             this.panelOrderCard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelOrderCard.Location = new System.Drawing.Point(624, 9);
-            this.panelOrderCard.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+            this.panelOrderCard.Location = new System.Drawing.Point(468, 7);
+            this.panelOrderCard.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.panelOrderCard.Name = "panelOrderCard";
-            this.panelOrderCard.Padding = new System.Windows.Forms.Padding(18, 13, 18, 13);
-            this.panelOrderCard.Size = new System.Drawing.Size(292, 157);
+            this.panelOrderCard.Padding = new System.Windows.Forms.Padding(14, 11, 14, 11);
+            this.panelOrderCard.Size = new System.Drawing.Size(219, 128);
             this.panelOrderCard.TabIndex = 2;
             // 
             // panelOrderAccent
             // 
             this.panelOrderAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(181)))), ((int)(((byte)(207)))));
             this.panelOrderAccent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelOrderAccent.Location = new System.Drawing.Point(18, 138);
+            this.panelOrderAccent.Location = new System.Drawing.Point(14, 108);
+            this.panelOrderAccent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelOrderAccent.Name = "panelOrderAccent";
-            this.panelOrderAccent.Size = new System.Drawing.Size(254, 3);
+            this.panelOrderAccent.Size = new System.Drawing.Size(189, 2);
             this.panelOrderAccent.TabIndex = 4;
             // 
             // lblOrderDelta
@@ -443,9 +450,10 @@ namespace BTL_LTTQ
             this.lblOrderDelta.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblOrderDelta.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Italic);
             this.lblOrderDelta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(192)))), ((int)(((byte)(215)))));
-            this.lblOrderDelta.Location = new System.Drawing.Point(18, 118);
+            this.lblOrderDelta.Location = new System.Drawing.Point(14, 93);
+            this.lblOrderDelta.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblOrderDelta.Name = "lblOrderDelta";
-            this.lblOrderDelta.Size = new System.Drawing.Size(122, 20);
+            this.lblOrderDelta.Size = new System.Drawing.Size(99, 15);
             this.lblOrderDelta.TabIndex = 3;
             this.lblOrderDelta.Text = "So với kỳ trước: --";
             // 
@@ -455,10 +463,10 @@ namespace BTL_LTTQ
             this.lblOrderSub.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblOrderSub.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblOrderSub.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblOrderSub.Location = new System.Drawing.Point(18, 98);
-            this.lblOrderSub.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.lblOrderSub.Location = new System.Drawing.Point(14, 78);
+            this.lblOrderSub.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.lblOrderSub.Name = "lblOrderSub";
-            this.lblOrderSub.Size = new System.Drawing.Size(119, 20);
+            this.lblOrderSub.Size = new System.Drawing.Size(95, 15);
             this.lblOrderSub.TabIndex = 2;
             this.lblOrderSub.Text = "Sản phẩm bán: 0";
             // 
@@ -468,10 +476,10 @@ namespace BTL_LTTQ
             this.lblOrderValue.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblOrderValue.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
             this.lblOrderValue.ForeColor = System.Drawing.Color.White;
-            this.lblOrderValue.Location = new System.Drawing.Point(18, 38);
-            this.lblOrderValue.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblOrderValue.Location = new System.Drawing.Point(14, 31);
+            this.lblOrderValue.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.lblOrderValue.Name = "lblOrderValue";
-            this.lblOrderValue.Size = new System.Drawing.Size(50, 60);
+            this.lblOrderValue.Size = new System.Drawing.Size(40, 47);
             this.lblOrderValue.TabIndex = 1;
             this.lblOrderValue.Text = "0";
             // 
@@ -481,10 +489,10 @@ namespace BTL_LTTQ
             this.lblOrderTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblOrderTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblOrderTitle.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblOrderTitle.Location = new System.Drawing.Point(18, 13);
-            this.lblOrderTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.lblOrderTitle.Location = new System.Drawing.Point(14, 11);
+            this.lblOrderTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.lblOrderTitle.Name = "lblOrderTitle";
-            this.lblOrderTitle.Size = new System.Drawing.Size(147, 25);
+            this.lblOrderTitle.Size = new System.Drawing.Size(117, 20);
             this.lblOrderTitle.TabIndex = 0;
             this.lblOrderTitle.Text = "Đơn hàng đóng";
             // 
@@ -498,20 +506,21 @@ namespace BTL_LTTQ
             this.panelCustomerCard.Controls.Add(this.lblCustomerValue);
             this.panelCustomerCard.Controls.Add(this.lblCustomerTitle);
             this.panelCustomerCard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCustomerCard.Location = new System.Drawing.Point(932, 9);
-            this.panelCustomerCard.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+            this.panelCustomerCard.Location = new System.Drawing.Point(699, 7);
+            this.panelCustomerCard.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.panelCustomerCard.Name = "panelCustomerCard";
-            this.panelCustomerCard.Padding = new System.Windows.Forms.Padding(18, 13, 18, 13);
-            this.panelCustomerCard.Size = new System.Drawing.Size(292, 157);
+            this.panelCustomerCard.Padding = new System.Windows.Forms.Padding(14, 11, 14, 11);
+            this.panelCustomerCard.Size = new System.Drawing.Size(219, 128);
             this.panelCustomerCard.TabIndex = 3;
             // 
             // panelCustomerAccent
             // 
             this.panelCustomerAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(200)))), ((int)(((byte)(155)))));
             this.panelCustomerAccent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelCustomerAccent.Location = new System.Drawing.Point(18, 138);
+            this.panelCustomerAccent.Location = new System.Drawing.Point(14, 108);
+            this.panelCustomerAccent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panelCustomerAccent.Name = "panelCustomerAccent";
-            this.panelCustomerAccent.Size = new System.Drawing.Size(254, 3);
+            this.panelCustomerAccent.Size = new System.Drawing.Size(189, 2);
             this.panelCustomerAccent.TabIndex = 4;
             // 
             // lblCustomerDelta
@@ -520,9 +529,10 @@ namespace BTL_LTTQ
             this.lblCustomerDelta.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblCustomerDelta.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Italic);
             this.lblCustomerDelta.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(192)))), ((int)(((byte)(215)))));
-            this.lblCustomerDelta.Location = new System.Drawing.Point(18, 118);
+            this.lblCustomerDelta.Location = new System.Drawing.Point(14, 93);
+            this.lblCustomerDelta.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCustomerDelta.Name = "lblCustomerDelta";
-            this.lblCustomerDelta.Size = new System.Drawing.Size(122, 20);
+            this.lblCustomerDelta.Size = new System.Drawing.Size(99, 15);
             this.lblCustomerDelta.TabIndex = 3;
             this.lblCustomerDelta.Text = "So với kỳ trước: --";
             // 
@@ -532,10 +542,10 @@ namespace BTL_LTTQ
             this.lblCustomerSub.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblCustomerSub.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblCustomerSub.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblCustomerSub.Location = new System.Drawing.Point(18, 98);
-            this.lblCustomerSub.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.lblCustomerSub.Location = new System.Drawing.Point(14, 78);
+            this.lblCustomerSub.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.lblCustomerSub.Name = "lblCustomerSub";
-            this.lblCustomerSub.Size = new System.Drawing.Size(97, 20);
+            this.lblCustomerSub.Size = new System.Drawing.Size(79, 15);
             this.lblCustomerSub.TabIndex = 2;
             this.lblCustomerSub.Text = "Khách mua: 0";
             // 
@@ -545,10 +555,10 @@ namespace BTL_LTTQ
             this.lblCustomerValue.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblCustomerValue.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
             this.lblCustomerValue.ForeColor = System.Drawing.Color.White;
-            this.lblCustomerValue.Location = new System.Drawing.Point(18, 38);
-            this.lblCustomerValue.Margin = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.lblCustomerValue.Location = new System.Drawing.Point(14, 31);
+            this.lblCustomerValue.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.lblCustomerValue.Name = "lblCustomerValue";
-            this.lblCustomerValue.Size = new System.Drawing.Size(50, 60);
+            this.lblCustomerValue.Size = new System.Drawing.Size(40, 47);
             this.lblCustomerValue.TabIndex = 1;
             this.lblCustomerValue.Text = "0";
             // 
@@ -558,10 +568,10 @@ namespace BTL_LTTQ
             this.lblCustomerTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblCustomerTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
             this.lblCustomerTitle.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblCustomerTitle.Location = new System.Drawing.Point(18, 13);
-            this.lblCustomerTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.lblCustomerTitle.Location = new System.Drawing.Point(14, 11);
+            this.lblCustomerTitle.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.lblCustomerTitle.Name = "lblCustomerTitle";
-            this.lblCustomerTitle.Size = new System.Drawing.Size(155, 25);
+            this.lblCustomerTitle.Size = new System.Drawing.Size(122, 20);
             this.lblCustomerTitle.TabIndex = 0;
             this.lblCustomerTitle.Text = "Tương tác khách";
             // 
@@ -583,11 +593,11 @@ namespace BTL_LTTQ
             this.grpFilter.Controls.Add(this.dtpFrom);
             this.grpFilter.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpFilter.ForeColor = System.Drawing.Color.Gainsboro;
-            this.grpFilter.Location = new System.Drawing.Point(24, 19);
-            this.grpFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpFilter.Location = new System.Drawing.Point(18, 15);
+            this.grpFilter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.grpFilter.Name = "grpFilter";
-            this.grpFilter.Padding = new System.Windows.Forms.Padding(16, 13, 16, 13);
-            this.grpFilter.Size = new System.Drawing.Size(1232, 145);
+            this.grpFilter.Padding = new System.Windows.Forms.Padding(12, 11, 12, 11);
+            this.grpFilter.Size = new System.Drawing.Size(924, 118);
             this.grpFilter.TabIndex = 1;
             this.grpFilter.TabStop = false;
             this.grpFilter.Text = "Thiết lập bộ lọc nâng cao";
@@ -599,10 +609,10 @@ namespace BTL_LTTQ
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Location = new System.Drawing.Point(470, 98);
-            this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnExport.Location = new System.Drawing.Point(352, 80);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(155, 30);
+            this.btnExport.Size = new System.Drawing.Size(116, 24);
             this.btnExport.TabIndex = 10;
             this.btnExport.Text = "Xuất báo cáo";
             this.btnExport.UseVisualStyleBackColor = false;
@@ -611,9 +621,10 @@ namespace BTL_LTTQ
             // lblCompareMode
             // 
             this.lblCompareMode.AutoSize = true;
-            this.lblCompareMode.Location = new System.Drawing.Point(22, 82);
+            this.lblCompareMode.Location = new System.Drawing.Point(16, 67);
+            this.lblCompareMode.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCompareMode.Name = "lblCompareMode";
-            this.lblCompareMode.Size = new System.Drawing.Size(139, 16);
+            this.lblCompareMode.Size = new System.Drawing.Size(114, 13);
             this.lblCompareMode.TabIndex = 9;
             this.lblCompareMode.Text = "Chế độ so sánh kỳ đối";
             // 
@@ -621,18 +632,19 @@ namespace BTL_LTTQ
             // 
             this.cboCompareMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboCompareMode.FormattingEnabled = true;
-            this.cboCompareMode.Location = new System.Drawing.Point(22, 101);
-            this.cboCompareMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboCompareMode.Location = new System.Drawing.Point(16, 82);
+            this.cboCompareMode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cboCompareMode.Name = "cboCompareMode";
-            this.cboCompareMode.Size = new System.Drawing.Size(220, 24);
+            this.cboCompareMode.Size = new System.Drawing.Size(166, 21);
             this.cboCompareMode.TabIndex = 8;
             // 
             // lblTopCount
             // 
             this.lblTopCount.AutoSize = true;
-            this.lblTopCount.Location = new System.Drawing.Point(741, 24);
+            this.lblTopCount.Location = new System.Drawing.Point(556, 20);
+            this.lblTopCount.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTopCount.Name = "lblTopCount";
-            this.lblTopCount.Size = new System.Drawing.Size(156, 16);
+            this.lblTopCount.Size = new System.Drawing.Size(128, 13);
             this.lblTopCount.TabIndex = 7;
             this.lblTopCount.Text = "Số dòng Top (3 - 15 mục)";
             // 
@@ -641,8 +653,8 @@ namespace BTL_LTTQ
             this.nudTopCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.nudTopCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.nudTopCount.ForeColor = System.Drawing.Color.White;
-            this.nudTopCount.Location = new System.Drawing.Point(744, 44);
-            this.nudTopCount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.nudTopCount.Location = new System.Drawing.Point(558, 36);
+            this.nudTopCount.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.nudTopCount.Maximum = new decimal(new int[] {
             15,
             0,
@@ -654,7 +666,7 @@ namespace BTL_LTTQ
             0,
             0});
             this.nudTopCount.Name = "nudTopCount";
-            this.nudTopCount.Size = new System.Drawing.Size(90, 22);
+            this.nudTopCount.Size = new System.Drawing.Size(68, 20);
             this.nudTopCount.TabIndex = 6;
             this.nudTopCount.Value = new decimal(new int[] {
             5,
@@ -665,9 +677,10 @@ namespace BTL_LTTQ
             // lblGrouping
             // 
             this.lblGrouping.AutoSize = true;
-            this.lblGrouping.Location = new System.Drawing.Point(560, 24);
+            this.lblGrouping.Location = new System.Drawing.Point(420, 20);
+            this.lblGrouping.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblGrouping.Name = "lblGrouping";
-            this.lblGrouping.Size = new System.Drawing.Size(99, 16);
+            this.lblGrouping.Size = new System.Drawing.Size(82, 13);
             this.lblGrouping.TabIndex = 5;
             this.lblGrouping.Text = "Nhóm xu hướng";
             // 
@@ -677,18 +690,19 @@ namespace BTL_LTTQ
             this.cboGrouping.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboGrouping.ForeColor = System.Drawing.Color.White;
             this.cboGrouping.FormattingEnabled = true;
-            this.cboGrouping.Location = new System.Drawing.Point(563, 43);
-            this.cboGrouping.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboGrouping.Location = new System.Drawing.Point(422, 35);
+            this.cboGrouping.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cboGrouping.Name = "cboGrouping";
-            this.cboGrouping.Size = new System.Drawing.Size(160, 24);
+            this.cboGrouping.Size = new System.Drawing.Size(121, 21);
             this.cboGrouping.TabIndex = 4;
             // 
             // lblQuickRange
             // 
             this.lblQuickRange.AutoSize = true;
-            this.lblQuickRange.Location = new System.Drawing.Point(22, 24);
+            this.lblQuickRange.Location = new System.Drawing.Point(16, 20);
+            this.lblQuickRange.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblQuickRange.Name = "lblQuickRange";
-            this.lblQuickRange.Size = new System.Drawing.Size(94, 16);
+            this.lblQuickRange.Size = new System.Drawing.Size(78, 13);
             this.lblQuickRange.TabIndex = 3;
             this.lblQuickRange.Text = "Phạm vi nhanh";
             // 
@@ -696,10 +710,10 @@ namespace BTL_LTTQ
             // 
             this.cboQuickRange.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboQuickRange.FormattingEnabled = true;
-            this.cboQuickRange.Location = new System.Drawing.Point(22, 43);
-            this.cboQuickRange.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cboQuickRange.Location = new System.Drawing.Point(16, 35);
+            this.cboQuickRange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cboQuickRange.Name = "cboQuickRange";
-            this.cboQuickRange.Size = new System.Drawing.Size(160, 24);
+            this.cboQuickRange.Size = new System.Drawing.Size(121, 21);
             this.cboQuickRange.TabIndex = 2;
             this.cboQuickRange.SelectedIndexChanged += new System.EventHandler(this.cboQuickRange_SelectedIndexChanged);
             // 
@@ -710,10 +724,10 @@ namespace BTL_LTTQ
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnRefresh.ForeColor = System.Drawing.Color.White;
-            this.btnRefresh.Location = new System.Drawing.Point(283, 98);
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnRefresh.Location = new System.Drawing.Point(212, 80);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(170, 30);
+            this.btnRefresh.Size = new System.Drawing.Size(128, 24);
             this.btnRefresh.TabIndex = 4;
             this.btnRefresh.Text = "Tải dữ liệu";
             this.btnRefresh.UseVisualStyleBackColor = false;
@@ -722,37 +736,39 @@ namespace BTL_LTTQ
             // lblTo
             // 
             this.lblTo.AutoSize = true;
-            this.lblTo.Location = new System.Drawing.Point(377, 24);
+            this.lblTo.Location = new System.Drawing.Point(283, 20);
+            this.lblTo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTo.Name = "lblTo";
-            this.lblTo.Size = new System.Drawing.Size(64, 16);
+            this.lblTo.Size = new System.Drawing.Size(53, 13);
             this.lblTo.TabIndex = 3;
             this.lblTo.Text = "Đến ngày";
             // 
             // lblFrom
             // 
             this.lblFrom.AutoSize = true;
-            this.lblFrom.Location = new System.Drawing.Point(199, 24);
+            this.lblFrom.Location = new System.Drawing.Point(149, 20);
+            this.lblFrom.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFrom.Name = "lblFrom";
-            this.lblFrom.Size = new System.Drawing.Size(56, 16);
+            this.lblFrom.Size = new System.Drawing.Size(46, 13);
             this.lblFrom.TabIndex = 2;
             this.lblFrom.Text = "Từ ngày";
             // 
             // dtpTo
             // 
             this.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpTo.Location = new System.Drawing.Point(380, 43);
-            this.dtpTo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dtpTo.Location = new System.Drawing.Point(285, 35);
+            this.dtpTo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtpTo.Name = "dtpTo";
-            this.dtpTo.Size = new System.Drawing.Size(176, 22);
+            this.dtpTo.Size = new System.Drawing.Size(133, 20);
             this.dtpTo.TabIndex = 1;
             // 
             // dtpFrom
             // 
             this.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFrom.Location = new System.Drawing.Point(202, 43);
-            this.dtpFrom.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dtpFrom.Location = new System.Drawing.Point(152, 35);
+            this.dtpFrom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtpFrom.Name = "dtpFrom";
-            this.dtpFrom.Size = new System.Drawing.Size(176, 22);
+            this.dtpFrom.Size = new System.Drawing.Size(133, 20);
             this.dtpFrom.TabIndex = 0;
             // 
             // lblHeader
@@ -760,21 +776,22 @@ namespace BTL_LTTQ
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this.lblHeader.ForeColor = System.Drawing.Color.White;
-            this.lblHeader.Location = new System.Drawing.Point(32, 26);
+            this.lblHeader.Location = new System.Drawing.Point(24, 21);
+            this.lblHeader.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(330, 41);
+            this.lblHeader.Size = new System.Drawing.Size(269, 32);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "Báo cáo & thống kê bán";
             // 
             // frmReport
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1280, 720);
+            this.ClientSize = new System.Drawing.Size(960, 585);
             this.Controls.Add(this.panelRoot);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmReport";
