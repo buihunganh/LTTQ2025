@@ -129,6 +129,43 @@ namespace BTL_LTTQ.GUI
             if (dgvChiTiet.Columns.Contains("MaCTSP")) dgvChiTiet.Columns["MaCTSP"].Visible = false;
             if (dgvChiTiet.Columns.Contains("DonGia")) dgvChiTiet.Columns["DonGia"].DefaultCellStyle.Format = "N0";
             if (dgvChiTiet.Columns.Contains("ThanhTien")) dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Format = "N0";
+            
+            // Thêm event để tự động tính lại ThanhTien khi sửa SoLuong hoặc GiamGia
+            dgvChiTiet.CellValueChanged += DgvChiTiet_CellValueChanged;
+        }
+
+        private void DgvChiTiet_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                DataGridViewRow row = dgvChiTiet.Rows[e.RowIndex];
+                string columnName = dgvChiTiet.Columns[e.ColumnIndex].Name;
+
+                // Chỉ tính lại khi thay đổi SoLuong hoặc GiamGia
+                if (columnName == "SoLuong" || columnName == "GiamGia")
+                {
+                    int soLuong = row.Cells["SoLuong"].Value != null ? Convert.ToInt32(row.Cells["SoLuong"].Value) : 0;
+                    decimal donGia = row.Cells["DonGia"].Value != null ? Convert.ToDecimal(row.Cells["DonGia"].Value) : 0;
+                    decimal giamGia = row.Cells["GiamGia"].Value != null ? Convert.ToDecimal(row.Cells["GiamGia"].Value) : 0;
+
+                    // Tính ThanhTien = SoLuong * DonGia - GiamGia
+                    decimal thanhTien = soLuong * donGia - giamGia;
+                    row.Cells["ThanhTien"].Value = thanhTien;
+
+                    // Cập nhật lại trong DataTable
+                    if (!dgvChiTiet.ReadOnly)
+                    {
+                        DataRow dataRow = ((DataRowView)row.DataBoundItem).Row;
+                        dataRow["ThanhTien"] = thanhTien;
+                    }
+
+                    // Tính lại tổng tiền
+                    CalculateTotal();
+                }
+            }
+            catch { }
         }
 
         private void CalculateTotal()
