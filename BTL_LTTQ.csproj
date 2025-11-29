@@ -191,6 +191,9 @@
     <EmbeddedResource Include="GUI\frmBanHang.resx">
       <DependentUpon>frmBanHang.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\frmHoaDon.resx">
+      <DependentUpon>frmHoaDon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\frmKhachHang.resx">
       <DependentUpon>frmKhachHang.cs</DependentUpon>
     </EmbeddedResource>

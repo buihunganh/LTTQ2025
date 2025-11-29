@@ -287,7 +287,7 @@ namespace BTL_LTTQ.GUI
                     colIndex = 1;
                     for (int j = 0; j < dgvNhanVien.Columns.Count; j++)
                     {
-                        if (dgvNhanVien.Columns[j].Visible && dgvNhanVien.Rows[i].Cells[j].Value != null)
+                        if (dgvNhanVien.Columns[j].Visible && dgvNhanVien.Rows[i].Cells[j].Value != null && dgvNhanVien.Rows[i].Cells[j].Value != DBNull.Value)
                         {
                             if (dgvNhanVien.Columns[j].Name == "NgayVaoLam")
                             {
@@ -370,6 +370,14 @@ namespace BTL_LTTQ.GUI
             finally
             {
                 GC.Collect();
+            }
+        }
+
+        private void txtSDT_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
             }
         }
     }

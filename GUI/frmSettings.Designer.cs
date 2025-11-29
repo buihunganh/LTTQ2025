@@ -1,4 +1,4 @@
-namespace BTL_LTTQ
+﻿namespace BTL_LTTQ
 {
     partial class frmSettings
     {
@@ -181,7 +181,7 @@ namespace BTL_LTTQ
             // 
             // txtConfirmPassword
             // 
-            this.txtConfirmPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtConfirmPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConfirmPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -206,7 +206,7 @@ namespace BTL_LTTQ
             // 
             // txtNewPassword
             // 
-            this.txtNewPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtNewPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtNewPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtNewPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -231,7 +231,7 @@ namespace BTL_LTTQ
             // 
             // txtOldPassword
             // 
-            this.txtOldPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtOldPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtOldPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtOldPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -331,7 +331,7 @@ namespace BTL_LTTQ
             // 
             // txtHireDate
             // 
-            this.txtHireDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtHireDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHireDate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtHireDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -342,6 +342,17 @@ namespace BTL_LTTQ
             this.txtHireDate.Name = "txtHireDate";
             this.txtHireDate.ReadOnly = true;
             this.txtHireDate.Size = new System.Drawing.Size(512, 32);
+            this.txtHireDate.TabIndex = 13;
+            // 
+            // lblHireDate
+            // 
+            this.lblHireDate.Location = new System.Drawing.Point(0, 0);
+            this.lblHireDate.Name = "lblHireDate";
+            this.lblHireDate.Size = new System.Drawing.Size(100, 23);
+            this.lblHireDate.TabIndex = 14;
+            // 
+            // txtAddress
+            // 
             this.txtAddress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtAddress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtAddress.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -365,7 +376,7 @@ namespace BTL_LTTQ
             // 
             // txtEmail
             // 
-            this.txtEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -389,7 +400,7 @@ namespace BTL_LTTQ
             // 
             // txtPhone
             // 
-            this.txtPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPhone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtPhone.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -399,6 +410,7 @@ namespace BTL_LTTQ
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(512, 32);
             this.txtPhone.TabIndex = 2;
+            this.txtPhone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPhone_KeyPress);
             // 
             // lblPhone
             // 
@@ -413,7 +425,7 @@ namespace BTL_LTTQ
             // 
             // txtFullName
             // 
-            this.txtFullName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtFullName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFullName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
             this.txtFullName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;

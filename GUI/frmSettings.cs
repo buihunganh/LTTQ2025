@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using BTL_LTTQ.BLL;
@@ -251,5 +251,13 @@ namespace BTL_LTTQ
 
             return root;
         }
+        private void txtPhone_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
     }
 }
