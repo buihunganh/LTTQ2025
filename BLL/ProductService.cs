@@ -443,9 +443,9 @@ namespace BTL_LTTQ.BLL
                         throw new Exception("Không thể xóa sản phẩm này vì đã có trong hóa đơn!");
                     }
 
-                    // Lấy MaSP và đường dẫn ảnh từ bảng SanPham trước khi xóa
+                    // Lấy MaSP và đường dẫn ảnh từ ChiTietSanPham trước khi xóa
                     const string getInfoSql = @"
-                        SELECT sp.MaSP, sp.HinhAnhChung 
+                        SELECT sp.MaSP, ctsp.HinhAnhChung 
                         FROM ChiTietSanPham ctsp
                         INNER JOIN SanPham sp ON ctsp.MaSP = sp.MaSP
                         WHERE ctsp.MaCTSP = @MaCTSP";

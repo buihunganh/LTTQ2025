@@ -167,13 +167,13 @@ namespace BTL_LTTQ
             {
                 Cursor = Cursors.WaitCursor;
                 System.Diagnostics.Debug.WriteLine($"LoadProductsByBrandPrefix called with brandPrefix: '{brandPrefix}'");
-                
+
                 // Lấy tất cả sản phẩm và filter theo prefix
                 var allProducts = _productService.GetAllProducts();
                 var filteredProducts = allProducts
                     .Where(p => p.TenGiay?.StartsWith(brandPrefix, StringComparison.OrdinalIgnoreCase) == true)
                     .ToList();
-                
+
                 System.Diagnostics.Debug.WriteLine($"LoadProductsByBrandPrefix found {filteredProducts.Count} products");
                 BindDataGridView(filteredProducts);
             }
@@ -567,7 +567,7 @@ namespace BTL_LTTQ
             {
                 // Convert sang full path nếu cần
                 string fullPath = GetFullImagePath(imagePath);
-                
+
                 if (File.Exists(fullPath))
                 {
                     // Load image into memory to avoid file locking
@@ -668,11 +668,11 @@ namespace BTL_LTTQ
                 if (_productService.UpdateProduct(product))
                 {
                     // Update image if changed
-                    if (!string.IsNullOrWhiteSpace(txtImagePath.Text) && product.MaSP > 0)
+                    if (!string.IsNullOrWhiteSpace(txtImagePath.Text) && product.MaCTSP > 0)
                     {
-                        _productService.UpdateProductImage(product.MaSP, txtImagePath.Text);
+                        _productService.UpdateProductImage(product.MaCTSP, txtImagePath.Text);
                     }
-                    
+
                     MessageBox.Show("Sửa sản phẩm thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // Reload theo hãng hiện tại (nếu có)
                     ReloadProductsWithCurrentBrand();
@@ -697,7 +697,7 @@ namespace BTL_LTTQ
                 return;
             }
 
-            var result = MessageBox.Show("Bạn có chắc chắn muốn xóa sản phẩm này?\nẢnh của sản phẩm cũng sẽ bị xóa.", "Xác nhận", 
+            var result = MessageBox.Show("Bạn có chắc chắn muốn xóa sản phẩm này?\nẢnh của sản phẩm cũng sẽ bị xóa.", "Xác nhận",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
                 return;
@@ -706,7 +706,7 @@ namespace BTL_LTTQ
             {
                 // Delete product from database and get its image path
                 var (success, imagePath) = _productService.DeleteProduct(_currentMaCTSP);
-                
+
                 if (success)
                 {
                     // Delete image file if it exists
@@ -737,7 +737,7 @@ namespace BTL_LTTQ
                         }
                         catch (Exception imgEx)
                         {
-                            MessageBox.Show($"Đã xóa sản phẩm nhưng không xóa được ảnh: {imgEx.Message}", 
+                            MessageBox.Show($"Đã xóa sản phẩm nhưng không xóa được ảnh: {imgEx.Message}",
                                 "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
@@ -763,14 +763,14 @@ namespace BTL_LTTQ
             // Reload theo hãng hiện tại (nếu có)
             ReloadProductsWithCurrentBrand();
         }
-        
+
         /// <summary>
         /// Reload sản phẩm theo hãng hiện tại đang được chọn
         /// </summary>
         private void ReloadProductsWithCurrentBrand()
         {
-            if (!string.IsNullOrWhiteSpace(_currentSelectedBrand) && 
-                _currentSelectedBrand != "Tất cả" && 
+            if (!string.IsNullOrWhiteSpace(_currentSelectedBrand) &&
+                _currentSelectedBrand != "Tất cả" &&
                 _currentSelectedBrand != "-1")
             {
                 LoadProductsByBrandPrefix(_currentSelectedBrand);
@@ -788,7 +788,7 @@ namespace BTL_LTTQ
                 // Kiểm tra có dữ liệu không
                 if (dgvProducts.Rows.Count == 0)
                 {
-                    MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo", 
+                    MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -915,7 +915,7 @@ namespace BTL_LTTQ
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi lọc sản phẩm theo hãng: {ex.Message}\n\nChi tiết: {ex.InnerException?.Message ?? ex.ToString()}", 
+                MessageBox.Show($"Lỗi khi lọc sản phẩm theo hãng: {ex.Message}\n\nChi tiết: {ex.InnerException?.Message ?? ex.ToString()}",
                     "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -925,20 +925,20 @@ namespace BTL_LTTQ
             try
             {
                 Cursor = Cursors.WaitCursor;
-                
+
                 // Nếu có hãng được chọn, áp dụng filter theo hãng trước
-                if (!string.IsNullOrWhiteSpace(_currentSelectedBrand) && 
-                    _currentSelectedBrand != "Tất cả" && 
+                if (!string.IsNullOrWhiteSpace(_currentSelectedBrand) &&
+                    _currentSelectedBrand != "Tất cả" &&
                     _currentSelectedBrand != "-1")
                 {
                     // Lấy danh sách sản phẩm theo hãng trước
                     var productsByBrand = _productService.GetProductsByBrand(_currentSelectedBrand);
-                    
+
                     // Sau đó áp dụng các filter khác (search, size, loại) trên danh sách đã filter theo hãng
                     var searchText = txtSearch.Text.Trim();
                     int? maSize = null;
                     int? maLoai = null;
-                    
+
                     if (cmbFilterSize.SelectedValue != null)
                     {
                         int sizeValue;
@@ -973,22 +973,22 @@ namespace BTL_LTTQ
 
                     // Filter từ danh sách đã filter theo hãng
                     var filteredProducts = productsByBrand.AsQueryable();
-                    
+
                     if (!string.IsNullOrWhiteSpace(searchText))
                     {
                         var searchLower = searchText.ToLower();
-                        filteredProducts = filteredProducts.Where(p => 
+                        filteredProducts = filteredProducts.Where(p =>
                             (p.TenGiay != null && p.TenGiay.ToLower().Contains(searchLower)) ||
                             (p.MaSKU != null && p.MaSKU.ToLower().Contains(searchLower)) ||
                             (p.TenLoai != null && p.TenLoai.ToLower().Contains(searchLower))
                         );
                     }
-                    
+
                     if (maSize.HasValue && maSize.Value > 0)
                     {
                         filteredProducts = filteredProducts.Where(p => p.MaSize == maSize.Value);
                     }
-                    
+
                     if (maLoai.HasValue && maLoai.Value > 0)
                     {
                         // Cần thêm logic filter theo loại nếu có
@@ -1048,7 +1048,7 @@ namespace BTL_LTTQ
                     }
 
                     var products = _productService.SearchProducts(searchText, maSize, maLoai, null, null);
-                    
+
                     // Sắp xếp theo giá nếu được chọn
                     var priceSort = cmbFilterPriceType.Text.Trim();
                     if (priceSort == "Giá tăng dần")
@@ -1059,7 +1059,7 @@ namespace BTL_LTTQ
                     {
                         products = products.OrderByDescending(p => p.GiaBan).ToList();
                     }
-                    
+
                     BindDataGridView(products);
                 }
             }
@@ -1149,50 +1149,51 @@ namespace BTL_LTTQ
                 GiaNhap = decimal.Parse(giaNhapText),
                 GiaBan = decimal.Parse(giaBanText),
                 SoLuongTon = string.IsNullOrWhiteSpace(txtQuantity.Text) ? 0 : int.Parse(txtQuantity.Text),
+                HinhAnhChung = txtImagePath.Text.Trim(),
                 TrangThai = true
             };
         }
 
         private bool ValidateInput()
-    {
-        // Allow "Tất cả" if product name is entered (brand will be extracted from product name)
-        var brandName = cmbProduct.SelectedValue?.ToString();
-        bool isAllSelected = string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả" || brandName == "-1";
-        
-        // If "Tất cả" is selected, we need product name to extract brand
-        if (isAllSelected)
         {
+            // Allow "Tất cả" if product name is entered (brand will be extracted from product name)
+            var brandName = cmbProduct.SelectedValue?.ToString();
+            bool isAllSelected = string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả" || brandName == "-1";
+
+            // If "Tất cả" is selected, we need product name to extract brand
+            if (isAllSelected)
+            {
+                if (string.IsNullOrWhiteSpace(txtProductName.Text.Trim()))
+                {
+                    MessageBox.Show("Khi chọn 'Tất cả', vui lòng nhập tên sản phẩm!\nTên hãng giày sẽ được lấy từ từ đầu tiên của tên sản phẩm.",
+                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtProductName.Focus();
+                    return false;
+                }
+                // Brand will be extracted from product name, so this is OK
+            }
+            else // If a specific brand is selected, ensure it's valid
+            {
+                if (cmbProduct.SelectedValue == null)
+                {
+                    MessageBox.Show("Vui lòng chọn hãng giày!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+            }
+
             if (string.IsNullOrWhiteSpace(txtProductName.Text.Trim()))
             {
-                MessageBox.Show("Khi chọn 'Tất cả', vui lòng nhập tên sản phẩm!\nTên hãng giày sẽ được lấy từ từ đầu tiên của tên sản phẩm.", 
-                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập tên sản phẩm!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtProductName.Focus();
                 return false;
             }
-            // Brand will be extracted from product name, so this is OK
-        }
-        else // If a specific brand is selected, ensure it's valid
-        {
-            if (cmbProduct.SelectedValue == null)
+
+            if (string.IsNullOrWhiteSpace(txtProductCode.Text.Trim()))
             {
-                MessageBox.Show("Vui lòng chọn hãng giày!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập mã SKU!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtProductCode.Focus();
                 return false;
             }
-        }
-
-        if (string.IsNullOrWhiteSpace(txtProductName.Text.Trim()))
-        {
-            MessageBox.Show("Vui lòng nhập tên sản phẩm!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            txtProductName.Focus();
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(txtProductCode.Text.Trim()))
-        {
-            MessageBox.Show("Vui lòng nhập mã SKU!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            txtProductCode.Focus();
-            return false;
-        }
             if (cmbSize.SelectedValue == null)
             {
                 MessageBox.Show("Vui lòng chọn size!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1280,7 +1281,7 @@ namespace BTL_LTTQ
             // Tìm phần "Resources\Images\Products"
             string marker = Path.Combine("Resources", "Images", "Products");
             int index = fullOrRelativePath.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
-            
+
             if (index >= 0)
             {
                 return fullOrRelativePath.Substring(index);
@@ -1289,7 +1290,7 @@ namespace BTL_LTTQ
             // Thử với forward slashes
             marker = "Resources/Images/Products";
             index = fullOrRelativePath.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
-            
+
             if (index >= 0)
             {
                 return fullOrRelativePath.Substring(index).Replace("/", "\\");
@@ -1322,109 +1323,109 @@ namespace BTL_LTTQ
         }
 
         private void btnUploadImage_Click(object sender, EventArgs e)
-    {
-        try
         {
-            // Get brand from selected ComboBox OR from product name
-            string brandName = cmbProduct.SelectedValue?.ToString()?.Trim();
-            
-            // If brand not selected or "Tất cả", try to get from product name
-            if (string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả")
+            try
             {
-                string productName = txtProductName.Text.Trim();
-                if (!string.IsNullOrWhiteSpace(productName))
-                {
-                    // Extract first word from product name as brand
-                    brandName = productName.Split(' ').FirstOrDefault();
-                    System.Diagnostics.Debug.WriteLine($"Auto-extracted brand from product name: {brandName}");
-                }
-            }
-            
-            // Final validation
-            if (string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả")
-            {
-                MessageBox.Show("Vui lòng chọn hãng giày hoặc nhập tên sản phẩm trước khi upload ảnh!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                // Get brand from selected ComboBox OR from product name
+                string brandName = cmbProduct.SelectedValue?.ToString()?.Trim();
 
-            using (var openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
-                openFileDialog.Title = "Chọn hình ảnh sản phẩm";
-                
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                // If brand not selected or "Tất cả", try to get from product name
+                if (string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả")
                 {
-                    // Create brand-specific folder: Resources/Images/Products/{brand}/
-                    string brandFolderName = brandName.ToLower();
-                    
-                    // Navigate to project root (2 levels up from bin/Debug)
-                    string projectRoot = Directory.GetParent(Application.StartupPath).Parent.FullName;
-                    string resourcesPath = Path.Combine(projectRoot, "Resources", "Images", "Products", brandFolderName);
-                    
-                    System.Diagnostics.Debug.WriteLine($"StartupPath: {Application.StartupPath}");
-                    System.Diagnostics.Debug.WriteLine($"ProjectRoot: {projectRoot}");
-                    System.Diagnostics.Debug.WriteLine($"ResourcesPath: {resourcesPath}");
-                    
-                    // Create directory if not exists
-                    if (!Directory.Exists(resourcesPath))
+                    string productName = txtProductName.Text.Trim();
+                    if (!string.IsNullOrWhiteSpace(productName))
                     {
-                        System.Diagnostics.Debug.WriteLine("Creating directory...");
-                        Directory.CreateDirectory(resourcesPath);
-                        System.Diagnostics.Debug.WriteLine($"Directory created: {resourcesPath}");
+                        // Extract first word from product name as brand
+                        brandName = productName.Split(' ').FirstOrDefault();
+                        System.Diagnostics.Debug.WriteLine($"Auto-extracted brand from product name: {brandName}");
                     }
-                    else
+                }
+
+                // Final validation
+                if (string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả")
+                {
+                    MessageBox.Show("Vui lòng chọn hãng giày hoặc nhập tên sản phẩm trước khi upload ảnh!", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                using (var openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+                    openFileDialog.Title = "Chọn hình ảnh sản phẩm";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        System.Diagnostics.Debug.WriteLine("Directory already exists");
-                    }
-                    
-                    // Find next available number by checking existing files
-                    var existingFiles = Directory.GetFiles(resourcesPath, $"{brandFolderName}*.*");
-                    int nextNumber = 1;
-                    
-                    if (existingFiles.Length > 0)
-                    {
-                        // Extract numbers from existing filenames and find max
-                        var existingNumbers = existingFiles
-                            .Select(f => Path.GetFileNameWithoutExtension(f))
-                            .Where(name => name.StartsWith(brandFolderName))
-                            .Select(name => name.Substring(brandFolderName.Length))
-                            .Where(numStr => int.TryParse(numStr, out _))
-                            .Select(numStr => int.Parse(numStr))
-                            .ToList();
-                        
-                        if (existingNumbers.Any())
+                        // Create brand-specific folder: Resources/Images/Products/{brand}/
+                        string brandFolderName = brandName.ToLower();
+
+                        // Navigate to project root (2 levels up from bin/Debug)
+                        string projectRoot = Directory.GetParent(Application.StartupPath).Parent.FullName;
+                        string resourcesPath = Path.Combine(projectRoot, "Resources", "Images", "Products", brandFolderName);
+
+                        System.Diagnostics.Debug.WriteLine($"StartupPath: {Application.StartupPath}");
+                        System.Diagnostics.Debug.WriteLine($"ProjectRoot: {projectRoot}");
+                        System.Diagnostics.Debug.WriteLine($"ResourcesPath: {resourcesPath}");
+
+                        // Create directory if not exists
+                        if (!Directory.Exists(resourcesPath))
                         {
-                            nextNumber = existingNumbers.Max() + 1;
+                            System.Diagnostics.Debug.WriteLine("Creating directory...");
+                            Directory.CreateDirectory(resourcesPath);
+                            System.Diagnostics.Debug.WriteLine($"Directory created: {resourcesPath}");
                         }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Directory already exists");
+                        }
+
+                        // Find next available number by checking existing files
+                        var existingFiles = Directory.GetFiles(resourcesPath, $"{brandFolderName}*.*");
+                        int nextNumber = 1;
+
+                        if (existingFiles.Length > 0)
+                        {
+                            // Extract numbers from existing filenames and find max
+                            var existingNumbers = existingFiles
+                                .Select(f => Path.GetFileNameWithoutExtension(f))
+                                .Where(name => name.StartsWith(brandFolderName))
+                                .Select(name => name.Substring(brandFolderName.Length))
+                                .Where(numStr => int.TryParse(numStr, out _))
+                                .Select(numStr => int.Parse(numStr))
+                                .ToList();
+
+                            if (existingNumbers.Any())
+                            {
+                                nextNumber = existingNumbers.Max() + 1;
+                            }
+                        }
+
+                        // Generate filename: brandname{number}.ext (e.g., nike1.jpg, nike4.jpg)
+                        string extension = Path.GetExtension(openFileDialog.FileName);
+                        string uniqueFileName = $"{brandFolderName}{nextNumber}{extension}";
+                        string destinationPath = Path.Combine(resourcesPath, uniqueFileName);
+
+                        System.Diagnostics.Debug.WriteLine($"Existing files: {existingFiles.Length}, Next number: {nextNumber}");
+                        System.Diagnostics.Debug.WriteLine($"Copying from: {openFileDialog.FileName}");
+                        System.Diagnostics.Debug.WriteLine($"Copying to: {destinationPath}");
+
+                        // Copy file to destination
+                        File.Copy(openFileDialog.FileName, destinationPath, true);
+
+                        System.Diagnostics.Debug.WriteLine("File copied successfully");
+
+                        // Hiển thị relative path trong UI
+                        txtImagePath.Text = GetRelativeImagePath(destinationPath);
+                        LoadProductImage(destinationPath);  // Load bằng full path
                     }
-                    
-                    // Generate filename: brandname{number}.ext (e.g., nike1.jpg, nike4.jpg)
-                    string extension = Path.GetExtension(openFileDialog.FileName);
-                    string uniqueFileName = $"{brandFolderName}{nextNumber}{extension}";
-                    string destinationPath = Path.Combine(resourcesPath, uniqueFileName);
-                    
-                    System.Diagnostics.Debug.WriteLine($"Existing files: {existingFiles.Length}, Next number: {nextNumber}");
-                    System.Diagnostics.Debug.WriteLine($"Copying from: {openFileDialog.FileName}");
-                    System.Diagnostics.Debug.WriteLine($"Copying to: {destinationPath}");
-                    
-                    // Copy file to destination
-                    File.Copy(openFileDialog.FileName, destinationPath, true);
-                    
-                    System.Diagnostics.Debug.WriteLine("File copied successfully");
-                    
-                    // Hiển thị relative path trong UI
-                    txtImagePath.Text = GetRelativeImagePath(destinationPath);
-                    LoadProductImage(destinationPath);  // Load bằng full path
                 }
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error: {ex.ToString()}");
+                MessageBox.Show($"Lỗi khi chọn ảnh:\n{ex.Message}\n\nChi tiết: {ex.StackTrace}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Error: {ex.ToString()}");
-            MessageBox.Show($"Lỗi khi chọn ảnh:\n{ex.Message}\n\nChi tiết: {ex.StackTrace}", "Lỗi",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
     }
 }
