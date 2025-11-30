@@ -270,6 +270,14 @@ namespace BTL_LTTQ.BLL
             {
                 using (var db = new DataProcesser())
                 {
+                    // KIỂM TRA SKU ĐẦU TIÊN - Đảm bảo SKU là DUY NHẤT
+                    const string checkSkuSql = "SELECT COUNT(*) FROM ChiTietSanPham WHERE MaSKU = @MaSKU";
+                    var checkParam = new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU };
+                    var count = db.ExecuteScalar(checkSkuSql, CommandType.Text, checkParam);
+                    if (Convert.ToInt32(count) > 0)
+                        throw new Exception($"Mã SKU '{product.MaSKU}' đã tồn tại trong hệ thống!");
+
+                    // Kiểm tra xem đã có variant này chưa (cùng MaSP, MaSize, MaMau)
                     const string variantSql = @"
                         SELECT MaCTSP, SoLuongTon 
                         FROM ChiTietSanPham 
@@ -296,7 +304,6 @@ namespace BTL_LTTQ.BLL
                             SET SoLuongTon = @NewSoLuong,
                                 GiaNhap = @GiaNhap,
                                 GiaBan = @GiaBan,
-                                MaSKU = @MaSKU,
                                 TrangThai = 1
                             WHERE MaCTSP = @MaCTSP";
 
@@ -305,20 +312,13 @@ namespace BTL_LTTQ.BLL
                             new SqlParameter("@NewSoLuong", SqlDbType.Int) { Value = currentQty + product.SoLuongTon },
                             new SqlParameter("@GiaNhap", SqlDbType.Decimal) { Value = product.GiaNhap },
                             new SqlParameter("@GiaBan", SqlDbType.Decimal) { Value = product.GiaBan },
-                            new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU },
                             new SqlParameter("@MaCTSP", SqlDbType.Int) { Value = maCTSP }
                         };
 
                         return db.ExecuteNonQuery(updateSql, CommandType.Text, updateParams) > 0;
                     }
 
-                    // Chưa có biến thể này => kiểm tra SKU rồi insert mới
-                    const string checkSkuSql = "SELECT COUNT(*) FROM ChiTietSanPham WHERE MaSKU = @MaSKU";
-                    var checkParam = new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU };
-                    var count = db.ExecuteScalar(checkSkuSql, CommandType.Text, checkParam);
-                    if (Convert.ToInt32(count) > 0)
-                        throw new Exception($"Mã SKU '{product.MaSKU}' đã tồn tại trong hệ thống!");
-
+                    // Chưa có variant này => Thêm mới
                     // Kiểm tra xem đã có variant nào cùng MaSP và MaMau chưa
                     // Nếu có thì dùng ảnh của variant đó (cùng màu dùng chung ảnh)
                     string imageToUse = product.HinhAnhChung;
