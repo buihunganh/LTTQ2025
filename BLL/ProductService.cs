@@ -314,31 +314,7 @@ namespace BTL_LTTQ.BLL
 
                     // Chưa có biến thể này => kiểm tra SKU rồi insert mới
                     const string checkSkuSql = "SELECT COUNT(*) FROM ChiTietSanPham WHERE MaSKU = @MaSKU";
-                    var checkParam = new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU };
-                    var count = db.ExecuteScalar(checkSkuSql, CommandType.Text, checkParam);
-                    if (Convert.ToInt32(count) > 0)
-                        throw new Exception($"Mã SKU '{product.MaSKU}' đã tồn tại trong hệ thống!");
-
-                    const string insertSql = @"
-                        INSERT INTO ChiTietSanPham (MaSP, MaSize, MaMau, MaSKU, GiaNhap, GiaBan, SoLuongTon, HinhAnhChung, TrangThai)
-                        VALUES (@MaSP, @MaSize, @MaMau, @MaSKU, @GiaNhap, @GiaBan, @SoLuongTon, @HinhAnhChung, @TrangThai)";
-
-                    var parameters = new[]
-                    {
-                        new SqlParameter("@MaSP", SqlDbType.Int) { Value = product.MaSP },
-                        new SqlParameter("@MaSize", SqlDbType.Int) { Value = product.MaSize },
-                        new SqlParameter("@MaMau", SqlDbType.Int) { Value = product.MaMau },
-                        new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU },
-                        new SqlParameter("@GiaNhap", SqlDbType.Decimal) { Value = product.GiaNhap },
-                        new SqlParameter("@GiaBan", SqlDbType.Decimal) { Value = product.GiaBan },
-                        new SqlParameter("@SoLuongTon", SqlDbType.Int) { Value = product.SoLuongTon },
-                        new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)product.HinhAnhChung ?? DBNull.Value },
-                        new SqlParameter("@TrangThai", SqlDbType.Bit) { Value = product.TrangThai }
-                    };
-
-                    return db.ExecuteNonQuery(insertSql, CommandType.Text, parameters) > 0;
                 }
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Lỗi khi thêm sản phẩm: {ex.Message}", ex);
@@ -399,14 +375,32 @@ namespace BTL_LTTQ.BLL
         {
             try
             {
-                const string sql = "UPDATE ChiTietSanPham SET HinhAnhChung = @HinhAnhChung WHERE MaCTSP = @MaCTSP";
+                // Lấy MaSP và MaMau của variant hiện tại
+                const string getInfoSql = "SELECT MaSP, MaMau FROM ChiTietSanPham WHERE MaCTSP = @MaCTSP";
 
                 using (var db = new DataProcesser())
                 {
+                    var getParam = new SqlParameter("@MaCTSP", SqlDbType.Int) { Value = maCTSP };
+                    var infoTable = db.ExecuteQuery(getInfoSql, CommandType.Text, getParam);
+
+                    if (infoTable.Rows.Count == 0)
+                        throw new Exception("Không tìm thấy sản phẩm!");
+
+                    int maSP = Convert.ToInt32(infoTable.Rows[0]["MaSP"]);
+                    int maMau = Convert.ToInt32(infoTable.Rows[0]["MaMau"]);
+
+                    // Cập nhật ảnh cho TẤT CẢ variants có cùng MaSP và MaMau
+                    // (Cùng màu sẽ dùng chung ảnh, bất kể size)
+                    const string sql = @"
+                        UPDATE ChiTietSanPham 
+                        SET HinhAnhChung = @HinhAnhChung 
+                        WHERE MaSP = @MaSP AND MaMau = @MaMau";
+
                     var parameters = new[]
                     {
                         new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)hinhAnhChung ?? DBNull.Value },
-                        new SqlParameter("@MaCTSP", SqlDbType.Int) { Value = maCTSP }
+                        new SqlParameter("@MaSP", SqlDbType.Int) { Value = maSP },
+                        new SqlParameter("@MaMau", SqlDbType.Int) { Value = maMau }
                     };
 
                     return db.ExecuteNonQuery(sql, CommandType.Text, parameters) > 0;
