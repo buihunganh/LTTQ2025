@@ -57,6 +57,7 @@
             this.lblImportPrice = new System.Windows.Forms.Label();
             this.txtProductCode = new System.Windows.Forms.TextBox();
             this.lblProductCode = new System.Windows.Forms.Label();
+            this.btnGenerateSKU = new System.Windows.Forms.Button();
             this.txtProductName = new System.Windows.Forms.TextBox();
             this.lblProductName = new System.Windows.Forms.Label();
             this.cmbProduct = new System.Windows.Forms.ComboBox();
@@ -392,6 +393,7 @@
             this.panelProductInfo.Controls.Add(this.lblImportPrice);
             this.panelProductInfo.Controls.Add(this.txtProductCode);
             this.panelProductInfo.Controls.Add(this.lblProductCode);
+            this.panelProductInfo.Controls.Add(this.btnGenerateSKU);
             this.panelProductInfo.Controls.Add(this.txtProductName);
             this.panelProductInfo.Controls.Add(this.lblProductName);
             this.panelProductInfo.Controls.Add(this.cmbProduct);
@@ -635,6 +637,24 @@
             this.lblProductCode.TabIndex = 4;
             this.lblProductCode.Text = "Mã giày:";
             // 
+            // btnGenerateSKU
+            // 
+            this.btnGenerateSKU.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(60)))), ((int)(((byte)(92)))));
+            this.btnGenerateSKU.FlatAppearance.BorderSize = 0;
+            this.btnGenerateSKU.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(72)))), ((int)(((byte)(98)))));
+            this.btnGenerateSKU.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(67)))), ((int)(((byte)(95)))));
+            this.btnGenerateSKU.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerateSKU.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerateSKU.ForeColor = System.Drawing.Color.White;
+            this.btnGenerateSKU.Location = new System.Drawing.Point(290, 41);
+            this.btnGenerateSKU.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGenerateSKU.Name = "btnGenerateSKU";
+            this.btnGenerateSKU.Size = new System.Drawing.Size(60, 20);
+            this.btnGenerateSKU.TabIndex = 25;
+            this.btnGenerateSKU.Text = "Tạo SKU";
+            this.btnGenerateSKU.UseVisualStyleBackColor = false;
+            this.btnGenerateSKU.Click += new System.EventHandler(this.btnGenerateSKU_Click);
+            // 
             // txtProductName
             // 
             this.txtProductName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
@@ -731,6 +751,7 @@
         private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.TextBox txtProductName;
         private System.Windows.Forms.Label lblProductName;
+        private System.Windows.Forms.Button btnGenerateSKU;
         private System.Windows.Forms.TextBox txtProductCode;
         private System.Windows.Forms.Label lblProductCode;
         private System.Windows.Forms.TextBox txtImportPrice;

@@ -31,6 +31,43 @@ namespace BTL_LTTQ
             LoadComboBoxes();
             LoadProducts();
             ResetForm();
+            SetupAutoSKUGeneration();
+        }
+
+        private void SetupAutoSKUGeneration()
+        {
+        }
+
+        private void btnGenerateSKU_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtProductName.Text))
+            {
+                MessageBox.Show("Vui lòng nhập tên giày!", "Thông báo", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtProductName.Focus();
+                return;
+            }
+
+            int? maSize = GetSelectedValueAsInt(cmbSize);
+            int? maMau = GetSelectedValueAsInt(cmbColor);
+
+            if (!maSize.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn size!", "Thông báo", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbSize.Focus();
+                return;
+            }
+
+            if (!maMau.HasValue)
+            {
+                MessageBox.Show("Vui lòng chọn màu sắc!", "Thông báo", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbColor.Focus();
+                return;
+            }
+
+            GenerateSKU();
         }
 
         private void LoadComboBoxes()
@@ -991,6 +1028,108 @@ namespace BTL_LTTQ
             {
                 Cursor = Cursors.Default;
             }
+        }
+
+        private void GenerateSKU()
+        {
+            if (string.IsNullOrWhiteSpace(txtProductName.Text))
+                return;
+            
+            int? maSize = GetSelectedValueAsInt(cmbSize);
+            int? maMau = GetSelectedValueAsInt(cmbColor);
+            
+            if (!maSize.HasValue || !maMau.HasValue)
+                return;
+
+            string brandName = cmbProduct.SelectedValue?.ToString()?.Trim();
+            if (string.IsNullOrWhiteSpace(brandName) || brandName == "Tất cả")
+                brandName = txtProductName.Text.Trim().Split(' ').FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(brandName)) return;
+
+            string brandPrefix = GetBrandPrefix(brandName);
+            string modelCode = GetModelCode(txtProductName.Text.Trim());
+            string size = cmbSize.Text?.Trim() ?? "";
+            string colorCode = GetColorCode(cmbColor.Text?.Trim() ?? "");
+
+            if (!string.IsNullOrWhiteSpace(brandPrefix) && !string.IsNullOrWhiteSpace(modelCode) && 
+                !string.IsNullOrWhiteSpace(size) && !string.IsNullOrWhiteSpace(colorCode))
+            {
+                txtProductCode.Text = $"{brandPrefix}-{modelCode}-{size}-{colorCode}";
+            }
+        }
+
+        private string GetBrandPrefix(string brandName)
+        {
+            if (string.IsNullOrWhiteSpace(brandName)) return "";
+            brandName = brandName.ToUpper();
+            
+            var brandMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "NIKE", "NK" }, { "BALENCIAGA", "BAL" }, { "ADIDAS", "AD" }, { "PUMA", "PU" },
+                { "VANS", "VN" }, { "CONVERSE", "CV" }, { "JORDAN", "JD" }, { "NEW BALANCE", "NB" }
+            };
+            
+            foreach (var kvp in brandMap)
+            {
+                if (brandName.StartsWith(kvp.Key, StringComparison.OrdinalIgnoreCase))
+                    return kvp.Value;
+            }
+            
+            return brandName.Length >= 3 ? brandName.Substring(0, 3) : brandName;
+        }
+
+        private string GetModelCode(string productName)
+        {
+            if (string.IsNullOrWhiteSpace(productName)) return "SP";
+            
+            string[] words = productName.ToUpper().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length < 2) return "SP";
+            
+            string fullText = productName.ToUpper();
+            if (fullText.Contains("FORCE") && fullText.Contains("1")) return "AF1";
+            if (fullText.Contains("TRIPLE") && fullText.Contains("S")) return "TS";
+            if (fullText.Contains("HIGH") && fullText.Contains("ANKLE")) return "HA";
+            if (fullText.Contains("AIR MAX")) return "AMX";
+            if (fullText.Contains("AIR")) return "AIR";
+            
+            for (int i = 1; i < words.Length && i < 3; i++)
+            {
+                string word = words[i];
+                if (word.Length >= 2 && word.All(char.IsLetter))
+                    return word.Length >= 3 ? word.Substring(0, 3) : word;
+            }
+            
+            return words.Length > 1 ? (words[1].Length >= 3 ? words[1].Substring(0, 3) : words[1]) : "SP";
+        }
+
+        private string GetColorCode(string colorName)
+        {
+            if (string.IsNullOrWhiteSpace(colorName)) return "";
+            
+            colorName = colorName.ToUpper();
+            var colorMap = new Dictionary<string, string>
+            {
+                { "TRẮNG", "WHT" }, { "WHITE", "WHT" }, { "WHT", "WHT" },
+                { "ĐEN", "BLK" }, { "BLACK", "BLK" }, { "BLK", "BLK" },
+                { "ĐỎ", "RED" }, { "RED", "RED" },
+                { "XANH", "BLU" }, { "BLUE", "BLU" },
+                { "VÀNG", "YLW" }, { "YELLOW", "YLW" },
+                { "HỒNG", "PNK" }, { "PINK", "PNK" },
+                { "XÁM", "GRY" }, { "GRAY", "GRY" }, { "GREY", "GRY" },
+                { "NÂU", "BRN" }, { "BROWN", "BRN" },
+                { "CAM", "ORG" }, { "ORANGE", "ORG" },
+                { "TÍM", "PRP" }, { "PURPLE", "PRP" },
+                { "XANH LÁ", "GRN" }, { "GREEN", "GRN" }
+            };
+            
+            foreach (var kvp in colorMap)
+            {
+                if (colorName.Contains(kvp.Key))
+                    return kvp.Value;
+            }
+            
+            return colorName.Length >= 3 ? colorName.Substring(0, 3) : colorName;
         }
 
         private ChiTietSanPhamDTO CreateProductFromForm()
