@@ -54,7 +54,7 @@ namespace BTL_LTTQ.BLL
         {
             try
             {
-                var conditions = new List<string> { "ctsp.TrangThai = 1 AND sp.TrangThai = 1" };
+                var conditions = new List<string>(); // Lấy tất cả, filter TrangThai sau bằng LINQ
                 var parameters = new List<SqlParameter>();
 
                 if (!string.IsNullOrWhiteSpace(searchText))
@@ -237,8 +237,7 @@ namespace BTL_LTTQ.BLL
                     INNER JOIN MauSac ms ON ctsp.MaMau = ms.MaMau
                     INNER JOIN LoaiGiay lg ON sp.MaLoai = lg.MaLoai
                     INNER JOIN ThuongHieu th ON sp.MaThuongHieu = th.MaThuongHieu
-                    WHERE ctsp.TrangThai = 1 AND sp.TrangThai = 1 
-                          AND LTRIM(RTRIM(th.TenThuongHieu)) = LTRIM(RTRIM(@brandName))
+                    WHERE LTRIM(RTRIM(th.TenThuongHieu)) = LTRIM(RTRIM(@brandName))
                     ORDER BY sp.TenGiay, sz.KichCo";
 
                 using (var db = new DataProcesser())
