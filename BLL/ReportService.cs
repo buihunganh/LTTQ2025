@@ -55,30 +55,48 @@ namespace BTL_LTTQ.BLL
         public DataTable GetRevenueTrend(DateTime fromDate, DateTime toDate, TrendGrouping grouping = TrendGrouping.Day)
         {
             string periodExpression;
+            string dateExpression;
+            string groupByClause;
 
             switch (grouping)
             {
                 case TrendGrouping.Week:
                     periodExpression = "DATEADD(DAY, - (DATEPART(WEEKDAY, hd.NgayLap) - 1), CAST(hd.NgayLap AS DATE))";
+                    dateExpression = "DATEADD(DAY, - (DATEPART(WEEKDAY, dr.Ngay) - 1), dr.Ngay)";
+                    groupByClause = dateExpression;
                     break;
                 case TrendGrouping.Month:
                     periodExpression = "DATEFROMPARTS(YEAR(hd.NgayLap), MONTH(hd.NgayLap), 1)";
+                    dateExpression = "DATEFROMPARTS(YEAR(dr.Ngay), MONTH(dr.Ngay), 1)";
+                    groupByClause = dateExpression;
                     break;
                 default:
                     periodExpression = "CAST(hd.NgayLap AS DATE)";
+                    dateExpression = "dr.Ngay";
+                    groupByClause = "dr.Ngay";
                     break;
             }
 
             string sql = $@"
+                WITH DateRange AS (
+                    -- Tạo tất cả ngày trong khoảng thời gian
+                    SELECT CAST(@fromDate AS DATE) AS Ngay
+                    UNION ALL
+                    SELECT DATEADD(DAY, 1, Ngay)
+                    FROM DateRange
+                    WHERE Ngay < CAST(@toDate AS DATE)
+                )
                 SELECT
-                    {periodExpression} AS Ngay,
+                    {dateExpression} AS Ngay,
                     ISNULL(SUM(hd.ThanhToan), 0) AS DoanhThu,
                     ISNULL(SUM((cthd.DonGia - ISNULL(cthd.GiaVon, 0)) * cthd.SoLuong), 0) AS LoiNhuan
-                FROM HoaDon hd
+                FROM DateRange dr
+                LEFT JOIN HoaDon hd ON {periodExpression} = {dateExpression}
+                    AND hd.NgayLap BETWEEN @fromDate AND @toDate
                 LEFT JOIN ChiTietHoaDon cthd ON hd.MaHD = cthd.MaHD
-                WHERE hd.NgayLap BETWEEN @fromDate AND @toDate
-                GROUP BY {periodExpression}
-                ORDER BY {periodExpression}";
+                GROUP BY {groupByClause}
+                ORDER BY {groupByClause}
+                OPTION (MAXRECURSION 0)";
 
             using (var db = new DataProcesser())
             {
