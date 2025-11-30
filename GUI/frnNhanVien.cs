@@ -21,15 +21,14 @@ namespace BTL_LTTQ.GUI
 
         private void frnNhanVien_Load(object sender, EventArgs e)
         {
-            if (cmbLocTrangThai.Items.Count > 0) cmbLocTrangThai.SelectedIndex = 0;
-
-
-            LoadData();
-
-            if (dtpNgayVaoLam != null)
+            InitComboBoxFilter();
+            if (cmbLocTrangThai.Items.Count > 1)
             {
-                dtpNgayVaoLam.Format = DateTimePickerFormat.Custom;
-                dtpNgayVaoLam.CustomFormat = "dd/MM/yyyy";
+                cmbLocTrangThai.SelectedIndex = 1;
+            }
+            else
+            {
+                LoadData();
             }
         }
 
@@ -154,7 +153,7 @@ namespace BTL_LTTQ.GUI
             {
                 DataGridViewRow row = dgvNhanVien.Rows[e.RowIndex];
                 int maNV = Convert.ToInt32(row.Cells["MaNV"].Value);
-                
+
                 txtMaNV.Text = maNV.ToString();
                 txtHoTen.Text = row.Cells["HoTen"].Value.ToString();
                 txtTaiKhoan.Text = row.Cells["TaiKhoan"].Value.ToString();
@@ -165,20 +164,19 @@ namespace BTL_LTTQ.GUI
                     dtpNgayVaoLam.Value = Convert.ToDateTime(row.Cells["NgayVaoLam"].Value);
                 chkIsAdmin.Checked = Convert.ToBoolean(row.Cells["IsAdmin"].Value);
                 chkTrangThai.Checked = Convert.ToBoolean(row.Cells["TrangThai"].Value);
-                
+
                 txtTaiKhoan.Enabled = false;
-                
-                // Lấy và hiển thị mật khẩu từ database
+
                 try
                 {
                     string matKhau = bllNhanVien.GetMatKhau(maNV);
                     txtMatKhau.Text = matKhau;
-                    txtMatKhau.Enabled = true; // Cho phép sửa mật khẩu
-                    txtMatKhau.PasswordChar = '\0'; // Hiển thị mật khẩu dạng text để xem và sửa
+                    txtMatKhau.Enabled = true;
+                    txtMatKhau.PasswordChar = '\0';
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Không thể lấy mật khẩu: {ex.Message}", "Lỗi", 
+                    MessageBox.Show($"Không thể lấy mật khẩu: {ex.Message}", "Lỗi",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtMatKhau.Clear();
                     txtMatKhau.Enabled = true;
@@ -188,49 +186,48 @@ namespace BTL_LTTQ.GUI
 
         private bool ValidateInput()
         {
-            if (string.IsNullOrWhiteSpace(txtHoTen.Text)) 
-            { 
-                MessageBox.Show("Vui lòng nhập họ tên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
-                txtHoTen.Focus(); 
-                return false; 
+            if (string.IsNullOrWhiteSpace(txtHoTen.Text))
+            {
+                MessageBox.Show("Vui lòng nhập họ tên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtHoTen.Focus();
+                return false;
             }
-            
-            if (txtTaiKhoan.Enabled && string.IsNullOrWhiteSpace(txtTaiKhoan.Text)) 
-            { 
-                MessageBox.Show("Vui lòng nhập tài khoản!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
-                txtTaiKhoan.Focus(); 
-                return false; 
+
+            if (txtTaiKhoan.Enabled && string.IsNullOrWhiteSpace(txtTaiKhoan.Text))
+            {
+                MessageBox.Show("Vui lòng nhập tài khoản!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTaiKhoan.Focus();
+                return false;
             }
-            
-            if (string.IsNullOrEmpty(txtMaNV.Text) && string.IsNullOrWhiteSpace(txtMatKhau.Text)) 
-            { 
-                MessageBox.Show("Vui lòng nhập mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
-                txtMatKhau.Focus(); 
-                return false; 
+
+            if (string.IsNullOrEmpty(txtMaNV.Text) && string.IsNullOrWhiteSpace(txtMatKhau.Text))
+            {
+                MessageBox.Show("Vui lòng nhập mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtMatKhau.Focus();
+                return false;
             }
-            
-            if (!string.IsNullOrWhiteSpace(txtSDT.Text) && !Regex.IsMatch(txtSDT.Text, @"^\d{10,11}$")) 
-            { 
-                MessageBox.Show("Số điện thoại không hợp lệ!\nVui lòng nhập 10-11 chữ số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
-                txtSDT.Focus(); 
-                return false; 
+
+            if (!string.IsNullOrWhiteSpace(txtSDT.Text) && !Regex.IsMatch(txtSDT.Text, @"^\d{10,11}$"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ!\nVui lòng nhập 10-11 chữ số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDT.Focus();
+                return false;
             }
-            
-            // Validate email nếu có nhập
+
             if (!string.IsNullOrWhiteSpace(txtEmail.Text))
             {
                 if (!IsValidEmail(txtEmail.Text))
                 {
-                    MessageBox.Show("Email không hợp lệ!\nVui lòng nhập đúng định dạng email (ví dụ: example@email.com).", 
+                    MessageBox.Show("Email không hợp lệ!\nVui lòng nhập đúng định dạng email (ví dụ: example@email.com).",
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtEmail.Focus();
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         private bool IsValidEmail(string email)
         {
             try
@@ -248,21 +245,17 @@ namespace BTL_LTTQ.GUI
         {
             try
             {
-                // Reset form để chuẩn bị thêm mới
                 btnLamMoi_Click(null, null);
-                
-                // Enable các trường cần thiết cho thêm mới
+
                 txtTaiKhoan.Enabled = true;
                 if (txtMatKhau != null)
                 {
                     txtMatKhau.Enabled = true;
                     txtMatKhau.Clear();
                 }
-                
-                // Set trạng thái mặc định
+
                 chkTrangThai.Checked = true;
-                
-                // Focus vào trường đầu tiên
+
                 txtHoTen.Focus();
             }
             catch (Exception ex)
@@ -278,43 +271,40 @@ namespace BTL_LTTQ.GUI
             {
                 if (string.IsNullOrEmpty(txtMaNV.Text))
                 {
-                    // Thêm mới
                     bool ok = bllNhanVien.CreateNhanVien(
-                        txtHoTen.Text.Trim(), 
-                        txtTaiKhoan.Text.Trim(), 
-                        txtMatKhau.Text, 
-                        chkIsAdmin.Checked, 
-                        txtSDT.Text.Trim(), 
-                        txtEmail.Text.Trim(), 
-                        txtDiaChi.Text.Trim(), 
+                        txtHoTen.Text.Trim(),
+                        txtTaiKhoan.Text.Trim(),
+                        txtMatKhau.Text,
+                        chkIsAdmin.Checked,
+                        txtSDT.Text.Trim(),
+                        txtEmail.Text.Trim(),
+                        txtDiaChi.Text.Trim(),
                         dtpNgayVaoLam.Value);
-                    
-                    if (ok) 
-                    { 
-                        MessageBox.Show("Thêm nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+
+                    if (ok)
+                    {
+                        MessageBox.Show("Thêm nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadData(txtSearch.Text);
                         btnLamMoi_Click(null, null);
                     }
                     else
                     {
-                        MessageBox.Show("Thêm nhân viên thất bại!\n\nCó thể tài khoản đã tồn tại hoặc có lỗi xảy ra.", 
+                        MessageBox.Show("Thêm nhân viên thất bại!\n\nCó thể tài khoản đã tồn tại hoặc có lỗi xảy ra.",
                             "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    // Sửa thông tin nhân viên
                     bool ok = bllNhanVien.EditNhanVien(
-                        Convert.ToInt32(txtMaNV.Text), 
-                        txtHoTen.Text.Trim(), 
-                        chkIsAdmin.Checked, 
-                        chkTrangThai.Checked, 
-                        txtSDT.Text.Trim(), 
-                        txtEmail.Text.Trim(), 
-                        txtDiaChi.Text.Trim(), 
+                        Convert.ToInt32(txtMaNV.Text),
+                        txtHoTen.Text.Trim(),
+                        chkIsAdmin.Checked,
+                        chkTrangThai.Checked,
+                        txtSDT.Text.Trim(),
+                        txtEmail.Text.Trim(),
+                        txtDiaChi.Text.Trim(),
                         dtpNgayVaoLam.Value);
-                    
-                    // Cập nhật mật khẩu nếu có thay đổi
+
                     if (!string.IsNullOrWhiteSpace(txtMatKhau.Text))
                     {
                         try
@@ -322,20 +312,20 @@ namespace BTL_LTTQ.GUI
                             bool okMatKhau = bllNhanVien.UpdateMatKhau(Convert.ToInt32(txtMaNV.Text), txtMatKhau.Text);
                             if (!okMatKhau)
                             {
-                                MessageBox.Show("Cập nhật thông tin thành công nhưng không thể cập nhật mật khẩu!", 
+                                MessageBox.Show("Cập nhật thông tin thành công nhưng không thể cập nhật mật khẩu!",
                                     "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                         }
                         catch (Exception exMatKhau)
                         {
-                            MessageBox.Show($"Cập nhật thông tin thành công nhưng lỗi khi cập nhật mật khẩu: {exMatKhau.Message}", 
+                            MessageBox.Show($"Cập nhật thông tin thành công nhưng lỗi khi cập nhật mật khẩu: {exMatKhau.Message}",
                                 "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
-                    
-                    if (ok) 
-                    { 
-                        MessageBox.Show("Cập nhật nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+
+                    if (ok)
+                    {
+                        MessageBox.Show("Cập nhật nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadData(txtSearch.Text);
                     }
                     else
@@ -344,10 +334,10 @@ namespace BTL_LTTQ.GUI
                     }
                 }
             }
-            catch (Exception ex) 
-            { 
-                MessageBox.Show($"Lỗi: {ex.Message}\n\nChi tiết: {ex.InnerException?.Message ?? ex.ToString()}", 
-                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}\n\nChi tiết: {ex.InnerException?.Message ?? ex.ToString()}",
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -358,19 +348,25 @@ namespace BTL_LTTQ.GUI
                 MessageBox.Show("Vui lòng chọn nhân viên cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
-            if (MessageBox.Show($"Bạn có chắc chắn muốn xóa nhân viên '{txtHoTen.Text}'?\n\n" +
-                "Lưu ý:\n" +
-                "- Nếu nhân viên đã có hóa đơn/phiếu nhập: sẽ bị vô hiệu hóa (không thể đăng nhập)\n" +
-                "- Nếu nhân viên chưa có hóa đơn/phiếu nhập: sẽ bị xóa vĩnh viễn khỏi hệ thống",
-                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+
+            if (MessageBox.Show($"Bạn có chắc chắn muốn xóa nhân viên '{txtHoTen.Text}'?\n\nNhân viên này sẽ bị ẩn khỏi danh sách hoạt động.",
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
                     if (bllNhanVien.DeleteNhanVien(Convert.ToInt32(txtMaNV.Text)))
                     {
                         MessageBox.Show("Đã xóa nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadData(txtSearch.Text);
+
+                        if (cmbLocTrangThai.SelectedIndex != 1)
+                        {
+                            cmbLocTrangThai.SelectedIndex = 1;
+                        }
+                        else
+                        {
+                            LoadData(txtSearch.Text);
+                        }
+
                         btnLamMoi_Click(null, null);
                     }
                     else
@@ -380,11 +376,10 @@ namespace BTL_LTTQ.GUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Lỗi khi xóa nhân viên: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             txtMaNV.Text = ""; txtHoTen.Text = ""; txtTaiKhoan.Text = ""; txtMatKhau.Text = "";
@@ -393,7 +388,6 @@ namespace BTL_LTTQ.GUI
             chkIsAdmin.Checked = false; chkTrangThai.Checked = true;
             txtTaiKhoan.Enabled = true;
 
-            cmbLocTrangThai.SelectedIndex = 0;
             txtSearch.Text = "";
         }
 
@@ -419,7 +413,6 @@ namespace BTL_LTTQ.GUI
                 worksheet = (Excel.Worksheet)workbook.Worksheets[1];
                 worksheet.Name = "NhanVien";
 
-                // Title
                 Excel.Range titleRange = worksheet.Range["A1", "I1"];
                 titleRange.Merge();
                 titleRange.Value2 = "DANH SÁCH NHÂN VIÊN";
@@ -429,7 +422,6 @@ namespace BTL_LTTQ.GUI
                 titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                 ReleaseObject(titleRange);
 
-                // Headers
                 int headerRow = 3;
                 int colIndex = 1;
                 for (int i = 0; i < dgvNhanVien.Columns.Count; i++)
@@ -449,7 +441,6 @@ namespace BTL_LTTQ.GUI
                 headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                 ReleaseObject(headerRange);
 
-                // Data rows
                 int row = headerRow + 1;
                 for (int i = 0; i < dgvNhanVien.Rows.Count; i++)
                 {
@@ -476,7 +467,6 @@ namespace BTL_LTTQ.GUI
                     row++;
                 }
 
-                // Add borders to data range
                 if (row > headerRow + 1)
                 {
                     Excel.Range dataRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[row - 1, totalVisibleCols]];
@@ -485,11 +475,9 @@ namespace BTL_LTTQ.GUI
                     ReleaseObject(dataRange);
                 }
 
-                // Auto-fit columns
                 worksheet.Columns.AutoFit();
                 worksheet.UsedRange.WrapText = false;
 
-                // Adjust column widths for better appearance
                 for (int i = 1; i <= totalVisibleCols; i++)
                 {
                     Excel.Range col = (Excel.Range)worksheet.Columns[i];

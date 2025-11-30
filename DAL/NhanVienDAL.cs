@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using BTL_LTTQ.DTO;
-using BTL_LTTQ.DAL; 
+using BTL_LTTQ.DAL;
 
 namespace BTL_LTTQ.DAL
 {
@@ -83,35 +83,15 @@ namespace BTL_LTTQ.DAL
 
         public bool DeleteNhanVien(int maNV)
         {
-            // Kiểm tra xem nhân viên có đang được sử dụng trong hóa đơn không
-            string sqlCheck = "SELECT COUNT(*) FROM HoaDon WHERE MaNV = @MaNV";
-            var checkParam = new System.Data.SqlClient.SqlParameter("@MaNV", maNV);
-            var count = db.ExecuteScalar(sqlCheck, System.Data.CommandType.Text, checkParam);
-            
-            bool hasHoaDon = Convert.ToInt32(count) > 0;
-
-            // Kiểm tra xem nhân viên có đang được sử dụng trong phiếu nhập không
-            string sqlCheckPN = "SELECT COUNT(*) FROM PhieuNhap WHERE MaNV = @MaNV";
-            var countPN = db.ExecuteScalar(sqlCheckPN, System.Data.CommandType.Text, checkParam);
-            
-            bool hasPhieuNhap = Convert.ToInt32(countPN) > 0;
-
-            // Nếu có hóa đơn hoặc phiếu nhập => chỉ vô hiệu hóa (soft delete)
-            if (hasHoaDon || hasPhieuNhap)
-            {
-                string sql = "UPDATE NhanVien SET TrangThai = 0 WHERE MaNV = @MaNV";
-                return db.ExecuteNonQuery(sql, System.Data.CommandType.Text, checkParam) > 0;
-            }
-
-            // Nếu không có ràng buộc => xóa hẳn (hard delete)
-            string sqlDelete = "DELETE FROM NhanVien WHERE MaNV = @MaNV";
-            return db.ExecuteNonQuery(sqlDelete, System.Data.CommandType.Text, checkParam) > 0;
+            string sql = "UPDATE NhanVien SET TrangThai = 0 WHERE MaNV = @MaNV";
+            return db.ExecuteNonQuery(sql, System.Data.CommandType.Text,
+                new System.Data.SqlClient.SqlParameter("@MaNV", maNV)) > 0;
         }
 
         public bool CheckTaiKhoanExists(string taiKhoan)
         {
             string sql = "SELECT COUNT(*) FROM NhanVien WHERE TaiKhoan = @TaiKhoan";
-            var result = db.ExecuteScalar(sql, System.Data.CommandType.Text, 
+            var result = db.ExecuteScalar(sql, System.Data.CommandType.Text,
                 new System.Data.SqlClient.SqlParameter("@TaiKhoan", taiKhoan));
             return Convert.ToInt32(result) > 0;
         }

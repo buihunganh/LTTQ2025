@@ -128,7 +128,7 @@
             this.cmbLocTrangThai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLocTrangThai.FormattingEnabled = true;
             this.cmbLocTrangThai.Location = new System.Drawing.Point(507, 52);
-            this.cmbLocTrangThai.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbLocTrangThai.Margin = new System.Windows.Forms.Padding(4);
             this.cmbLocTrangThai.Name = "cmbLocTrangThai";
             this.cmbLocTrangThai.Size = new System.Drawing.Size(216, 28);
             this.cmbLocTrangThai.TabIndex = 2;
