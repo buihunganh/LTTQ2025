@@ -314,7 +314,50 @@ namespace BTL_LTTQ.BLL
 
                     // Chưa có biến thể này => kiểm tra SKU rồi insert mới
                     const string checkSkuSql = "SELECT COUNT(*) FROM ChiTietSanPham WHERE MaSKU = @MaSKU";
+                    var checkParam = new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU };
+                    var count = db.ExecuteScalar(checkSkuSql, CommandType.Text, checkParam);
+                    if (Convert.ToInt32(count) > 0)
+                        throw new Exception($"Mã SKU '{product.MaSKU}' đã tồn tại trong hệ thống!");
+
+                    // Kiểm tra xem đã có variant nào cùng MaSP và MaMau chưa
+                    // Nếu có thì dùng ảnh của variant đó (cùng màu dùng chung ảnh)
+                    string imageToUse = product.HinhAnhChung;
+                    const string checkColorSql = "SELECT TOP 1 HinhAnhChung FROM ChiTietSanPham WHERE MaSP = @MaSP AND MaMau = @MaMau AND HinhAnhChung IS NOT NULL";
+                    var colorParams = new[]
+                    {
+                        new SqlParameter("@MaSP", SqlDbType.Int) { Value = product.MaSP },
+                        new SqlParameter("@MaMau", SqlDbType.Int) { Value = product.MaMau }
+                    };
+                    var colorTable = db.ExecuteQuery(checkColorSql, CommandType.Text, colorParams);
+                    if (colorTable != null && colorTable.Rows.Count > 0)
+                    {
+                        var existingImage = colorTable.Rows[0]["HinhAnhChung"];
+                        if (existingImage != DBNull.Value && !string.IsNullOrWhiteSpace(existingImage.ToString()))
+                        {
+                            imageToUse = existingImage.ToString();
+                        }
+                    }
+
+                    const string insertSql = @"
+                        INSERT INTO ChiTietSanPham (MaSP, MaSize, MaMau, MaSKU, GiaNhap, GiaBan, SoLuongTon, HinhAnhChung, TrangThai)
+                        VALUES (@MaSP, @MaSize, @MaMau, @MaSKU, @GiaNhap, @GiaBan, @SoLuongTon, @HinhAnhChung, @TrangThai)";
+
+                    var parameters = new[]
+                    {
+                        new SqlParameter("@MaSP", SqlDbType.Int) { Value = product.MaSP },
+                        new SqlParameter("@MaSize", SqlDbType.Int) { Value = product.MaSize },
+                        new SqlParameter("@MaMau", SqlDbType.Int) { Value = product.MaMau },
+                        new SqlParameter("@MaSKU", SqlDbType.VarChar, 100) { Value = product.MaSKU },
+                        new SqlParameter("@GiaNhap", SqlDbType.Decimal) { Value = product.GiaNhap },
+                        new SqlParameter("@GiaBan", SqlDbType.Decimal) { Value = product.GiaBan },
+                        new SqlParameter("@SoLuongTon", SqlDbType.Int) { Value = product.SoLuongTon },
+                        new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)imageToUse ?? DBNull.Value },
+                        new SqlParameter("@TrangThai", SqlDbType.Bit) { Value = product.TrangThai }
+                    };
+
+                    return db.ExecuteNonQuery(insertSql, CommandType.Text, parameters) > 0;
                 }
+            }
             catch (Exception ex)
             {
                 throw new Exception($"Lỗi khi thêm sản phẩm: {ex.Message}", ex);
