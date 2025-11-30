@@ -256,5 +256,65 @@ namespace BTL_LTTQ.GUI
         {
 
         }
+
+        private void btnViewDetail_Click(object sender, EventArgs e)
+        {
+            if (dgvTonKho.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn một sản phẩm để xem chi tiết!", "Thông báo", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                var selectedRow = dgvTonKho.SelectedRows[0];
+                
+                if (!dgvTonKho.Columns.Contains("MaCTSP"))
+                {
+                    MessageBox.Show("Không tìm thấy cột MaCTSP!", "Lỗi", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var maCTSPValue = selectedRow.Cells["MaCTSP"].Value;
+                
+                if (maCTSPValue == null || maCTSPValue == DBNull.Value)
+                {
+                    MessageBox.Show("Không tìm thấy thông tin sản phẩm!", "Thông báo", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                int maCTSP = 0;
+                if (maCTSPValue is int intValue)
+                    maCTSP = intValue;
+                else if (maCTSPValue is long longValue)
+                    maCTSP = (int)longValue;
+                else if (!int.TryParse(maCTSPValue.ToString(), out maCTSP))
+                {
+                    MessageBox.Show("Mã sản phẩm không hợp lệ!", "Lỗi", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (maCTSP <= 0)
+                {
+                    MessageBox.Show("Mã sản phẩm không hợp lệ!", "Lỗi", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var tenSanPham = dgvTonKho.Columns.Contains("TenSP") ? selectedRow.Cells["TenSP"].Value?.ToString() ?? "" : "";
+                
+                var frmLichSu = new frmLichSuNhapHang(maCTSP, tenSanPham);
+                frmLichSu.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở lịch sử nhập hàng: {ex.Message}", "Lỗi", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

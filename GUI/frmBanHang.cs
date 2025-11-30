@@ -37,7 +37,32 @@ namespace BTL_LTTQ.GUI
             _dtGioHang.Columns.Add("ThanhTien", typeof(decimal));
 
             dgvGioHang.DataSource = _dtGioHang;
+            
+            // Set HeaderText tiếng Việt có dấu
+            SetGridViewHeaders();
+            
             CalculateTotal();
+        }
+        
+        private void SetGridViewHeaders()
+        {
+            if (dgvGioHang.Columns["MaCTSP"] != null) 
+                dgvGioHang.Columns["MaCTSP"].Visible = false;
+            
+            if (dgvGioHang.Columns["TenSP"] != null)
+                dgvGioHang.Columns["TenSP"].HeaderText = "Tên sản phẩm";
+            
+            if (dgvGioHang.Columns["SoLuong"] != null)
+                dgvGioHang.Columns["SoLuong"].HeaderText = "Số lượng";
+            
+            if (dgvGioHang.Columns["DonGia"] != null)
+                dgvGioHang.Columns["DonGia"].HeaderText = "Đơn giá";
+            
+            if (dgvGioHang.Columns["GiamGia"] != null)
+                dgvGioHang.Columns["GiamGia"].HeaderText = "Giảm giá (%)";
+            
+            if (dgvGioHang.Columns["ThanhTien"] != null)
+                dgvGioHang.Columns["ThanhTien"].HeaderText = "Thành tiền";
         }
 
         private void CalculateTotal()
@@ -60,8 +85,8 @@ namespace BTL_LTTQ.GUI
         {
             _dtSanPham = _bll.GetSanPhamBanHang();
             
-            if (dgvGioHang.Columns["MaCTSP"] != null) 
-                dgvGioHang.Columns["MaCTSP"].Visible = false;
+            // Đảm bảo HeaderText được set lại sau khi load
+            SetGridViewHeaders();
         }
 
         private void LoadProductCards(string searchText = "")
@@ -398,7 +423,7 @@ namespace BTL_LTTQ.GUI
 
         private void txtSearch_Enter(object sender, EventArgs e)
         {
-            if (txtSearch.Text == "Tim kiem san pham...")
+            if (txtSearch.Text == "Tìm kiếm sản phẩm...")
             {
                 txtSearch.Text = "";
                 txtSearch.ForeColor = Color.Black;
@@ -409,7 +434,7 @@ namespace BTL_LTTQ.GUI
         {
             if (string.IsNullOrWhiteSpace(txtSearch.Text))
             {
-                txtSearch.Text = "Tim kiem san pham...";
+                txtSearch.Text = "Tìm kiếm sản phẩm...";
                 txtSearch.ForeColor = Color.Gray;
             }
         }

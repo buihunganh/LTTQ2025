@@ -189,6 +189,7 @@ namespace BTL_LTTQ.GUI
             this.txtSDT.Size = new System.Drawing.Size(290, 30);
             this.txtSDT.TabIndex = 14;
             this.txtSDT.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtSDT_KeyPress);
+            this.txtSDT.TextChanged += new System.EventHandler(this.TxtSDT_TextChanged);
         
             this.lblSDT.AutoSize = true;
             this.lblSDT.Location = new System.Drawing.Point(360, 105);

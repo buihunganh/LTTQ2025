@@ -299,7 +299,12 @@ namespace BTL_LTTQ.GUI
             {
                 DataRowView drv = (DataRowView)cboKhachHang.SelectedItem;
                 txtMaKH.Text = drv["MaKH"].ToString();
+                
+                // Đánh dấu đang cập nhật từ ComboBox để tránh vòng lặp
+                _isUpdatingFromComboBox = true;
                 txtSDT.Text = drv["SoDienThoai"].ToString();
+                _isUpdatingFromComboBox = false;
+                
                 txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString())
                     ? drv["DiaChi"].ToString()
                     : "Khách tại quầy";
@@ -688,6 +693,64 @@ namespace BTL_LTTQ.GUI
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true; 
+            }
+        }
+
+        private bool _isUpdatingFromComboBox = false;
+
+        private void TxtSDT_TextChanged(object sender, EventArgs e)
+        {
+            // Bỏ qua nếu đang cập nhật từ ComboBox để tránh vòng lặp
+            if (_isUpdatingFromComboBox) return;
+            
+            // Chỉ tìm kiếm khi txtSDT có thể nhập (không phải ReadOnly)
+            if (txtSDT.ReadOnly) return;
+            
+            string sdt = txtSDT.Text.Trim();
+            
+            // Chỉ tìm khi có ít nhất 7 số (số điện thoại hợp lệ)
+            if (sdt.Length >= 7)
+            {
+                try
+                {
+                    DataRow khachHang = _bll.GetKhachHangByPhone(sdt);
+                    if (khachHang != null)
+                    {
+                        // Tìm và chọn khách hàng trong ComboBox
+                        int maKH = Convert.ToInt32(khachHang["MaKH"]);
+                        
+                        // Tạm thời tắt event để tránh vòng lặp
+                        cboKhachHang.SelectedIndexChanged -= CboKhachHang_SelectedIndexChanged;
+                        _isUpdatingFromComboBox = true;
+                        
+                        // Tìm và chọn khách hàng
+                        for (int i = 0; i < cboKhachHang.Items.Count; i++)
+                        {
+                            DataRowView drv = (DataRowView)cboKhachHang.Items[i];
+                            if (Convert.ToInt32(drv["MaKH"]) == maKH)
+                            {
+                                cboKhachHang.SelectedIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // Điền thông tin
+                        txtMaKH.Text = maKH.ToString();
+                        txtDiaChi.Text = khachHang["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(khachHang["DiaChi"].ToString())
+                            ? khachHang["DiaChi"].ToString()
+                            : "Khách tại quầy";
+                        
+                        // Bật lại event
+                        _isUpdatingFromComboBox = false;
+                        cboKhachHang.SelectedIndexChanged += CboKhachHang_SelectedIndexChanged;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Không hiển thị lỗi để tránh làm phiền người dùng
+                    System.Diagnostics.Debug.WriteLine("Lỗi tìm khách hàng: " + ex.Message);
+                    _isUpdatingFromComboBox = false;
+                }
             }
         }
     }

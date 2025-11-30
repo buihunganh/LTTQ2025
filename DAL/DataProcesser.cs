@@ -255,18 +255,35 @@ namespace BTL_LTTQ.DAL
                     foreach (DataRow r in dtChiTiet.Rows)
                     {
                         string sqlCT = @"INSERT INTO ChiTietPhieuNhap(MaPN, MaCTSP, SoLuong, GiaNhap, ThanhTien) 
-                                         VALUES (@MaPN, @MaCTSP, @SoLuong, @GiaNhap, @ThanhTien)";
+                                         VALUES (@MaPN, @MaCTSP, @SoLuong, @GiaNhap, @ThanhTien);
+                                         SELECT CAST(SCOPE_IDENTITY() AS INT);";
                         SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
                         cmdCT.Parameters.AddWithValue("@MaPN", maPN);
                         cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
                         cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
                         cmdCT.Parameters.AddWithValue("@GiaNhap", r["GiaNhap"]);
                         cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
-                        cmdCT.ExecuteNonQuery();
+                        int maCTPN = Convert.ToInt32(cmdCT.ExecuteScalar());
 
+                        // Tạo lô hàng mới (FIFO)
+                        string sqlLoHang = @"INSERT INTO LoHang(MaCTSP, MaPN, MaCTPN, SoLuongBanDau, SoLuongConLai, GiaNhap, NgayNhap, TrangThai)
+                                             VALUES (@MaCTSP, @MaPN, @MaCTPN, @SoLuong, @SoLuong, @GiaNhap, GETDATE(), 1)";
+                        SqlCommand cmdLoHang = new SqlCommand(sqlLoHang, connection, transaction);
+                        cmdLoHang.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdLoHang.Parameters.AddWithValue("@MaPN", maPN);
+                        cmdLoHang.Parameters.AddWithValue("@MaCTPN", maCTPN);
+                        cmdLoHang.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
+                        cmdLoHang.Parameters.AddWithValue("@GiaNhap", r["GiaNhap"]);
+                        cmdLoHang.ExecuteNonQuery();
+
+                        // Cập nhật số lượng tồn kho và tính giá nhập trung bình
                         string sqlUpd = @"UPDATE ChiTietSanPham 
-                                          SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL, 
-                                              GiaNhap = @GiaNhap 
+                                          SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL,
+                                              GiaNhap = CASE 
+                                                  WHEN (ISNULL(SoLuongTon, 0) + @SL) > 0 
+                                                  THEN ((ISNULL(SoLuongTon, 0) * ISNULL(GiaNhap, 0)) + (@SL * @GiaNhap)) / (ISNULL(SoLuongTon, 0) + @SL)
+                                                  ELSE @GiaNhap
+                                              END
                                           WHERE MaCTSP = @MaCTSP";
                         SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
                         cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
@@ -305,22 +322,80 @@ namespace BTL_LTTQ.DAL
 
                     foreach (DataRow r in dtChiTiet.Rows)
                     {
-                        string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien) 
-                                         VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien)";
+                        int maCTSP = Convert.ToInt32(r["MaCTSP"]);
+                        int soLuongCanBan = Convert.ToInt32(r["SoLuong"]);
+                        decimal tongGiaVon = 0;
+                        int soLuongDaTru = 0;
+
+                        // FIFO: Trừ từ lô hàng cũ nhất trước
+                        string sqlGetLoHang = @"SELECT TOP 1 MaLoHang, SoLuongConLai, GiaNhap 
+                                                FROM LoHang 
+                                                WHERE MaCTSP = @MaCTSP 
+                                                  AND TrangThai = 1 
+                                                  AND SoLuongConLai > 0 
+                                                ORDER BY NgayNhap ASC, MaLoHang ASC";
+                        
+                        int soLuongConLaiCanBan = soLuongCanBan;
+                        
+                        while (soLuongConLaiCanBan > 0)
+                        {
+                            SqlCommand cmdGetLo = new SqlCommand(sqlGetLoHang, connection, transaction);
+                            cmdGetLo.Parameters.AddWithValue("@MaCTSP", maCTSP);
+                            
+                            int maLoHang = 0;
+                            int soLuongConLai = 0;
+                            decimal giaNhap = 0;
+                            
+                            using (SqlDataReader reader = cmdGetLo.ExecuteReader())
+                            {
+                                if (!reader.Read())
+                                {
+                                    throw new Exception("Không đủ hàng trong kho cho sản phẩm MaCTSP: " + maCTSP);
+                                }
+
+                                maLoHang = reader.GetInt32(0);
+                                soLuongConLai = reader.GetInt32(1);
+                                giaNhap = reader.GetDecimal(2);
+                            }
+
+                            int soLuongTruTrongLo = Math.Min(soLuongConLaiCanBan, soLuongConLai);
+                            tongGiaVon += giaNhap * soLuongTruTrongLo;
+                            soLuongDaTru += soLuongTruTrongLo;
+                            soLuongConLaiCanBan -= soLuongTruTrongLo;
+
+                            // Cập nhật số lượng còn lại trong lô hàng
+                            string sqlUpdateLo = @"UPDATE LoHang 
+                                                   SET SoLuongConLai = SoLuongConLai - @SL,
+                                                       TrangThai = CASE WHEN (SoLuongConLai - @SL) <= 0 THEN 0 ELSE 1 END
+                                                   WHERE MaLoHang = @MaLoHang";
+                            SqlCommand cmdUpdateLo = new SqlCommand(sqlUpdateLo, connection, transaction);
+                            cmdUpdateLo.Parameters.AddWithValue("@SL", soLuongTruTrongLo);
+                            cmdUpdateLo.Parameters.AddWithValue("@MaLoHang", maLoHang);
+                            cmdUpdateLo.ExecuteNonQuery();
+                        }
+
+                        // Tính giá vốn trung bình (weighted average) từ các lô đã trừ
+                        decimal giaVonTrungBinh = soLuongDaTru > 0 ? tongGiaVon / soLuongDaTru : 0;
+
+                        // Lưu chi tiết hóa đơn với giá vốn theo FIFO
+                        string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien, GiaVon) 
+                                         VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien, @GiaVon)";
 
                         SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
                         cmdCT.Parameters.AddWithValue("@MaHD", newInvoiceID);
-                        cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdCT.Parameters.AddWithValue("@MaCTSP", maCTSP);
                         cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
                         cmdCT.Parameters.AddWithValue("@DonGia", r["DonGia"]);
                         cmdCT.Parameters.AddWithValue("@GiamGia", r["GiamGia"]);
                         cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
+                        cmdCT.Parameters.AddWithValue("@GiaVon", giaVonTrungBinh);
                         cmdCT.ExecuteNonQuery();
 
+                        // Cập nhật số lượng tồn kho
                         string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon - @SL WHERE MaCTSP = @MaCTSP";
                         SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
                         cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
-                        cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdUpd.Parameters.AddWithValue("@MaCTSP", maCTSP);
                         cmdUpd.ExecuteNonQuery();
                     }
 
@@ -408,12 +483,34 @@ namespace BTL_LTTQ.DAL
                         adapter.Fill(dtChiTiet);
                     }
 
+                    // Hoàn trả hàng vào kho (tạo lô hàng hoàn trả)
                     foreach (DataRow row in dtChiTiet.Rows)
                     {
+                        int maCTSP = Convert.ToInt32(row["MaCTSP"]);
+                        int soLuong = Convert.ToInt32(row["SoLuong"]);
+                        
+                        // Lấy giá vốn từ ChiTietHoaDon (đã lưu khi bán)
+                        string sqlGetGiaVon = "SELECT GiaVon FROM ChiTietHoaDon WHERE MaHD = @MaHD AND MaCTSP = @MaCTSP";
+                        SqlCommand cmdGetGiaVon = new SqlCommand(sqlGetGiaVon, connection, transaction);
+                        cmdGetGiaVon.Parameters.AddWithValue("@MaHD", maHD);
+                        cmdGetGiaVon.Parameters.AddWithValue("@MaCTSP", maCTSP);
+                        object giaVonObj = cmdGetGiaVon.ExecuteScalar();
+                        decimal giaVon = (giaVonObj != null && giaVonObj != DBNull.Value) ? Convert.ToDecimal(giaVonObj) : 0;
+
+                        // Tạo lô hàng hoàn trả (với MaPN = NULL để đánh dấu là hoàn trả)
+                        string sqlLoHangHoanTra = @"INSERT INTO LoHang(MaCTSP, MaPN, MaCTPN, SoLuongBanDau, SoLuongConLai, GiaNhap, NgayNhap, TrangThai)
+                                                     VALUES (@MaCTSP, NULL, NULL, @SoLuong, @SoLuong, @GiaVon, GETDATE(), 1)";
+                        SqlCommand cmdLoHang = new SqlCommand(sqlLoHangHoanTra, connection, transaction);
+                        cmdLoHang.Parameters.AddWithValue("@MaCTSP", maCTSP);
+                        cmdLoHang.Parameters.AddWithValue("@SoLuong", soLuong);
+                        cmdLoHang.Parameters.AddWithValue("@GiaVon", giaVon);
+                        cmdLoHang.ExecuteNonQuery();
+
+                        // Cập nhật số lượng tồn kho
                         string sqlUpdate = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
                         SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, connection, transaction);
-                        cmdUpdate.Parameters.AddWithValue("@SL", row["SoLuong"]);
-                        cmdUpdate.Parameters.AddWithValue("@MaCTSP", row["MaCTSP"]);
+                        cmdUpdate.Parameters.AddWithValue("@SL", soLuong);
+                        cmdUpdate.Parameters.AddWithValue("@MaCTSP", maCTSP);
                         cmdUpdate.ExecuteNonQuery();
                     }
 
@@ -484,12 +581,36 @@ namespace BTL_LTTQ.DAL
                         adapter.Fill(dtOld);
                     }
 
-                    foreach (DataRow row in dtOld.Rows)
+                    // Hoàn trả hàng cũ vào kho (tạo lô hàng hoàn trả)
+                    string sqlGetOldGiaVon = @"SELECT MaCTSP, SoLuong, GiaVon FROM ChiTietHoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdGetOldGiaVon = new SqlCommand(sqlGetOldGiaVon, connection, transaction);
+                    cmdGetOldGiaVon.Parameters.AddWithValue("@MaHD", maHD);
+                    DataTable dtOldGiaVon = new DataTable();
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(cmdGetOldGiaVon))
                     {
+                        adapter.Fill(dtOldGiaVon);
+                    }
+
+                    foreach (DataRow row in dtOldGiaVon.Rows)
+                    {
+                        int maCTSP = Convert.ToInt32(row["MaCTSP"]);
+                        int soLuong = Convert.ToInt32(row["SoLuong"]);
+                        decimal giaVon = (row["GiaVon"] != DBNull.Value) ? Convert.ToDecimal(row["GiaVon"]) : 0;
+
+                        // Tạo lô hàng hoàn trả (với MaPN = NULL để đánh dấu là hoàn trả)
+                        string sqlLoHangHoanTra = @"INSERT INTO LoHang(MaCTSP, MaPN, MaCTPN, SoLuongBanDau, SoLuongConLai, GiaNhap, NgayNhap, TrangThai)
+                                                     VALUES (@MaCTSP, NULL, NULL, @SoLuong, @SoLuong, @GiaVon, GETDATE(), 1)";
+                        SqlCommand cmdLoHang = new SqlCommand(sqlLoHangHoanTra, connection, transaction);
+                        cmdLoHang.Parameters.AddWithValue("@MaCTSP", maCTSP);
+                        cmdLoHang.Parameters.AddWithValue("@SoLuong", soLuong);
+                        cmdLoHang.Parameters.AddWithValue("@GiaVon", giaVon);
+                        cmdLoHang.ExecuteNonQuery();
+
+                        // Cập nhật số lượng tồn kho
                         string sqlUpdate = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
                         SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, connection, transaction);
-                        cmdUpdate.Parameters.AddWithValue("@SL", row["SoLuong"]);
-                        cmdUpdate.Parameters.AddWithValue("@MaCTSP", row["MaCTSP"]);
+                        cmdUpdate.Parameters.AddWithValue("@SL", soLuong);
+                        cmdUpdate.Parameters.AddWithValue("@MaCTSP", maCTSP);
                         cmdUpdate.ExecuteNonQuery();
                     }
 
@@ -512,24 +633,83 @@ namespace BTL_LTTQ.DAL
                     cmdUpdateHD.Parameters.AddWithValue("@TienThua", tienThua);
                     cmdUpdateHD.ExecuteNonQuery();
 
+                    // Bán hàng mới theo FIFO
                     foreach (DataRow r in dtChiTiet.Rows)
                     {
-                        string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien) 
-                                         VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien)";
+                        int maCTSP = Convert.ToInt32(r["MaCTSP"]);
+                        int soLuongCanBan = Convert.ToInt32(r["SoLuong"]);
+                        decimal tongGiaVon = 0;
+                        int soLuongDaTru = 0;
+
+                        // FIFO: Trừ từ lô hàng cũ nhất trước
+                        string sqlGetLoHang = @"SELECT TOP 1 MaLoHang, SoLuongConLai, GiaNhap 
+                                                FROM LoHang 
+                                                WHERE MaCTSP = @MaCTSP 
+                                                  AND TrangThai = 1 
+                                                  AND SoLuongConLai > 0 
+                                                ORDER BY NgayNhap ASC, MaLoHang ASC";
+                        
+                        int soLuongConLaiCanBan = soLuongCanBan;
+                        
+                        while (soLuongConLaiCanBan > 0)
+                        {
+                            SqlCommand cmdGetLo = new SqlCommand(sqlGetLoHang, connection, transaction);
+                            cmdGetLo.Parameters.AddWithValue("@MaCTSP", maCTSP);
+                            
+                            int maLoHang = 0;
+                            int soLuongConLai = 0;
+                            decimal giaNhap = 0;
+                            
+                            using (SqlDataReader reader = cmdGetLo.ExecuteReader())
+                            {
+                                if (!reader.Read())
+                                {
+                                    throw new Exception("Không đủ hàng trong kho cho sản phẩm MaCTSP: " + maCTSP);
+                                }
+
+                                maLoHang = reader.GetInt32(0);
+                                soLuongConLai = reader.GetInt32(1);
+                                giaNhap = reader.GetDecimal(2);
+                            }
+
+                            int soLuongTruTrongLo = Math.Min(soLuongConLaiCanBan, soLuongConLai);
+                            tongGiaVon += giaNhap * soLuongTruTrongLo;
+                            soLuongDaTru += soLuongTruTrongLo;
+                            soLuongConLaiCanBan -= soLuongTruTrongLo;
+
+                            // Cập nhật số lượng còn lại trong lô hàng
+                            string sqlUpdateLo = @"UPDATE LoHang 
+                                                   SET SoLuongConLai = SoLuongConLai - @SL,
+                                                       TrangThai = CASE WHEN (SoLuongConLai - @SL) <= 0 THEN 0 ELSE 1 END
+                                                   WHERE MaLoHang = @MaLoHang";
+                            SqlCommand cmdUpdateLo = new SqlCommand(sqlUpdateLo, connection, transaction);
+                            cmdUpdateLo.Parameters.AddWithValue("@SL", soLuongTruTrongLo);
+                            cmdUpdateLo.Parameters.AddWithValue("@MaLoHang", maLoHang);
+                            cmdUpdateLo.ExecuteNonQuery();
+                        }
+
+                        // Tính giá vốn trung bình (weighted average) từ các lô đã trừ
+                        decimal giaVonTrungBinh = soLuongDaTru > 0 ? tongGiaVon / soLuongDaTru : 0;
+
+                        // Lưu chi tiết hóa đơn với giá vốn theo FIFO
+                        string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien, GiaVon) 
+                                         VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien, @GiaVon)";
 
                         SqlCommand cmdCT = new SqlCommand(sqlCT, connection, transaction);
                         cmdCT.Parameters.AddWithValue("@MaHD", maHD);
-                        cmdCT.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdCT.Parameters.AddWithValue("@MaCTSP", maCTSP);
                         cmdCT.Parameters.AddWithValue("@SoLuong", r["SoLuong"]);
                         cmdCT.Parameters.AddWithValue("@DonGia", r["DonGia"]);
                         cmdCT.Parameters.AddWithValue("@GiamGia", r["GiamGia"]);
                         cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
+                        cmdCT.Parameters.AddWithValue("@GiaVon", giaVonTrungBinh);
                         cmdCT.ExecuteNonQuery();
 
+                        // Cập nhật số lượng tồn kho
                         string sqlUpd = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon - @SL WHERE MaCTSP = @MaCTSP";
                         SqlCommand cmdUpd = new SqlCommand(sqlUpd, connection, transaction);
                         cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
-                        cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
+                        cmdUpd.Parameters.AddWithValue("@MaCTSP", maCTSP);
                         cmdUpd.ExecuteNonQuery();
                     }
 
@@ -539,8 +719,8 @@ namespace BTL_LTTQ.DAL
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    System.Diagnostics.Debug.WriteLine($"Lỗi cập nhật hóa đơn: {ex.Message}");
-                    System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                    System.Diagnostics.Debug.WriteLine("Lỗi cập nhật hóa đơn: " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine("Stack trace: " + ex.StackTrace);
                     return false;
                 }
             }

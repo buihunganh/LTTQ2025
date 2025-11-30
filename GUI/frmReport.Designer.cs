@@ -113,6 +113,7 @@ namespace BTL_LTTQ
             this.bodyLayout.Name = "bodyLayout";
             this.bodyLayout.RowCount = 1;
             this.bodyLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.bodyLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 367F));
             this.bodyLayout.Size = new System.Drawing.Size(1232, 367);
             this.bodyLayout.TabIndex = 3;
             // 

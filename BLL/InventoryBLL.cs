@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using BTL_LTTQ.DAL;
 
 namespace BTL_LTTQ.BLL
@@ -83,6 +84,45 @@ namespace BTL_LTTQ.BLL
             using (var dal = new DataProcesser())
             {
                 return dal.NhapHangTransaction(maNCC, maNV, tongTien, dtChiTiet);
+            }
+        }
+
+        // 7. Lấy lịch sử nhập hàng theo MaCTSP (từ bảng LoHang để có số lượng còn lại)
+        public DataTable GetLichSuNhapByMaCTSP(int maCTSP)
+        {
+            using (var dal = new DataProcesser())
+            {
+                string sql = @"SELECT lh.SoLuongBanDau AS SoLuong,
+                                      lh.GiaNhap, 
+                                      lh.NgayNhap,
+                                      lh.SoLuongConLai,
+                                      ISNULL(ncc.TenNCC, N'Không xác định') AS NhaCungCap
+                               FROM LoHang lh
+                               LEFT JOIN ChiTietPhieuNhap ctpn ON lh.MaCTPN = ctpn.MaCTPN
+                               LEFT JOIN PhieuNhap pn ON lh.MaPN = pn.MaPN
+                               LEFT JOIN NhaCungCap ncc ON pn.MaNCC = ncc.MaNCC
+                               WHERE lh.MaCTSP = @MaCTSP
+                                 AND lh.MaPN IS NOT NULL
+                               ORDER BY lh.NgayNhap DESC";
+                return dal.ExecuteQuery(sql, CommandType.Text, 
+                    new System.Data.SqlClient.SqlParameter("@MaCTSP", maCTSP));
+            }
+        }
+
+        // 8. Lấy số lượng tồn kho hiện tại
+        public int GetSoLuongTon(int maCTSP)
+        {
+            using (var dal = new DataProcesser())
+            {
+                string sql = @"SELECT SoLuongTon FROM ChiTietSanPham WHERE MaCTSP = @MaCTSP";
+                var result = dal.ExecuteQuery(sql, CommandType.Text, 
+                    new System.Data.SqlClient.SqlParameter("@MaCTSP", maCTSP));
+                
+                if (result != null && result.Rows.Count > 0 && result.Rows[0]["SoLuongTon"] != DBNull.Value)
+                {
+                    return Convert.ToInt32(result.Rows[0]["SoLuongTon"]);
+                }
+                return 0;
             }
         }
     }

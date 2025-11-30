@@ -47,6 +47,24 @@ namespace BTL_LTTQ.BLL
             }
         }
 
+        public DataRow GetKhachHangByPhone(string soDienThoai)
+        {
+            using (var dal = new DataProcesser())
+            {
+                string sql = @"SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi 
+                               FROM KhachHang 
+                               WHERE SoDienThoai = @SoDienThoai AND TrangThai = 1";
+                var result = dal.ExecuteQuery(sql, System.Data.CommandType.Text,
+                    new System.Data.SqlClient.SqlParameter("@SoDienThoai", soDienThoai));
+                
+                if (result != null && result.Rows.Count > 0)
+                {
+                    return result.Rows[0];
+                }
+                return null;
+            }
+        }
+
         public int ThanhToan(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, decimal tienKhachTra, decimal tienThua, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())

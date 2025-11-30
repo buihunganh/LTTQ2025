@@ -53,7 +53,7 @@ namespace BTL_LTTQ.GUI
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(225, 32);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "BAN HANG (POS)";
+            this.lblTitle.Text = "BÁN HÀNG (POS)";
             
             // txtSearch
             this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -63,7 +63,7 @@ namespace BTL_LTTQ.GUI
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(400, 32);
             this.txtSearch.TabIndex = 1;
-            this.txtSearch.Text = "Tim kiem san pham...";
+            this.txtSearch.Text = "Tìm kiếm sản phẩm...";
             this.txtSearch.ForeColor = System.Drawing.Color.Gray;
             this.txtSearch.Enter += new System.EventHandler(this.txtSearch_Enter);
             this.txtSearch.Leave += new System.EventHandler(this.txtSearch_Leave);

@@ -249,28 +249,11 @@ namespace BTL_LTTQ
 
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
             {
-                DataPropertyName = "GiaNhap",
-                HeaderText = "Giá nhập",
-                Name = "GiaNhap",
-                Width = 120,
-                DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" }
-            });
-
-            dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
-            {
                 DataPropertyName = "GiaBan",
                 HeaderText = "Giá bán",
                 Name = "GiaBan",
                 Width = 120,
                 DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" }
-            });
-
-            dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                DataPropertyName = "SoLuongTon",
-                HeaderText = "Số lượng",
-                Name = "SoLuongTon",
-                Width = 80
             });
 
             dgvProducts.Columns.Add(new DataGridViewTextBoxColumn
@@ -298,9 +281,7 @@ namespace BTL_LTTQ
             dgvProducts.Columns["Size"].FillWeight = 40;
             dgvProducts.Columns["Mau"].FillWeight = 70;
             dgvProducts.Columns["Loai"].FillWeight = 90;
-            dgvProducts.Columns["GiaNhap"].FillWeight = 70;
             dgvProducts.Columns["GiaBan"].FillWeight = 70;
-            dgvProducts.Columns["SoLuongTon"].FillWeight = 50;
             dgvProducts.Columns["HinhAnh"].FillWeight = 110;
 
             dgvProducts.DefaultCellStyle.ForeColor = Color.White;
@@ -318,7 +299,7 @@ namespace BTL_LTTQ
 
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var row = dgvProducts.Rows[e.RowIndex];
             var maCTSPValue = row.Cells["MaCTSP"].Value;
@@ -360,20 +341,10 @@ namespace BTL_LTTQ
             cmbColor.SelectedValue = GetMaMauFromRow(row);
             cmbLoai.SelectedValue = GetMaLoaiFromRow(row);
 
-            if (row.Cells["GiaNhap"].Value != null && decimal.TryParse(row.Cells["GiaNhap"].Value.ToString(), out var giaNhap))
-                txtImportPrice.Text = giaNhap.ToString("N0");
-            else
-                txtImportPrice.Clear();
-
             if (row.Cells["GiaBan"].Value != null && decimal.TryParse(row.Cells["GiaBan"].Value.ToString(), out var giaBan))
                 txtSellingPrice.Text = giaBan.ToString("N0");
             else
                 txtSellingPrice.Clear();
-
-            if (row.Cells["SoLuongTon"].Value != null && int.TryParse(row.Cells["SoLuongTon"].Value.ToString(), out var soLuong))
-                txtQuantity.Text = soLuong.ToString();
-            else
-                txtQuantity.Clear();
 
             string imagePath = row.Cells["HinhAnh"].Value?.ToString() ?? "";
             txtImagePath.Text = GetRelativeImagePath(imagePath);
@@ -835,7 +806,7 @@ namespace BTL_LTTQ
                             {
                                 worksheet.Cells[row, colIndex] = value.ToString();
 
-                                if (col.Name == "GiaNhap" || col.Name == "GiaBan")
+                                if (col.Name == "GiaBan")
                                 {
                                     Excel.Range cellRange = (Excel.Range)worksheet.Cells[row, colIndex];
                                     cellRange.NumberFormat = "#,##0";
@@ -1062,21 +1033,22 @@ namespace BTL_LTTQ
         private string GetBrandPrefix(string brandName)
         {
             if (string.IsNullOrWhiteSpace(brandName)) return "";
-            brandName = brandName.ToUpper();
             
-            var brandMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "NIKE", "NK" }, { "BALENCIAGA", "BAL" }, { "ADIDAS", "AD" }, { "PUMA", "PU" },
-                { "VANS", "VN" }, { "CONVERSE", "CV" }, { "JORDAN", "JD" }, { "NEW BALANCE", "NB" }
-            };
+            brandName = brandName.ToUpper().Trim();
             
-            foreach (var kvp in brandMap)
-            {
-                if (brandName.StartsWith(kvp.Key, StringComparison.OrdinalIgnoreCase))
-                    return kvp.Value;
-            }
+            string[] words = brandName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length == 0) return "";
             
-            return brandName.Length >= 3 ? brandName.Substring(0, 3) : brandName;
+            string firstWord = words[0];
+            
+            if (firstWord.Length >= 3)
+                return firstWord.Substring(0, 3);
+            else if (firstWord.Length == 2)
+                return firstWord;
+            else if (words.Length > 1 && words[1].Length >= 2)
+                return firstWord + words[1].Substring(0, Math.Min(2, words[1].Length));
+            else
+                return firstWord;
         }
 
         private string GetModelCode(string productName)
@@ -1134,7 +1106,6 @@ namespace BTL_LTTQ
 
         private ChiTietSanPhamDTO CreateProductFromForm()
         {
-            var giaNhapText = txtImportPrice.Text.Replace(",", "").Replace(".", "").Trim();
             var giaBanText = txtSellingPrice.Text.Replace(",", "").Replace(".", "").Trim();
             int maSP = 0;
             var tenGiay = txtProductName.Text.Trim();
@@ -1180,9 +1151,9 @@ namespace BTL_LTTQ
                 MaSize = maSize,
                 MaMau = maMau,
                 MaSKU = txtProductCode.Text.Trim(),
-                GiaNhap = decimal.Parse(giaNhapText),
+                GiaNhap = 0,
                 GiaBan = decimal.Parse(giaBanText),
-                SoLuongTon = string.IsNullOrWhiteSpace(txtQuantity.Text) ? 0 : int.Parse(txtQuantity.Text),
+                SoLuongTon = 0,
                 HinhAnhChung = txtImagePath.Text.Trim(),
                 TrangThai = true
             };
@@ -1234,32 +1205,11 @@ namespace BTL_LTTQ
                 return false;
             }
 
-            var giaNhapText = txtImportPrice.Text.Replace(",", "").Replace(".", "").Trim();
-            if (string.IsNullOrWhiteSpace(giaNhapText) || !decimal.TryParse(giaNhapText, out var giaNhap) || giaNhap <= 0)
-            {
-                MessageBox.Show("Giá nhập không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtImportPrice.Focus();
-                return false;
-            }
-
             var giaBanText = txtSellingPrice.Text.Replace(",", "").Replace(".", "").Trim();
             if (string.IsNullOrWhiteSpace(giaBanText) || !decimal.TryParse(giaBanText, out var giaBan) || giaBan <= 0)
             {
                 MessageBox.Show("Giá bán không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtSellingPrice.Focus();
-                return false;
-            }
-
-            if (giaBan < giaNhap)
-            {
-                MessageBox.Show("Giá bán phải lớn hơn hoặc bằng giá nhập!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtQuantity.Text) || !int.TryParse(txtQuantity.Text, out var soLuong) || soLuong < 0)
-            {
-                MessageBox.Show("Số lượng không hợp lệ! Vui lòng nhập số >= 0", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtQuantity.Focus();
                 return false;
             }
 
@@ -1283,9 +1233,7 @@ namespace BTL_LTTQ
             _currentMaCTSP = 0;
             txtProductName.Clear();
             txtProductCode.Clear();
-            txtImportPrice.Clear();
             txtSellingPrice.Clear();
-            txtQuantity.Clear();
             txtDescription.Clear();
             txtImagePath.Clear();
             picProductImage.Image = null;

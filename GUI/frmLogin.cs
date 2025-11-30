@@ -78,13 +78,9 @@ namespace BTL_LTTQ
 
         private void ResetInput()
         {
-            txtUsername.Focus();
-            if (!chkRemember.Checked)
-            {
-                txtUsername.Clear();
-            }
-
+            txtUsername.Clear();
             txtPassword.Clear();
+            txtUsername.Focus();
         }
 
         private void ToggleInputs(bool enabled)
