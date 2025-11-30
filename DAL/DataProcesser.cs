@@ -222,6 +222,7 @@ namespace BTL_LTTQ.DAL
         public DataTable GetThongTinChungHoaDon(int maHD)
         {
             string sql = @"SELECT hd.MaHoaDon, hd.NgayLap, hd.TongTien, hd.GiamGia, hd.ThanhToan, 
+                          hd.TienKhachTra, hd.TienThua,
                           hd.MaNV, hd.MaKH,
                           ISNULL(nv.HoTen, N'Không xác định') AS NhanVien, 
                           ISNULL(kh.HoTen, N'Khách lẻ') AS KhachHang, 
@@ -280,15 +281,15 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        public int BanHangTransaction(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
+        public int BanHangTransaction(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGiaTong, decimal thanhToan, decimal tienKhachTra, decimal tienThua, DataTable dtChiTiet)
         {
             using (var connection = CreateConnection())
             using (var transaction = connection.BeginTransaction())
             {
                 try
                 {
-                    string sqlHD = @"INSERT INTO HoaDon(MaHoaDon, NgayLap, MaNV, MaKH, MaKM, TongTien, GiamGia, ThanhToan, PhuongThucThanhToan, TrangThai) 
-                                     VALUES (@MaCode, GETDATE(), @MaNV, @MaKH, 1, @TongTien, 0, @ThanhToan, N'Tiền mặt', N'Hoàn thành');
+                    string sqlHD = @"INSERT INTO HoaDon(MaHoaDon, NgayLap, MaNV, MaKH, MaKM, TongTien, GiamGia, ThanhToan, TienKhachTra, TienThua, PhuongThucThanhToan, TrangThai) 
+                                     VALUES (@MaCode, GETDATE(), @MaNV, @MaKH, 1, @TongTien, 0, @ThanhToan, @TienKhachTra, @TienThua, N'Tiền mặt', N'Hoàn thành');
                                      SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                     SqlCommand cmdHD = new SqlCommand(sqlHD, connection, transaction);
@@ -297,6 +298,8 @@ namespace BTL_LTTQ.DAL
                     cmdHD.Parameters.AddWithValue("@MaKH", maKH);
                     cmdHD.Parameters.AddWithValue("@TongTien", tongTien);
                     cmdHD.Parameters.AddWithValue("@ThanhToan", thanhToan);
+                    cmdHD.Parameters.AddWithValue("@TienKhachTra", tienKhachTra);
+                    cmdHD.Parameters.AddWithValue("@TienThua", tienThua);
 
                     int newInvoiceID = Convert.ToInt32(cmdHD.ExecuteScalar());
 
@@ -319,6 +322,30 @@ namespace BTL_LTTQ.DAL
                         cmdUpd.Parameters.AddWithValue("@SL", r["SoLuong"]);
                         cmdUpd.Parameters.AddWithValue("@MaCTSP", r["MaCTSP"]);
                         cmdUpd.ExecuteNonQuery();
+                    }
+
+                    if (maKH > 0)
+                    {
+                        string sqlGetTongChiTieu = "SELECT ISNULL(TongChiTieu, 0) FROM KhachHang WHERE MaKH = @MaKH";
+                        SqlCommand cmdGetTong = new SqlCommand(sqlGetTongChiTieu, connection, transaction);
+                        cmdGetTong.Parameters.AddWithValue("@MaKH", maKH);
+                        decimal tongChiTieuHienTai = Convert.ToDecimal(cmdGetTong.ExecuteScalar());
+                        
+                        decimal tongChiTieuMoi = tongChiTieuHienTai + thanhToan;
+                        
+                        string hangMoi = "Thành viên";
+                        if (tongChiTieuMoi >= 20000000) hangMoi = "Kim cương";
+                        else if (tongChiTieuMoi >= 10000000) hangMoi = "Vàng";
+                        else if (tongChiTieuMoi >= 5000000) hangMoi = "Bạc";
+                        string sqlUpdateKH = @"UPDATE KhachHang 
+                            SET TongChiTieu = @TongChiTieu,
+                                HangThanhVien = @HangThanhVien
+                            WHERE MaKH = @MaKH";
+                        SqlCommand cmdUpdateKH = new SqlCommand(sqlUpdateKH, connection, transaction);
+                        cmdUpdateKH.Parameters.AddWithValue("@MaKH", maKH);
+                        cmdUpdateKH.Parameters.AddWithValue("@TongChiTieu", tongChiTieuMoi);
+                        cmdUpdateKH.Parameters.AddWithValue("@HangThanhVien", hangMoi);
+                        cmdUpdateKH.ExecuteNonQuery();
                     }
 
                     transaction.Commit();
@@ -358,6 +385,20 @@ namespace BTL_LTTQ.DAL
             {
                 try
                 {
+                    string sqlGetHD = @"SELECT MaKH, ThanhToan FROM HoaDon WHERE MaHD = @MaHD";
+                    SqlCommand cmdGetHD = new SqlCommand(sqlGetHD, connection, transaction);
+                    cmdGetHD.Parameters.AddWithValue("@MaHD", maHD);
+                    object maKHObj = null;
+                    object thanhToanObj = null;
+                    using (SqlDataReader reader = cmdGetHD.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            maKHObj = reader["MaKH"];
+                            thanhToanObj = reader["ThanhToan"];
+                        }
+                    }
+
                     string sqlGetDetail = @"SELECT MaCTSP, SoLuong FROM ChiTietHoaDon WHERE MaHD = @MaHD";
                     SqlCommand cmdGet = new SqlCommand(sqlGetDetail, connection, transaction);
                     cmdGet.Parameters.AddWithValue("@MaHD", maHD);
@@ -386,6 +427,36 @@ namespace BTL_LTTQ.DAL
                     cmdDeleteHD.Parameters.AddWithValue("@MaHD", maHD);
                     cmdDeleteHD.ExecuteNonQuery();
 
+                    if (maKHObj != null && maKHObj != DBNull.Value && thanhToanObj != null && thanhToanObj != DBNull.Value)
+                    {
+                        int maKH = Convert.ToInt32(maKHObj);
+                        decimal thanhToan = Convert.ToDecimal(thanhToanObj);
+                        
+                        if (maKH > 0)
+                        {
+                            string sqlGetTongChiTieu = "SELECT ISNULL(TongChiTieu, 0) FROM KhachHang WHERE MaKH = @MaKH";
+                            SqlCommand cmdGetTong = new SqlCommand(sqlGetTongChiTieu, connection, transaction);
+                            cmdGetTong.Parameters.AddWithValue("@MaKH", maKH);
+                            decimal tongChiTieuHienTai = Convert.ToDecimal(cmdGetTong.ExecuteScalar());
+                            
+                            decimal tongChiTieuMoi = Math.Max(0, tongChiTieuHienTai - thanhToan);
+                            
+                            string hangMoi = "Thành viên";
+                            if (tongChiTieuMoi >= 20000000) hangMoi = "Kim cương";
+                            else if (tongChiTieuMoi >= 10000000) hangMoi = "Vàng";
+                            else if (tongChiTieuMoi >= 5000000) hangMoi = "Bạc";
+                            string sqlUpdateKH = @"UPDATE KhachHang 
+                                SET TongChiTieu = @TongChiTieu,
+                                    HangThanhVien = @HangThanhVien
+                                WHERE MaKH = @MaKH";
+                            SqlCommand cmdUpdateKH = new SqlCommand(sqlUpdateKH, connection, transaction);
+                            cmdUpdateKH.Parameters.AddWithValue("@MaKH", maKH);
+                            cmdUpdateKH.Parameters.AddWithValue("@TongChiTieu", tongChiTieuMoi);
+                            cmdUpdateKH.Parameters.AddWithValue("@HangThanhVien", hangMoi);
+                            cmdUpdateKH.ExecuteNonQuery();
+                        }
+                    }
+
                     transaction.Commit();
                     return true;
                 }
@@ -397,7 +468,7 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        public bool CapNhatHoaDonTransaction(int maHD, int maKH, decimal tongTien, decimal giamGiaTong, decimal thanhToan, DataTable dtChiTiet)
+        public bool CapNhatHoaDonTransaction(int maHD, int maKH, decimal tongTien, decimal giamGiaTong, decimal thanhToan, decimal tienKhachTra, decimal tienThua, DataTable dtChiTiet)
         {
             using (var connection = CreateConnection())
             using (var transaction = connection.BeginTransaction())
@@ -428,7 +499,8 @@ namespace BTL_LTTQ.DAL
                     cmdDeleteCT.ExecuteNonQuery();
 
                     string sqlUpdateHD = @"UPDATE HoaDon 
-                                           SET MaKH = @MaKH, TongTien = @TongTien, GiamGia = @GiamGia, ThanhToan = @ThanhToan
+                                           SET MaKH = @MaKH, TongTien = @TongTien, GiamGia = @GiamGia, ThanhToan = @ThanhToan, 
+                                               TienKhachTra = @TienKhachTra, TienThua = @TienThua
                                            WHERE MaHD = @MaHD";
                     SqlCommand cmdUpdateHD = new SqlCommand(sqlUpdateHD, connection, transaction);
                     cmdUpdateHD.Parameters.AddWithValue("@MaHD", maHD);
@@ -436,6 +508,8 @@ namespace BTL_LTTQ.DAL
                     cmdUpdateHD.Parameters.AddWithValue("@TongTien", tongTien);
                     cmdUpdateHD.Parameters.AddWithValue("@GiamGia", giamGiaTong);
                     cmdUpdateHD.Parameters.AddWithValue("@ThanhToan", thanhToan);
+                    cmdUpdateHD.Parameters.AddWithValue("@TienKhachTra", tienKhachTra);
+                    cmdUpdateHD.Parameters.AddWithValue("@TienThua", tienThua);
                     cmdUpdateHD.ExecuteNonQuery();
 
                     foreach (DataRow r in dtChiTiet.Rows)

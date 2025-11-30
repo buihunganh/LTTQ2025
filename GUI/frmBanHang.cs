@@ -155,66 +155,55 @@ namespace BTL_LTTQ.GUI
         {
             try
             {
-                int maCTSP = Convert.ToInt32(product["MaCTSP"]);
-                string projectRoot = System.IO.Path.GetFullPath(
-                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\.."));
+                // Lấy đường dẫn ảnh từ database
+                string imagePath = product["HinhAnhChung"] != DBNull.Value 
+                    ? product["HinhAnhChung"].ToString() 
+                    : "";
                 
-                string imagePath = "";
-                
-                // Hard-code mapping: MaCTSP -> Image Path
-                // TODO: Điền MaCTSP và đường dẫn ảnh tương ứng
-                switch (maCTSP)
+                if (string.IsNullOrWhiteSpace(imagePath))
                 {
-                    // Nike products
-                    case 1: imagePath = @"Resources\Images\Products\nike\nike2.jpg"; break;
-                    case 2: imagePath = @"Resources\Images\Products\nike\nike2.jpg"; break;
-                    case 3: imagePath = @"Resources\Images\Products\nike\nike3.jpg"; break;
-                    case 4: imagePath = @"Resources\Images\Products\nike\nike4.jpg"; break;
-                    case 5: imagePath = @"Resources\Images\Products\nike\nike5.jpg"; break;
-                    case 6: imagePath = @"Resources\Images\Products\nike\nike6.jpg"; break;
-                    
-                    // Balenciaga products
-                    case 7: imagePath = @"Resources\Images\Products\balenciaga\balenciaga1.png"; break;
-                    case 8: imagePath = @"Resources\Images\Products\balenciaga\balenciaga2.jpg"; break;
-                    case 9: imagePath = @"Resources\Images\Products\balenciaga\balenciaga3.png"; break;
-                    
-                    // Converse products
-                    case 10: imagePath = @"Resources\Images\Products\converse\converse2.jpg"; break;
-                    case 11: imagePath = @"Resources\Images\Products\converse\converse3.jpg"; break;
-                    
-                    // Puma products
-                    case 12: imagePath = @"Resources\Images\Products\puma\puma1.jpg"; break;
-                    
-                    default:
-                        // If no mapping found, use placeholder
-                        return GeneratePlaceholderImage(product["TenHienThi"].ToString());
+                    // Nếu không có ảnh trong database, dùng placeholder
+                    return GeneratePlaceholderImage(product["TenHienThi"].ToString());
                 }
                 
-                // Combine with project root to get full path
-                imagePath = System.IO.Path.Combine(projectRoot, imagePath);
+                // Chuyển đổi relative path thành full path
+                string fullPath = GetFullImagePath(imagePath);
                 
-                // Check if file exists and load it
-                if (System.IO.File.Exists(imagePath))
+                // Kiểm tra file có tồn tại không
+                if (System.IO.File.Exists(fullPath))
                 {
-                    using (var img = Image.FromFile(imagePath))
+                    // Load image vào memory để tránh file lock
+                    using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
                     {
-                        return new Bitmap(img); // Create copy to avoid file lock
+                        var memoryStream = new System.IO.MemoryStream();
+                        fileStream.CopyTo(memoryStream);
+                        return Image.FromStream(memoryStream);
                     }
-                }
-                else
-                {
-                    // File not found, show message for debugging
-                    // MessageBox.Show($"Image not found: {imagePath}\nMaCTSP: {maCTSP}", "Debug");
                 }
             }
             catch (Exception ex)
             {
-                // Debug: Uncomment to see errors
-                // MessageBox.Show($"Error loading image: {ex.Message}\nProduct: {product["TenHienThi"]}", "Error");
+                // Nếu có lỗi, không hiển thị message để tránh làm phiền người dùng
+                System.Diagnostics.Debug.WriteLine($"Error loading image: {ex.Message}");
             }
             
             // Fallback to placeholder if anything goes wrong
             return GeneratePlaceholderImage(product["TenHienThi"].ToString());
+        }
+        
+        private string GetFullImagePath(string relativeOrFullPath)
+        {
+            if (string.IsNullOrWhiteSpace(relativeOrFullPath))
+                return string.Empty;
+
+            // Nếu đã là full path, return ngay
+            if (System.IO.Path.IsPathRooted(relativeOrFullPath))
+                return relativeOrFullPath;
+
+            // Convert relative -> full
+            string projectRoot = System.IO.Path.GetFullPath(
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\.."));
+            return System.IO.Path.Combine(projectRoot, relativeOrFullPath);
         }
 
         private Image GeneratePlaceholderImage(string productName)
@@ -393,6 +382,9 @@ namespace BTL_LTTQ.GUI
             {
                 _dtGioHang.Rows.Clear();
                 CalculateTotal();
+                // Reload dữ liệu sản phẩm từ database để cập nhật số lượng tồn kho
+                LoadData();
+                LoadProductCards(txtSearch.Text);
             }
         }
 

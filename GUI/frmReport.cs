@@ -830,7 +830,7 @@ namespace BTL_LTTQ
                     obj = null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 obj = null;
             }
@@ -871,9 +871,6 @@ namespace BTL_LTTQ
             return string.Format(CultureInfo.CurrentCulture, "{0:N0}", value);
         }
 
-        /// <summary>
-        /// Kiểm tra xem form có đang chạy trong Visual Studio Designer không
-        /// </summary>
         private static bool IsInDesignMode()
         {
             return LicenseManager.UsageMode == LicenseUsageMode.Designtime ||

@@ -75,6 +75,36 @@ namespace BTL_LTTQ.GUI
 
             _dtChiTiet = dtChiTiet;
             LoadInitData(isViewOnly: true);
+            
+            // Hiển thị tiền khách trả và tiền thừa nếu có
+            if (dtChung.Rows.Count > 0)
+            {
+                DataRow r = dtChung.Rows[0];
+                if (r["TienKhachTra"] != DBNull.Value)
+                {
+                    decimal tienKhachTra = Convert.ToDecimal(r["TienKhachTra"]);
+                    txtTienKhachTra.Text = tienKhachTra.ToString("N0");
+                }
+                if (r["TienThua"] != DBNull.Value)
+                {
+                    decimal tienThua = Convert.ToDecimal(r["TienThua"]);
+                    if (tienThua < 0)
+                    {
+                        lblTienThuaValue.Text = Math.Abs(tienThua).ToString("N0") + " VNĐ (Thiếu)";
+                        lblTienThuaValue.ForeColor = Color.Red;
+                    }
+                    else if (tienThua == 0)
+                    {
+                        lblTienThuaValue.Text = "0 VNĐ";
+                        lblTienThuaValue.ForeColor = Color.Lime;
+                    }
+                    else
+                    {
+                        lblTienThuaValue.Text = tienThua.ToString("N0") + " VNĐ";
+                        lblTienThuaValue.ForeColor = Color.Lime;
+                    }
+                }
+            }
         }
 
 
@@ -102,6 +132,10 @@ namespace BTL_LTTQ.GUI
                     txtSDT.ReadOnly = true;
                     txtDiaChi.ReadOnly = true;
                     lblTongTien.Text = _tongTienSo.ToString("N0") + " VNĐ";
+                    
+                    // Hiển thị tiền khách trả và tiền thừa nhưng chỉ đọc
+                    txtTienKhachTra.ReadOnly = true;
+                    txtTienKhachTra.BackColor = Color.FromArgb(240, 240, 240);
 
                     btnLuu.Visible = false;
                     btnIn.Enabled = true;
@@ -165,6 +199,98 @@ namespace BTL_LTTQ.GUI
             foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
 
             lblTongTien.Text = tongTienHang.ToString("N0") + " VNĐ";
+            
+            // Tính tiền thừa nếu đã nhập tiền khách trả
+            CalculateTienThua();
+        }
+        
+        private void CalculateTienThua()
+        {
+            try
+            {
+                decimal tongTienHang = 0;
+                foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
+                
+                string tienKhachTraText = txtTienKhachTra.Text.Replace(",", "").Replace(".", "").Trim();
+                if (string.IsNullOrWhiteSpace(tienKhachTraText))
+                {
+                    lblTienThuaValue.Text = "0 VNĐ";
+                    lblTienThuaValue.ForeColor = Color.Lime;
+                    return;
+                }
+                
+                decimal tienKhachTra = Convert.ToDecimal(tienKhachTraText);
+                decimal tienThua = tienKhachTra - tongTienHang;
+                
+                if (tienThua < 0)
+                {
+                    // Tiền khách trả < tổng tiền => thiếu tiền
+                    lblTienThuaValue.Text = Math.Abs(tienThua).ToString("N0") + " VNĐ (Thiếu)";
+                    lblTienThuaValue.ForeColor = Color.Red;
+                }
+                else if (tienThua == 0)
+                {
+                    // Vừa đủ
+                    lblTienThuaValue.Text = "0 VNĐ";
+                    lblTienThuaValue.ForeColor = Color.Lime;
+                }
+                else
+                {
+                    // Tiền thừa
+                    lblTienThuaValue.Text = tienThua.ToString("N0") + " VNĐ";
+                    lblTienThuaValue.ForeColor = Color.Lime;
+                }
+            }
+            catch
+            {
+                lblTienThuaValue.Text = "0 VNĐ";
+                lblTienThuaValue.ForeColor = Color.Lime;
+            }
+        }
+        
+        private void TxtTienKhachTra_TextChanged(object sender, EventArgs e)
+        {
+            // Format số tiền khi nhập
+            if (string.IsNullOrWhiteSpace(txtTienKhachTra.Text))
+            {
+                CalculateTienThua();
+                return;
+            }
+            
+            try
+            {
+                string text = txtTienKhachTra.Text.Replace(",", "").Replace(".", "").Trim();
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    CalculateTienThua();
+                    return;
+                }
+                
+                decimal value = Convert.ToDecimal(text);
+                int cursorPos = txtTienKhachTra.SelectionStart;
+                txtTienKhachTra.Text = value.ToString("N0");
+                
+                // Giữ vị trí con trỏ
+                int newPos = cursorPos + (txtTienKhachTra.Text.Length - text.Length);
+                if (newPos < 0) newPos = 0;
+                if (newPos > txtTienKhachTra.Text.Length) newPos = txtTienKhachTra.Text.Length;
+                txtTienKhachTra.SelectionStart = newPos;
+                
+                CalculateTienThua();
+            }
+            catch
+            {
+                // Nếu không parse được, giữ nguyên text
+            }
+        }
+        
+        private void TxtTienKhachTra_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Chỉ cho phép nhập số và phím điều khiển
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
 
         private void CboKhachHang_SelectedIndexChanged(object sender, EventArgs e)
@@ -219,6 +345,28 @@ namespace BTL_LTTQ.GUI
                 MessageBox.Show("Không có hàng để lưu!");
                 return;
             }
+            
+            // Kiểm tra tiền khách trả
+            decimal tongTienHang = 0;
+            foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
+            
+            string tienKhachTraText = txtTienKhachTra.Text.Replace(",", "").Replace(".", "").Trim();
+            if (string.IsNullOrWhiteSpace(tienKhachTraText))
+            {
+                MessageBox.Show("Vui lòng nhập số tiền khách trả!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTienKhachTra.Focus();
+                return;
+            }
+            
+            decimal tienKhachTra = Convert.ToDecimal(tienKhachTraText);
+            if (tienKhachTra < tongTienHang)
+            {
+                decimal thieu = tongTienHang - tienKhachTra;
+                MessageBox.Show($"Tiền khách trả không đủ!\n\nCòn thiếu: {thieu:N0} VNĐ", 
+                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTienKhachTra.Focus();
+                return;
+            }
 
             try
             {
@@ -227,7 +375,8 @@ namespace BTL_LTTQ.GUI
 
                 decimal tongHang = 0;
                 foreach (DataRow r in _dtChiTiet.Rows) tongHang += Convert.ToDecimal(r["ThanhTien"]);
-                decimal thanhToan = tongHang; 
+                decimal thanhToan = tongHang;
+                decimal tienThua = tienKhachTra - tongHang;
 
                 if (_isEditMode && _idHoaDonVuaLuu > 0)
                 {
@@ -278,7 +427,7 @@ namespace BTL_LTTQ.GUI
                     string newDiaChi = txtDiaChi.Text.Trim();
                     _bll.UpdateKhachHangInfo(maKH, newSDT, newDiaChi);
 
-                    bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, 0, thanhToan, dtChiTietMoi);
+                    bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, 0, thanhToan, tienKhachTra, tienThua, dtChiTietMoi);
                     if (success)
                     {
                         MessageBox.Show("Cập nhật hóa đơn thành công!");
@@ -302,7 +451,7 @@ namespace BTL_LTTQ.GUI
                 }
                 else
                 {
-                    _idHoaDonVuaLuu = _bll.ThanhToan(_maHDString, maKH, maNV, tongHang, 0, thanhToan, _dtChiTiet);
+                    _idHoaDonVuaLuu = _bll.ThanhToan(_maHDString, maKH, maNV, tongHang, 0, thanhToan, tienKhachTra, tienThua, _dtChiTiet);
 
                     if (_idHoaDonVuaLuu > 0)
                     {

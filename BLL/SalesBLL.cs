@@ -13,12 +13,13 @@ namespace BTL_LTTQ.BLL
                 string sql = @"SELECT ct.MaCTSP, 
                                       sp.TenGiay + ' (' + sz.KichCo + ' - ' + ms.TenMau + ')' AS TenHienThi, 
                                       ct.GiaBan,
-                                      ct.SoLuongTon
+                                      ct.SoLuongTon,
+                                      ct.HinhAnhChung
                                FROM ChiTietSanPham ct 
                                JOIN SanPham sp ON ct.MaSP = sp.MaSP
                                JOIN SizeGiay sz ON ct.MaSize = sz.MaSize
                                JOIN MauSac ms ON ct.MaMau = ms.MaMau
-                               WHERE ct.TrangThai = 1";  // Bỏ filter SoLuongTon > 0 để hiện tất cả
+                               WHERE ct.TrangThai = 1 AND sp.TrangThai = 1";  // Bỏ filter SoLuongTon > 0 để hiện tất cả
                 return dal.ExecuteQuery(sql);
             }
         }
@@ -46,12 +47,12 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        public int ThanhToan(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
+        public int ThanhToan(string maHoaDon, int maKH, int maNV, decimal tongTien, decimal giamGia, decimal thanhToan, decimal tienKhachTra, decimal tienThua, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())
             {
                 // Trả về int ID từ DAL
-                return dal.BanHangTransaction(maHoaDon, maKH, maNV, tongTien, giamGia, thanhToan, dtChiTiet);
+                return dal.BanHangTransaction(maHoaDon, maKH, maNV, tongTien, giamGia, thanhToan, tienKhachTra, tienThua, dtChiTiet);
             }
         }
         public DataTable FindInvoices(DateTime from, DateTime to, string nv, string kh)
@@ -78,11 +79,11 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        public bool CapNhatHoaDon(int maHD, int maKH, decimal tongTien, decimal giamGia, decimal thanhToan, DataTable dtChiTiet)
+        public bool CapNhatHoaDon(int maHD, int maKH, decimal tongTien, decimal giamGia, decimal thanhToan, decimal tienKhachTra, decimal tienThua, DataTable dtChiTiet)
         {
             using (var dal = new DataProcesser())
             {
-                return dal.CapNhatHoaDonTransaction(maHD, maKH, tongTien, giamGia, thanhToan, dtChiTiet);
+                return dal.CapNhatHoaDonTransaction(maHD, maKH, tongTien, giamGia, thanhToan, tienKhachTra, tienThua, dtChiTiet);
             }
         }
 

@@ -12,15 +12,6 @@ namespace BTL_LTTQ.BLL
             _dataProcesser = new DataProcesser();
         }
 
-        /// <summary>
-        /// Đổi mật khẩu cho user
-        /// </summary>
-        /// <param name="employeeId">ID nhân viên</param>
-        /// <param name="oldPassword">Mật khẩu cũ</param>
-        /// <param name="newPassword">Mật khẩu mới</param>
-        /// <param name="confirmPassword">Xác nhận mật khẩu mới</param>
-        /// <param name="errorMessage">Thông báo lỗi nếu có</param>
-        /// <returns>True nếu thành công, False nếu thất bại</returns>
         public bool UpdatePassword(int employeeId, string oldPassword, string newPassword, string confirmPassword, out string errorMessage)
         {
             errorMessage = string.Empty;
@@ -77,9 +68,7 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        /// <summary>
         /// Cập nhật thông tin profile của user
-        /// </summary>
         public bool UpdateProfile(int employeeId, string fullName, string phone, string email, string address, string avatarPath, out string errorMessage)
         {
             errorMessage = string.Empty;

@@ -102,6 +102,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\ChamCongBLL.cs" />
     <Compile Include="BLL\InventoryBLL.cs" />
     <Compile Include="BLL\KhachHangBLL.cs" />
     <Compile Include="BLL\NhanVienBLL.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="BLL\ReportService.cs" />
     <Compile Include="BLL\SalesBLL.cs" />
     <Compile Include="BLL\UserService.cs" />
+    <Compile Include="DAL\ChamCongDAL.cs" />
     <Compile Include="DAL\DataProcesser.cs" />
     <Compile Include="DAL\KhachHangDAL.cs" />
     <Compile Include="DAL\NhanVienDAL.cs" />

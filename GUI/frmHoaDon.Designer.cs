@@ -48,6 +48,10 @@ namespace BTL_LTTQ.GUI
             this.btnHuyHoaDon = new System.Windows.Forms.Button();
             this.btnDong = new System.Windows.Forms.Button();
             this.btnXoaSP = new System.Windows.Forms.Button();
+            this.lblTienKhachTra = new System.Windows.Forms.Label();
+            this.txtTienKhachTra = new System.Windows.Forms.TextBox();
+            this.lblTienThua = new System.Windows.Forms.Label();
+            this.lblTienThuaValue = new System.Windows.Forms.Label();
             this.grpInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChiTiet)).BeginInit();
             this.SuspendLayout();
@@ -246,10 +250,47 @@ namespace BTL_LTTQ.GUI
             this.lblTongTien.TabIndex = 3;
             this.lblTongTien.Text = "0 VNĐ";
             
+            this.lblTienKhachTra.AutoSize = true;
+            this.lblTienKhachTra.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTienKhachTra.ForeColor = System.Drawing.Color.Gainsboro;
+            this.lblTienKhachTra.Location = new System.Drawing.Point(200, 550);
+            this.lblTienKhachTra.Name = "lblTienKhachTra";
+            this.lblTienKhachTra.Size = new System.Drawing.Size(95, 20);
+            this.lblTienKhachTra.TabIndex = 21;
+            this.lblTienKhachTra.Text = "Tiền khách trả:";
+            
+            this.txtTienKhachTra.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTienKhachTra.ForeColor = System.Drawing.Color.Black;
+            this.txtTienKhachTra.Location = new System.Drawing.Point(200, 570);
+            this.txtTienKhachTra.Name = "txtTienKhachTra";
+            this.txtTienKhachTra.Size = new System.Drawing.Size(150, 30);
+            this.txtTienKhachTra.TabIndex = 22;
+            this.txtTienKhachTra.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTienKhachTra.TextChanged += new System.EventHandler(this.TxtTienKhachTra_TextChanged);
+            this.txtTienKhachTra.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtTienKhachTra_KeyPress);
+            
+            this.lblTienThua.AutoSize = true;
+            this.lblTienThua.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTienThua.ForeColor = System.Drawing.Color.Lime;
+            this.lblTienThua.Location = new System.Drawing.Point(370, 550);
+            this.lblTienThua.Name = "lblTienThua";
+            this.lblTienThua.Size = new System.Drawing.Size(70, 20);
+            this.lblTienThua.TabIndex = 23;
+            this.lblTienThua.Text = "Tiền thừa:";
+            
+            this.lblTienThuaValue.AutoSize = true;
+            this.lblTienThuaValue.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTienThuaValue.ForeColor = System.Drawing.Color.Lime;
+            this.lblTienThuaValue.Location = new System.Drawing.Point(370, 570);
+            this.lblTienThuaValue.Name = "lblTienThuaValue";
+            this.lblTienThuaValue.Size = new System.Drawing.Size(70, 25);
+            this.lblTienThuaValue.TabIndex = 24;
+            this.lblTienThuaValue.Text = "0 VNĐ";
+            
             this.btnLuu.BackColor = System.Drawing.Color.Green;
             this.btnLuu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLuu.ForeColor = System.Drawing.Color.White;
-            this.btnLuu.Location = new System.Drawing.Point(150, 600);
+            this.btnLuu.Location = new System.Drawing.Point(150, 640);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(130, 40);
             this.btnLuu.TabIndex = 4;
@@ -260,7 +301,7 @@ namespace BTL_LTTQ.GUI
             this.btnSua.BackColor = System.Drawing.Color.Blue;
             this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSua.ForeColor = System.Drawing.Color.White;
-            this.btnSua.Location = new System.Drawing.Point(290, 600);
+            this.btnSua.Location = new System.Drawing.Point(290, 640);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(130, 40);
             this.btnSua.TabIndex = 5;
@@ -273,7 +314,7 @@ namespace BTL_LTTQ.GUI
             this.btnIn.Enabled = false;
             this.btnIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnIn.ForeColor = System.Drawing.Color.White;
-            this.btnIn.Location = new System.Drawing.Point(430, 600);
+            this.btnIn.Location = new System.Drawing.Point(430, 640);
             this.btnIn.Name = "btnIn";
             this.btnIn.Size = new System.Drawing.Size(130, 40);
             this.btnIn.TabIndex = 6;
@@ -284,7 +325,7 @@ namespace BTL_LTTQ.GUI
             this.btnHuyHoaDon.BackColor = System.Drawing.Color.Red;
             this.btnHuyHoaDon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHuyHoaDon.ForeColor = System.Drawing.Color.White;
-            this.btnHuyHoaDon.Location = new System.Drawing.Point(570, 600);
+            this.btnHuyHoaDon.Location = new System.Drawing.Point(570, 640);
             this.btnHuyHoaDon.Name = "btnHuyHoaDon";
             this.btnHuyHoaDon.Size = new System.Drawing.Size(130, 40);
             this.btnHuyHoaDon.TabIndex = 7;
@@ -296,7 +337,7 @@ namespace BTL_LTTQ.GUI
             this.btnDong.BackColor = System.Drawing.Color.Gray;
             this.btnDong.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDong.ForeColor = System.Drawing.Color.White;
-            this.btnDong.Location = new System.Drawing.Point(710, 600);
+            this.btnDong.Location = new System.Drawing.Point(710, 640);
             this.btnDong.Name = "btnDong";
             this.btnDong.Size = new System.Drawing.Size(130, 40);
             this.btnDong.TabIndex = 8;
@@ -307,7 +348,11 @@ namespace BTL_LTTQ.GUI
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(47)))), ((int)(((byte)(72)))));
-            this.ClientSize = new System.Drawing.Size(900, 750);
+            this.ClientSize = new System.Drawing.Size(900, 800);
+            this.Controls.Add(this.lblTienThuaValue);
+            this.Controls.Add(this.lblTienThua);
+            this.Controls.Add(this.txtTienKhachTra);
+            this.Controls.Add(this.lblTienKhachTra);
             this.Controls.Add(this.btnDong);
             this.Controls.Add(this.btnHuyHoaDon);
             this.Controls.Add(this.btnIn);
@@ -359,5 +404,9 @@ namespace BTL_LTTQ.GUI
         private System.Windows.Forms.Button btnHuyHoaDon;
         private System.Windows.Forms.Button btnDong;
         private System.Windows.Forms.Button btnXoaSP;
+        private System.Windows.Forms.Label lblTienKhachTra;
+        private System.Windows.Forms.TextBox txtTienKhachTra;
+        private System.Windows.Forms.Label lblTienThua;
+        private System.Windows.Forms.Label lblTienThuaValue;
     }
 }

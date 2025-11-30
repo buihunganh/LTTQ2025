@@ -153,7 +153,9 @@ namespace BTL_LTTQ.GUI
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvNhanVien.Rows[e.RowIndex];
-                txtMaNV.Text = row.Cells["MaNV"].Value.ToString();
+                int maNV = Convert.ToInt32(row.Cells["MaNV"].Value);
+                
+                txtMaNV.Text = maNV.ToString();
                 txtHoTen.Text = row.Cells["HoTen"].Value.ToString();
                 txtTaiKhoan.Text = row.Cells["TaiKhoan"].Value.ToString();
                 txtSDT.Text = row.Cells["SoDienThoai"].Value?.ToString() ?? "";
@@ -163,24 +165,110 @@ namespace BTL_LTTQ.GUI
                     dtpNgayVaoLam.Value = Convert.ToDateTime(row.Cells["NgayVaoLam"].Value);
                 chkIsAdmin.Checked = Convert.ToBoolean(row.Cells["IsAdmin"].Value);
                 chkTrangThai.Checked = Convert.ToBoolean(row.Cells["TrangThai"].Value);
+                
                 txtTaiKhoan.Enabled = false;
+                
+                // Lấy và hiển thị mật khẩu từ database
+                try
+                {
+                    string matKhau = bllNhanVien.GetMatKhau(maNV);
+                    txtMatKhau.Text = matKhau;
+                    txtMatKhau.Enabled = true; // Cho phép sửa mật khẩu
+                    txtMatKhau.PasswordChar = '\0'; // Hiển thị mật khẩu dạng text để xem và sửa
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Không thể lấy mật khẩu: {ex.Message}", "Lỗi", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtMatKhau.Clear();
+                    txtMatKhau.Enabled = true;
+                }
             }
         }
 
         private bool ValidateInput()
         {
-            if (string.IsNullOrWhiteSpace(txtHoTen.Text)) { MessageBox.Show("Nhập họ tên!"); txtHoTen.Focus(); return false; }
-            if (txtTaiKhoan.Enabled && string.IsNullOrWhiteSpace(txtTaiKhoan.Text)) { MessageBox.Show("Nhập tài khoản!"); txtTaiKhoan.Focus(); return false; }
-            if (string.IsNullOrEmpty(txtMaNV.Text) && string.IsNullOrWhiteSpace(txtMatKhau.Text)) { MessageBox.Show("Nhập mật khẩu!"); txtMatKhau.Focus(); return false; }
-            if (!string.IsNullOrWhiteSpace(txtSDT.Text) && !Regex.IsMatch(txtSDT.Text, @"^\d{10,11}$")) { MessageBox.Show("SĐT sai định dạng!"); txtSDT.Focus(); return false; }
+            if (string.IsNullOrWhiteSpace(txtHoTen.Text)) 
+            { 
+                MessageBox.Show("Vui lòng nhập họ tên!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                txtHoTen.Focus(); 
+                return false; 
+            }
+            
+            if (txtTaiKhoan.Enabled && string.IsNullOrWhiteSpace(txtTaiKhoan.Text)) 
+            { 
+                MessageBox.Show("Vui lòng nhập tài khoản!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                txtTaiKhoan.Focus(); 
+                return false; 
+            }
+            
+            if (string.IsNullOrEmpty(txtMaNV.Text) && string.IsNullOrWhiteSpace(txtMatKhau.Text)) 
+            { 
+                MessageBox.Show("Vui lòng nhập mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                txtMatKhau.Focus(); 
+                return false; 
+            }
+            
+            if (!string.IsNullOrWhiteSpace(txtSDT.Text) && !Regex.IsMatch(txtSDT.Text, @"^\d{10,11}$")) 
+            { 
+                MessageBox.Show("Số điện thoại không hợp lệ!\nVui lòng nhập 10-11 chữ số.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                txtSDT.Focus(); 
+                return false; 
+            }
+            
+            // Validate email nếu có nhập
+            if (!string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                if (!IsValidEmail(txtEmail.Text))
+                {
+                    MessageBox.Show("Email không hợp lệ!\nVui lòng nhập đúng định dạng email (ví dụ: example@email.com).", 
+                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtEmail.Focus();
+                    return false;
+                }
+            }
+            
             return true;
+        }
+        
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            btnLamMoi_Click(null, null);
-            txtTaiKhoan.Enabled = true;
-            txtHoTen.Focus();
+            try
+            {
+                // Reset form để chuẩn bị thêm mới
+                btnLamMoi_Click(null, null);
+                
+                // Enable các trường cần thiết cho thêm mới
+                txtTaiKhoan.Enabled = true;
+                if (txtMatKhau != null)
+                {
+                    txtMatKhau.Enabled = true;
+                    txtMatKhau.Clear();
+                }
+                
+                // Set trạng thái mặc định
+                chkTrangThai.Checked = true;
+                
+                // Focus vào trường đầu tiên
+                txtHoTen.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi chuẩn bị form thêm mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnLuu_Click(object sender, EventArgs e)
@@ -190,28 +278,109 @@ namespace BTL_LTTQ.GUI
             {
                 if (string.IsNullOrEmpty(txtMaNV.Text))
                 {
-                    bool ok = bllNhanVien.CreateNhanVien(txtHoTen.Text, txtTaiKhoan.Text, txtMatKhau.Text, chkIsAdmin.Checked, txtSDT.Text, txtEmail.Text, txtDiaChi.Text, dtpNgayVaoLam.Value);
-                    if (ok) { MessageBox.Show("Thêm thành công!"); LoadData(txtSearch.Text); }
+                    // Thêm mới
+                    bool ok = bllNhanVien.CreateNhanVien(
+                        txtHoTen.Text.Trim(), 
+                        txtTaiKhoan.Text.Trim(), 
+                        txtMatKhau.Text, 
+                        chkIsAdmin.Checked, 
+                        txtSDT.Text.Trim(), 
+                        txtEmail.Text.Trim(), 
+                        txtDiaChi.Text.Trim(), 
+                        dtpNgayVaoLam.Value);
+                    
+                    if (ok) 
+                    { 
+                        MessageBox.Show("Thêm nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                        LoadData(txtSearch.Text);
+                        btnLamMoi_Click(null, null);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Thêm nhân viên thất bại!\n\nCó thể tài khoản đã tồn tại hoặc có lỗi xảy ra.", 
+                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    bool ok = bllNhanVien.EditNhanVien(Convert.ToInt32(txtMaNV.Text), txtHoTen.Text, chkIsAdmin.Checked, chkTrangThai.Checked, txtSDT.Text, txtEmail.Text, txtDiaChi.Text, dtpNgayVaoLam.Value);
-                    if (ok) { MessageBox.Show("Sửa thành công!"); LoadData(txtSearch.Text); }
+                    // Sửa thông tin nhân viên
+                    bool ok = bllNhanVien.EditNhanVien(
+                        Convert.ToInt32(txtMaNV.Text), 
+                        txtHoTen.Text.Trim(), 
+                        chkIsAdmin.Checked, 
+                        chkTrangThai.Checked, 
+                        txtSDT.Text.Trim(), 
+                        txtEmail.Text.Trim(), 
+                        txtDiaChi.Text.Trim(), 
+                        dtpNgayVaoLam.Value);
+                    
+                    // Cập nhật mật khẩu nếu có thay đổi
+                    if (!string.IsNullOrWhiteSpace(txtMatKhau.Text))
+                    {
+                        try
+                        {
+                            bool okMatKhau = bllNhanVien.UpdateMatKhau(Convert.ToInt32(txtMaNV.Text), txtMatKhau.Text);
+                            if (!okMatKhau)
+                            {
+                                MessageBox.Show("Cập nhật thông tin thành công nhưng không thể cập nhật mật khẩu!", 
+                                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                        catch (Exception exMatKhau)
+                        {
+                            MessageBox.Show($"Cập nhật thông tin thành công nhưng lỗi khi cập nhật mật khẩu: {exMatKhau.Message}", 
+                                "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    
+                    if (ok) 
+                    { 
+                        MessageBox.Show("Cập nhật nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                        LoadData(txtSearch.Text);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cập nhật nhân viên thất bại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
+            catch (Exception ex) 
+            { 
+                MessageBox.Show($"Lỗi: {ex.Message}\n\nChi tiết: {ex.InnerException?.Message ?? ex.ToString()}", 
+                    "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtMaNV.Text)) return;
-            if (MessageBox.Show($"Vô hiệu hóa nhân viên '{txtHoTen.Text}'?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (string.IsNullOrEmpty(txtMaNV.Text))
             {
-                if (bllNhanVien.DeleteNhanVien(Convert.ToInt32(txtMaNV.Text)))
+                MessageBox.Show("Vui lòng chọn nhân viên cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            if (MessageBox.Show($"Bạn có chắc chắn muốn xóa nhân viên '{txtHoTen.Text}'?\n\n" +
+                "Lưu ý:\n" +
+                "- Nếu nhân viên đã có hóa đơn/phiếu nhập: sẽ bị vô hiệu hóa (không thể đăng nhập)\n" +
+                "- Nếu nhân viên chưa có hóa đơn/phiếu nhập: sẽ bị xóa vĩnh viễn khỏi hệ thống",
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                try
                 {
-                    MessageBox.Show("Đã vô hiệu hóa.");
-                    LoadData(txtSearch.Text);
-                    btnLamMoi_Click(null, null);
+                    if (bllNhanVien.DeleteNhanVien(Convert.ToInt32(txtMaNV.Text)))
+                    {
+                        MessageBox.Show("Đã xóa nhân viên thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadData(txtSearch.Text);
+                        btnLamMoi_Click(null, null);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Xóa nhân viên thất bại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xóa nhân viên: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

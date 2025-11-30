@@ -11,7 +11,7 @@ namespace BTL_LTTQ.DAL
 
         public DataTable GetAllKhachHang()
         {
-            string sql = "SELECT MaKH, HoTen, SoDienThoai, TongChiTieu, HangThanhVien FROM KhachHang";
+            string sql = "SELECT MaKH, HoTen, SoDienThoai, TongChiTieu, HangThanhVien FROM KhachHang WHERE TrangThai = 1";
             return db.ExecuteQuery(sql);
         }
 
@@ -39,10 +39,15 @@ namespace BTL_LTTQ.DAL
         {
             string sql = $@"UPDATE KhachHang 
                     SET HoTen = N'{kh.HoTen}', 
-                        SoDienThoai = '{kh.SoDienThoai}',
-                        TongChiTieu = {kh.TongChiTieu},  
-                        HangThanhVien = N'{kh.HangThanhVien}'
-                    WHERE MaKH = {kh.MaKH}";
+                        SoDienThoai = '{kh.SoDienThoai}'";
+            
+            if (kh.TongChiTieu > 0)
+            {
+                sql += $@", TongChiTieu = {kh.TongChiTieu},  
+                        HangThanhVien = N'{kh.HangThanhVien}'";
+            }
+            
+            sql += $@" WHERE MaKH = {kh.MaKH}";
 
             return db.ExecuteNonQuery(sql) > 0;
         }
@@ -69,8 +74,23 @@ namespace BTL_LTTQ.DAL
         }
         public bool DeleteKhachHang(int maKH)
         {
-            string sql = $"DELETE FROM KhachHang WHERE MaKH = {maKH}";
-            return db.ExecuteNonQuery(sql) > 0;
+            // Kiểm tra xem khách hàng có đang được sử dụng trong hóa đơn không
+            string sqlCheck = @"SELECT COUNT(*) FROM HoaDon WHERE MaKH = @MaKH AND TrangThai != N'Hủy'";
+            var checkParam = new SqlParameter("@MaKH", maKH);
+            var count = db.ExecuteScalar(sqlCheck, CommandType.Text, checkParam);
+            
+            if (Convert.ToInt32(count) > 0)
+            {
+                // Nếu có hóa đơn, chỉ set TrangThai = 0 (soft delete)
+                string sql = "UPDATE KhachHang SET TrangThai = 0 WHERE MaKH = @MaKH";
+                return db.ExecuteNonQuery(sql, CommandType.Text, new SqlParameter("@MaKH", maKH)) > 0;
+            }
+            else
+            {
+                // Nếu không có hóa đơn, xóa hoàn toàn (hard delete)
+                string sql = "DELETE FROM KhachHang WHERE MaKH = @MaKH";
+                return db.ExecuteNonQuery(sql, CommandType.Text, new SqlParameter("@MaKH", maKH)) > 0;
+            }
         }
 
         public DataTable GetPurchaseHistory(int maKH, int limit = 20)

@@ -20,6 +20,7 @@ namespace BTL_LTTQ
         private readonly string _projectRootPath;
         private DateTime? _lastCheckIn;
         private DateTime? _lastCheckOut;
+        private readonly ChamCongBLL _chamCongBLL = new ChamCongBLL();
 
         public frmMain() : this(null)
         {
@@ -34,34 +35,29 @@ namespace BTL_LTTQ
             ApplyUserContext();
             ConfigureMenuButtons();
             _reportService = IsInDesignMode() ? null : new ReportService();
+            LoadChamCongStatus();
             UpdateCheckStatusLabel();
             LoadRealtimeNotifications();
         }
 
         private void SetupAvatarCircular()
         {
+            if (picAvatar == null) return;
 
-            if (picAvatar != null)
+            picAvatar.Paint += (s, e) =>
             {
-                picAvatar.Paint += (s, e) =>
+                using (var path = new System.Drawing.Drawing2D.GraphicsPath())
                 {
-                    using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+                    path.AddEllipse(0, 0, picAvatar.Width - 1, picAvatar.Height - 1);
+                    picAvatar.Region = new Region(path);
+                    e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    using (var pen = new Pen(Color.FromArgb(232, 90, 79), 3))
                     {
-                        path.AddEllipse(0, 0, picAvatar.Width - 1, picAvatar.Height - 1);
-                        picAvatar.Region = new Region(path);
-
-
-                        e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        using (var pen = new Pen(Color.FromArgb(232, 90, 79), 3))
-                        {
-                            e.Graphics.DrawEllipse(pen, 1, 1, picAvatar.Width - 3, picAvatar.Height - 3);
-                        }
+                        e.Graphics.DrawEllipse(pen, 1, 1, picAvatar.Width - 3, picAvatar.Height - 3);
                     }
-                };
-
-
-                CreateDefaultAvatar();
-            }
+                }
+            };
+            CreateDefaultAvatar();
         }
 
         private void CreateDefaultAvatar()
@@ -74,8 +70,6 @@ namespace BTL_LTTQ
             using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
-
                 using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(
                     new Rectangle(0, 0, size, size),
                     Color.FromArgb(102, 106, 148),
@@ -117,15 +111,12 @@ namespace BTL_LTTQ
             lblUser.Text = displayName;
             lblRole.Text = roleLabel;
 
-
             bool isAdmin = _currentUser?.IsAdmin ?? false;
             if (btnStaff != null)
             {
                 btnStaff.Visible = isAdmin;
                 btnStaff.Enabled = isAdmin;
             }
-
-
             LoadAvatarFromFile();
         }
 
@@ -156,55 +147,36 @@ namespace BTL_LTTQ
 
         private void btnProduct_Click(object sender, EventArgs e)
         {
-            if (sender is Button btn)
-            {
-                SetActiveMenuButton(btn);
-            }
+            if (sender is Button btn) SetActiveMenuButton(btn);
             ShowContentForm(new frmSanpham());
         }
 
         private void btnQuanLyHoaDon_Click(object sender, EventArgs e)
         {
-
-            if (sender is Button btn)
-            {
-                SetActiveMenuButton(btn);
-            }
-
-
+            if (sender is Button btn) SetActiveMenuButton(btn);
             ShowContentForm(new BTL_LTTQ.GUI.frmQuanLyHoaDon(_currentUser));
         }
 
-        /// <summary>
-        /// Hiển thị một form con trong panelContent
-        /// </summary>
         private void ShowContentForm(Form contentForm)
         {
-
             if (_activeContentForm != null)
             {
                 _activeContentForm.Close();
                 _activeContentForm.Dispose();
             }
 
-
             _activeContentForm = contentForm;
             contentForm.TopLevel = false;
             contentForm.FormBorderStyle = FormBorderStyle.None;
             contentForm.Dock = DockStyle.Fill;
-
 
             panelContent.Controls.Clear();
             panelContent.Controls.Add(contentForm);
             contentForm.Show();
         }
 
-        /// <summary>
-        /// Hiển thị nội dung Dashboard (trang chủ)
-        /// </summary>
         private void ShowHomeContent()
         {
-
             if (_activeContentForm != null)
             {
                 _activeContentForm.Close();
@@ -212,40 +184,24 @@ namespace BTL_LTTQ
                 _activeContentForm = null;
             }
 
-
             panelContent.Controls.Clear();
-            panelContent.Controls.Add(panelDashboard);
-            panelContent.Controls.Add(panelQuickActions);
-            panelContent.Controls.Add(panelRealtime);
-            panelContent.Controls.Add(panelGreeting);
-            panelContent.Controls.Add(lblContentSubtitle);
-            panelContent.Controls.Add(lblContentTitle);
+            panelContent.Controls.AddRange(new Control[] { panelDashboard, panelQuickActions, panelRealtime, 
+                panelGreeting, lblContentSubtitle, lblContentTitle });
 
-
-            lblContentTitle.Visible = true;
-            lblContentSubtitle.Visible = true;
-            panelDashboard.Visible = true;
-            panelQuickActions.Visible = true;
-            panelRealtime.Visible = true;
-            panelGreeting.Visible = true;
-
-
-            lblContentTitle.BringToFront();
-            lblContentSubtitle.BringToFront();
-            panelDashboard.BringToFront();
-            panelQuickActions.BringToFront();
-            panelRealtime.BringToFront();
-            panelGreeting.BringToFront();
-
+            var controls = new Control[] { lblContentTitle, lblContentSubtitle, panelDashboard, 
+                panelQuickActions, panelRealtime, panelGreeting };
+            foreach (var ctrl in controls)
+            {
+                ctrl.Visible = true;
+                ctrl.BringToFront();
+            }
 
             UpdateDashboardOverview();
         }
 
         private void ConfigureMenuButtons()
         {
-
             var buttons = new[] { btnDashboard, btnProduct, btnInventory, btnPos, btnInvoice, btnCustomer, btnStaff, btnReport };
-
             foreach (var button in buttons)
             {
                 if (button != null && !_menuButtonStyles.ContainsKey(button))
@@ -258,14 +214,9 @@ namespace BTL_LTTQ
                     };
                 }
             }
-
-
             SetActiveMenuButton(btnDashboard);
         }
 
-        /// <summary>
-        /// Cập nhật dữ liệu tổng quan trên Dashboard
-        /// </summary>
         private void UpdateDashboardOverview()
         {
             if (_reportService == null)
@@ -274,8 +225,6 @@ namespace BTL_LTTQ
             }
 
             var overview = _reportService.GetTodayOverview(DateTime.Now);
-
-
             lblRevenueTodayValue.Text = $"{overview.TodayRevenue:N0} đ";
             lblOrdersTodayValue.Text = overview.TodayOrders.ToString();
             lblTopProductValue.Text = overview.TopProductName;
@@ -283,44 +232,28 @@ namespace BTL_LTTQ
 
             LoadRealtimeNotifications();
 
-
             var userName = _currentUser?.FullName ?? "Bạn";
             lblGreeting.Text = $"Xin chào, {userName}!";
             lblWorkingDate.Text = $"Ngày làm việc: {DateTime.Now:dd/MM/yyyy (dddd)}";
         }
 
-        /// <summary>
-        /// Kiểm tra xem form có đang chạy trong Visual Studio Designer không
-        /// </summary>
         private static bool IsInDesignMode()
         {
             return LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
                    Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        /// <summary>
-        /// Đặt một button menu là active (highlight)
-        /// </summary>
         private void SetActiveMenuButton(Button button)
         {
-            if (button == null || _activeMenuButton == button)
-            {
-                return;
-            }
-
+            if (button == null || _activeMenuButton == button) return;
 
             ResetMenuButton(_activeMenuButton);
-
-
             _activeMenuButton = button;
             button.BackColor = Color.FromArgb(102, 106, 148);
             button.ForeColor = Color.White;
             button.Font = new Font(button.Font, FontStyle.Bold);
         }
 
-        /// <summary>
-        /// Reset button menu về style mặc định
-        /// </summary>
         private void ResetMenuButton(Button button)
         {
             if (button == null || !_menuButtonStyles.TryGetValue(button, out var appearance))
@@ -337,38 +270,39 @@ namespace BTL_LTTQ
         {
             var settingsForm = new frmSettings(_currentUser);
             ShowContentForm(settingsForm);
-
-
-            settingsForm.FormClosed += (s, args) =>
-            {
-                LoadAvatarFromFile();
-            };
+            settingsForm.FormClosed += (s, args) => LoadAvatarFromFile();
         }
 
         private void btnCheckIn_Click(object sender, EventArgs e)
         {
-            string currentTime = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
-            _lastCheckIn = DateTime.Now;
-            UpdateCheckStatusLabel();
-            MessageBox.Show(
-                $"✓ Check-in thành công!\nThời gian: {currentTime}",
-                "Chấm công - Vào làm",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            if (_currentUser == null) return;
+            try
+            {
+                if (_chamCongBLL.CheckIn(_currentUser.EmployeeId))
+                {
+                    _lastCheckIn = DateTime.Now;
+                    UpdateCheckStatusLabel();
+                    MessageBox.Show($"✓ Check-in thành công!\nThời gian: {DateTime.Now:HH:mm:ss}", 
+                        "Chấm công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void btnCheckOut_Click(object sender, EventArgs e)
         {
-            string currentTime = DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
-            _lastCheckOut = DateTime.Now;
-            UpdateCheckStatusLabel();
-            MessageBox.Show(
-                $"✓ Check-out thành công!\nThời gian: {currentTime}",
-                "Chấm công - Tan làm",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            if (_currentUser == null) return;
+            try
+            {
+                if (_chamCongBLL.CheckOut(_currentUser.EmployeeId))
+                {
+                    _lastCheckOut = DateTime.Now;
+                    UpdateCheckStatusLabel();
+                    MessageBox.Show($"✓ Check-out thành công!\nThời gian: {DateTime.Now:HH:mm:ss}", 
+                        "Chấm công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void btnCustomer_Click(object sender, EventArgs e)
@@ -379,18 +313,12 @@ namespace BTL_LTTQ
 
         private void btnStaff_Click(object sender, EventArgs e)
         {
-
             if (_currentUser == null || !_currentUser.IsAdmin)
             {
-                MessageBox.Show(
-                    "Bạn không có quyền truy cập chức năng này.\nChỉ quản trị viên mới có thể quản lý nhân viên.",
-                    "Không có quyền truy cập",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này.\nChỉ quản trị viên mới có thể quản lý nhân viên.",
+                    "Không có quyền truy cập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             SetActiveMenuButton(btnStaff);
             ShowContentForm(new GUI.frnNhanVien());
         }
@@ -420,49 +348,32 @@ namespace BTL_LTTQ
             public Font Font;
         }
 
-        private void panelRevenueToday_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        private void panelRevenueToday_Paint(object sender, PaintEventArgs e) { }
 
         private void btnQuanLyKho_Click(object sender, EventArgs e)
         {
-            if (sender is Button btn)
-            {
-                SetActiveMenuButton(btn);
-            }
-
-
+            if (sender is Button btn) SetActiveMenuButton(btn);
             ShowContentForm(new BTL_LTTQ.GUI.frmNhapHang());
         }
 
         private void btnBanHang_Click(object sender, EventArgs e)
         {
-            if (sender is Button btn)
-            {
-                SetActiveMenuButton(btn);
-            }
+            if (sender is Button btn) SetActiveMenuButton(btn);
             ShowContentForm(new BTL_LTTQ.GUI.frmBanHang(_currentUser));
         }
 
-        /// <summary>
-        /// Load avatar từ file path (đã upload trong form Settings)
-        /// </summary>
         private void LoadAvatarFromFile()
         {
             try
             {
-
                 using (var dataProcesser = new DataProcesser())
                 {
                     var profile = dataProcesser.GetEmployeeProfile(_currentUser?.EmployeeId ?? 0);
-
                     if (profile != null && !string.IsNullOrEmpty(profile.AvatarPath))
                     {
                         string fullPath = GetAvatarFullPath(profile.AvatarPath);
                         if (!string.IsNullOrEmpty(fullPath) && System.IO.File.Exists(fullPath))
                         {
-
                             using (var img = Image.FromFile(fullPath))
                             {
                                 picAvatar.Image = new Bitmap(img);
@@ -472,77 +383,79 @@ namespace BTL_LTTQ
                     }
                 }
             }
-            catch
-            {
-
-            }
-
-
+            catch { }
             CreateDefaultAvatar();
         }
 
         private string GetAvatarFullPath(string relativePath)
         {
-            if (string.IsNullOrWhiteSpace(relativePath))
-            {
-                return null;
-            }
-
+            if (string.IsNullOrWhiteSpace(relativePath)) return null;
 
             var projectPath = System.IO.Path.Combine(_projectRootPath, relativePath);
-            if (System.IO.File.Exists(projectPath))
-            {
-                return projectPath;
-            }
-
+            if (System.IO.File.Exists(projectPath)) return projectPath;
 
             var startupPath = System.IO.Path.Combine(Application.StartupPath, relativePath);
-            if (System.IO.File.Exists(startupPath))
-            {
-                return startupPath;
-            }
+            if (System.IO.File.Exists(startupPath)) return startupPath;
 
             return projectPath;
         }
 
         private static string GetProjectRootPath()
         {
-            string root = Application.StartupPath;
-
             try
             {
-                root = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.StartupPath, @"..\.."));
+                return System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.StartupPath, @"..\.."));
             }
             catch
             {
-
+                return Application.StartupPath;
             }
+        }
 
-            return root;
+        private void LoadChamCongStatus()
+        {
+            if (_currentUser == null) return;
+            try
+            {
+                DataRow chamCong = _chamCongBLL.GetChamCongToday(_currentUser.EmployeeId);
+                if (chamCong != null)
+                {
+                    if (chamCong["GioCheckIn"] != DBNull.Value)
+                        _lastCheckIn = Convert.ToDateTime(chamCong["GioCheckIn"]);
+                    if (chamCong["GioCheckOut"] != DBNull.Value)
+                        _lastCheckOut = Convert.ToDateTime(chamCong["GioCheckOut"]);
+                }
+            }
+            catch { }
         }
 
         private void UpdateCheckStatusLabel()
         {
-            if (lblCheckStatus == null)
-            {
-                return;
-            }
+            if (lblCheckStatus == null || _currentUser == null) return;
 
-            string message;
-            if (_lastCheckOut.HasValue && (!_lastCheckIn.HasValue || _lastCheckOut.Value >= _lastCheckIn.Value))
+            try
             {
-                message = $"Trạng thái chấm công: Đã check-out lúc {_lastCheckOut:HH:mm:ss}";
+                DataRow chamCong = _chamCongBLL.GetChamCongToday(_currentUser.EmployeeId);
+                
+                if (chamCong != null && chamCong["GioCheckOut"] != DBNull.Value)
+                {
+                    DateTime checkOut = Convert.ToDateTime(chamCong["GioCheckOut"]);
+                    lblCheckStatus.Text = $"Trạng thái: Đã check-out lúc {checkOut:HH:mm:ss}";
+                }
+                else if (chamCong != null && chamCong["GioCheckIn"] != DBNull.Value)
+                {
+                    DateTime checkIn = Convert.ToDateTime(chamCong["GioCheckIn"]);
+                    lblCheckStatus.Text = $"Trạng thái: Đã check-in lúc {checkIn:HH:mm:ss}";
+                }
+                else
+                {
+                    lblCheckStatus.Text = "Trạng thái: Chưa check-in";
+                }
             }
-            else if (_lastCheckIn.HasValue)
+            catch
             {
-                message = $"Trạng thái chấm công: Đã check-in lúc {_lastCheckIn:HH:mm:ss}";
+                lblCheckStatus.Text = "Trạng thái: Chưa check-in";
             }
-            else
-            {
-                message = "Trạng thái chấm công: Chưa check-in";
-            }
-
-            lblCheckStatus.Text = message;
         }
 
         private void LoadRealtimeNotifications()

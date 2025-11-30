@@ -77,47 +77,77 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            txtChiTieu.ReadOnly = false;
-
-            if (string.IsNullOrWhiteSpace(txtHoTen.Text)) { MessageBox.Show("Nhập tên!"); return; }
-            string cleanMoney = txtChiTieu.Text.Replace(" VND", "").Replace(",", "").Replace(".", "").Trim();
-            decimal tongTien = 0;
-            if (!string.IsNullOrEmpty(cleanMoney))
-            {
-                decimal.TryParse(cleanMoney, out tongTien);
-            }
-            if (bll.Add(txtHoTen.Text, txtSDT.Text, tongTien))
-            {
-                MessageBox.Show("Thêm thành công! Hạng thành viên đã được tính");
-                LoadData();
-                btnLamMoi_Click(null, null);
-            }
-            else MessageBox.Show("Lỗi: Thiếu thông tin.");
-        }
 
         private void btnLuu_Click(object sender, EventArgs e)
         {
             txtChiTieu.ReadOnly = false;
-            if (string.IsNullOrEmpty(txtMaKH.Text)) return;
-            if (bll.Edit(int.Parse(txtMaKH.Text), txtHoTen.Text, txtSDT.Text))
+            if (string.IsNullOrEmpty(txtMaKH.Text))
             {
-                MessageBox.Show("Cập nhật thành công!");
-                LoadData(txtSearch.Text);
+                MessageBox.Show("Vui lòng chọn khách hàng cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validate dữ liệu
+            if (string.IsNullOrWhiteSpace(txtHoTen.Text))
+            {
+                MessageBox.Show("Vui lòng nhập tên khách hàng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtHoTen.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtSDT.Text))
+            {
+                MessageBox.Show("Vui lòng nhập số điện thoại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSDT.Focus();
+                return;
+            }
+
+            try
+            {
+                if (bll.Edit(int.Parse(txtMaKH.Text), txtHoTen.Text.Trim(), txtSDT.Text.Trim()))
+                {
+                    MessageBox.Show("Cập nhật thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadData(txtSearch.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Cập nhật thất bại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi cập nhật: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtMaKH.Text)) return;
-            if (MessageBox.Show("Xóa khách hàng này?", "Cảnh báo", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (string.IsNullOrEmpty(txtMaKH.Text))
             {
-                if (bll.Delete(int.Parse(txtMaKH.Text)))
+                MessageBox.Show("Vui lòng chọn khách hàng cần xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này?\n\nLưu ý: Nếu khách hàng đã có hóa đơn, việc xóa có thể ảnh hưởng đến dữ liệu.", 
+                "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                try
                 {
-                    MessageBox.Show("Đã xóa.");
-                    LoadData(txtSearch.Text);
-                    btnLamMoi_Click(null, null);
+                    if (bll.Delete(int.Parse(txtMaKH.Text)))
+                    {
+                        MessageBox.Show("Đã xóa khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadData(txtSearch.Text);
+                        btnLamMoi_Click(null, null);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Xóa khách hàng thất bại!\n\nCó thể khách hàng đang được sử dụng trong hệ thống.", 
+                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xóa: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

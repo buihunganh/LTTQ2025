@@ -89,6 +89,10 @@ namespace BTL_LTTQ.BLL
                 }
 
                 var whereClause = string.Join(" AND ", conditions);
+                var wherePart = string.IsNullOrWhiteSpace(whereClause) 
+                    ? "WHERE ctsp.TrangThai = 1 AND sp.TrangThai = 1" 
+                    : $"WHERE {whereClause} AND ctsp.TrangThai = 1 AND sp.TrangThai = 1";
+                
                 var sql = $@"
                     SELECT 
                         ctsp.MaCTSP,
@@ -110,7 +114,7 @@ namespace BTL_LTTQ.BLL
                     INNER JOIN SizeGiay sz ON ctsp.MaSize = sz.MaSize
                     INNER JOIN MauSac ms ON ctsp.MaMau = ms.MaMau
                     INNER JOIN LoaiGiay lg ON sp.MaLoai = lg.MaLoai
-                    WHERE {whereClause}
+                    {wherePart}
                     ORDER BY sp.TenGiay, sz.KichCo";
 
                 using (var db = new DataProcesser())
@@ -238,6 +242,7 @@ namespace BTL_LTTQ.BLL
                     INNER JOIN LoaiGiay lg ON sp.MaLoai = lg.MaLoai
                     INNER JOIN ThuongHieu th ON sp.MaThuongHieu = th.MaThuongHieu
                     WHERE LTRIM(RTRIM(th.TenThuongHieu)) = LTRIM(RTRIM(@brandName))
+                        AND ctsp.TrangThai = 1 AND sp.TrangThai = 1
                     ORDER BY sp.TenGiay, sz.KichCo";
 
                 using (var db = new DataProcesser())
@@ -545,7 +550,7 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        public int EnsureBaseProduct(string tenGiay, int maLoai, string moTa, string hinhAnhChung)
+        public int EnsureBaseProduct(string tenGiay, int maLoai, string moTa)
         {
             if (string.IsNullOrWhiteSpace(tenGiay))
                 throw new ArgumentException("Tên giày không được để trống", nameof(tenGiay));
@@ -572,8 +577,8 @@ namespace BTL_LTTQ.BLL
                 }
 
                 const string insertSql = @"
-                        INSERT INTO SanPham (TenGiay, MaLoai, MaThuongHieu, MoTa, HinhAnhChung, TrangThai)
-                        VALUES (@TenGiay, @MaLoai, @MaThuongHieu, @MoTa, @HinhAnhChung, 1);
+                        INSERT INTO SanPham (TenGiay, MaLoai, MaThuongHieu, MoTa, TrangThai)
+                        VALUES (@TenGiay, @MaLoai, @MaThuongHieu, @MoTa, 1);
                         SELECT SCOPE_IDENTITY();";
 
                 var insertParams = new[]
@@ -581,8 +586,7 @@ namespace BTL_LTTQ.BLL
                         new SqlParameter("@TenGiay", SqlDbType.NVarChar, 200) { Value = tenGiay },
                         new SqlParameter("@MaLoai", SqlDbType.Int) { Value = maLoai },
                         new SqlParameter("@MaThuongHieu", SqlDbType.Int) { Value = 1 }, // tạm mặc định 1
-                        new SqlParameter("@MoTa", SqlDbType.NVarChar) { Value = (object)moTa ?? DBNull.Value },
-                        new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)hinhAnhChung ?? DBNull.Value }
+                        new SqlParameter("@MoTa", SqlDbType.NVarChar) { Value = (object)moTa ?? DBNull.Value }
                     };
 
                 var newId = db.ExecuteScalar(insertSql, CommandType.Text, insertParams);

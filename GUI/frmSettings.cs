@@ -241,7 +241,6 @@ namespace BTL_LTTQ
 
             try
             {
-                // Move up two levels from bin\Debug (or Release) to project directory
                 root = System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.StartupPath, @"..\.."));
             }
             catch

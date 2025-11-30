@@ -22,6 +22,10 @@ namespace BTL_LTTQ.BLL
         public bool CreateNhanVien(string hoTen, string taiKhoan, string matKhau, bool isAdmin, string sdt, string email, string diaChi, DateTime ngayVaoLam)
         {
             if (string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(taiKhoan)) return false;
+            if (dalNhanVien.CheckTaiKhoanExists(taiKhoan))
+            {
+                throw new Exception($"Tài khoản '{taiKhoan}' đã tồn tại trong hệ thống!");
+            }
 
             NhanVienDTO nv = new NhanVienDTO
             {
@@ -38,7 +42,6 @@ namespace BTL_LTTQ.BLL
             return dalNhanVien.AddNhanVien(nv);
         }
 
-        // 4. Sửa nhân viên
         public bool EditNhanVien(int maNV, string hoTen, bool isAdmin, bool trangThai, string sdt, string email, string diaChi, DateTime ngayVaoLam)
         {
             NhanVienDTO nv = new NhanVienDTO
@@ -55,13 +58,25 @@ namespace BTL_LTTQ.BLL
             return dalNhanVien.UpdateNhanVien(nv);
         }
 
-        // 5. Xóa nhân viên
-        public bool DeleteNhanVien(int maNV)
+        public bool UpdateMatKhau(int maNV, string matKhauMoi)
         {
-            return dalNhanVien.DisableNhanVien(maNV);
+            if (string.IsNullOrWhiteSpace(matKhauMoi))
+            {
+                throw new Exception("Mật khẩu không được để trống!");
+            }
+            return dalNhanVien.UpdateMatKhau(maNV, matKhauMoi);
         }
 
-        // 6. Login (Giữ nguyên)
+        public string GetMatKhau(int maNV)
+        {
+            return dalNhanVien.GetMatKhau(maNV);
+        }
+
+        public bool DeleteNhanVien(int maNV)
+        {
+            return dalNhanVien.DeleteNhanVien(maNV);
+        }
+
         public bool KiemTraDangNhap(string u, string p)
         {
             NhanVienDTO nv = dalNhanVien.CheckLogin(u, p);
