@@ -995,6 +995,20 @@ namespace BTL_LTTQ
                         // Tạm thời bỏ qua vì cần query lại DB
                     }
 
+                    // Filter theo trạng thái
+                    if (cmbFilterStatus.SelectedIndex > 0) // 0 = "Tất cả", bỏ qua
+                    {
+                        var selectedStatus = cmbFilterStatus.Text?.Trim();
+                        if (selectedStatus == "Đang kinh doanh")
+                        {
+                            filteredProducts = filteredProducts.Where(p => p.TrangThai == true);
+                        }
+                        else if (selectedStatus == "Ngừng kinh doanh")
+                        {
+                            filteredProducts = filteredProducts.Where(p => p.TrangThai == false);
+                        }
+                    }
+
                     // Sắp xếp theo giá nếu được chọn
                     var priceSort = cmbFilterPriceType.Text.Trim();
                     if (priceSort == "Giá tăng dần")
