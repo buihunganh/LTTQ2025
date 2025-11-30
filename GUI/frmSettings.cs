@@ -43,7 +43,6 @@ namespace BTL_LTTQ
 
         private void HideScrollbars()
         {
-            // Check if panels still exist and not disposed
             if (panelProfileSection != null && !panelProfileSection.IsDisposed && panelProfileSection.IsHandleCreated)
             {
                 ShowScrollBar(panelProfileSection.Handle, SB_VERT, 0);
@@ -245,7 +244,6 @@ namespace BTL_LTTQ
             }
             catch
             {
-                // Ignore and fall back to StartupPath
             }
 
             return root;

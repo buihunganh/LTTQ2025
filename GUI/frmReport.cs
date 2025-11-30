@@ -731,7 +731,6 @@ namespace BTL_LTTQ
 
                 var data = _topCustomersTable ?? new DataTable();
 
-                // Title
                 Excel.Range titleRange = ws.Range["A1", "C1"];
                 titleRange.Merge();
                 titleRange.Value2 = "TOP KHÁCH HÀNG";
@@ -875,6 +874,11 @@ namespace BTL_LTTQ
         {
             return LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
                    Application.ExecutablePath.IndexOf("devenv.exe", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private void chartRevenue_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

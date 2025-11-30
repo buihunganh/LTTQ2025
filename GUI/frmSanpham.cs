@@ -140,14 +140,6 @@ namespace BTL_LTTQ
                     cmbColor.DisplayMember = "TenMau";
                     cmbColor.ValueMember = "MaMau";
                 }
-
-                if (cmbFilterStatus.Items.Count == 0)
-                {
-                    cmbFilterStatus.Items.Add("Tất cả");
-                    cmbFilterStatus.Items.Add("Đang kinh doanh");
-                    cmbFilterStatus.Items.Add("Ngừng kinh doanh");
-                    cmbFilterStatus.SelectedIndex = 0;
-                }
             }
             catch (Exception ex)
             {
@@ -801,17 +793,37 @@ namespace BTL_LTTQ
                     {
                         if (col.Visible && col.Name != "MaCTSP")
                         {
-                            var value = dgvRow.Cells[col.Index].Value;
-                            if (value != null && value != DBNull.Value)
+                            var cell = dgvRow.Cells[col.Name];
+                            if (cell != null && cell.Value != null && cell.Value != DBNull.Value)
                             {
-                                worksheet.Cells[row, colIndex] = value.ToString();
-
                                 if (col.Name == "GiaBan")
                                 {
+                                    decimal giaBan = 0;
+                                    if (cell.Value is decimal decValue)
+                                        giaBan = decValue;
+                                    else if (cell.Value is double doubleValue)
+                                        giaBan = (decimal)doubleValue;
+                                    else if (cell.Value is int intValue)
+                                        giaBan = intValue;
+                                    else if (cell.Value is long longValue)
+                                        giaBan = longValue;
+                                    else
+                                    {
+                                        string valueStr = cell.Value.ToString();
+                                        valueStr = valueStr.Replace(",", "").Replace(".", "");
+                                        if (decimal.TryParse(valueStr, out decimal parsedValue))
+                                            giaBan = parsedValue;
+                                    }
+                                    
                                     Excel.Range cellRange = (Excel.Range)worksheet.Cells[row, colIndex];
+                                    cellRange.Value2 = giaBan;
                                     cellRange.NumberFormat = "#,##0";
                                     cellRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
                                     ReleaseObject(cellRange);
+                                }
+                                else
+                                {
+                                    worksheet.Cells[row, colIndex] = cell.Value.ToString();
                                 }
                             }
                             colIndex++;
@@ -960,15 +972,6 @@ namespace BTL_LTTQ
 
                     if (maSize.HasValue && maSize.Value > 0)
                         filteredProducts = filteredProducts.Where(p => p.MaSize == maSize.Value);
-
-                    if (cmbFilterStatus.SelectedIndex > 0)
-                    {
-                        var selectedStatus = cmbFilterStatus.Text?.Trim();
-                        if (selectedStatus == "Đang kinh doanh")
-                            filteredProducts = filteredProducts.Where(p => p.TrangThai == true);
-                        else if (selectedStatus == "Ngừng kinh doanh")
-                            filteredProducts = filteredProducts.Where(p => p.TrangThai == false);
-                    }
 
                     var priceSort = cmbFilterPriceType.Text.Trim();
                     if (priceSort == "Giá tăng dần")
@@ -1154,8 +1157,7 @@ namespace BTL_LTTQ
                 GiaNhap = 0,
                 GiaBan = decimal.Parse(giaBanText),
                 SoLuongTon = 0,
-                HinhAnhChung = txtImagePath.Text.Trim(),
-                TrangThai = true
+                HinhAnhChung = txtImagePath.Text.Trim()
             };
         }
 

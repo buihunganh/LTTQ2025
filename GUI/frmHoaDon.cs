@@ -76,7 +76,6 @@ namespace BTL_LTTQ.GUI
             _dtChiTiet = dtChiTiet;
             LoadInitData(isViewOnly: true);
             
-            // Hiển thị tiền khách trả và tiền thừa nếu có
             if (dtChung.Rows.Count > 0)
             {
                 DataRow r = dtChung.Rows[0];
@@ -133,7 +132,6 @@ namespace BTL_LTTQ.GUI
                     txtDiaChi.ReadOnly = true;
                     lblTongTien.Text = _tongTienSo.ToString("N0") + " VNĐ";
                     
-                    // Hiển thị tiền khách trả và tiền thừa nhưng chỉ đọc
                     txtTienKhachTra.ReadOnly = true;
                     txtTienKhachTra.BackColor = Color.FromArgb(240, 240, 240);
 
@@ -200,7 +198,6 @@ namespace BTL_LTTQ.GUI
 
             lblTongTien.Text = tongTienHang.ToString("N0") + " VNĐ";
             
-            // Tính tiền thừa nếu đã nhập tiền khách trả
             CalculateTienThua();
         }
         
@@ -224,19 +221,16 @@ namespace BTL_LTTQ.GUI
                 
                 if (tienThua < 0)
                 {
-                    // Tiền khách trả < tổng tiền => thiếu tiền
                     lblTienThuaValue.Text = Math.Abs(tienThua).ToString("N0") + " VNĐ (Thiếu)";
                     lblTienThuaValue.ForeColor = Color.Red;
                 }
                 else if (tienThua == 0)
                 {
-                    // Vừa đủ
                     lblTienThuaValue.Text = "0 VNĐ";
                     lblTienThuaValue.ForeColor = Color.Lime;
                 }
                 else
                 {
-                    // Tiền thừa
                     lblTienThuaValue.Text = tienThua.ToString("N0") + " VNĐ";
                     lblTienThuaValue.ForeColor = Color.Lime;
                 }
@@ -250,7 +244,6 @@ namespace BTL_LTTQ.GUI
         
         private void TxtTienKhachTra_TextChanged(object sender, EventArgs e)
         {
-            // Format số tiền khi nhập
             if (string.IsNullOrWhiteSpace(txtTienKhachTra.Text))
             {
                 CalculateTienThua();
@@ -270,7 +263,6 @@ namespace BTL_LTTQ.GUI
                 int cursorPos = txtTienKhachTra.SelectionStart;
                 txtTienKhachTra.Text = value.ToString("N0");
                 
-                // Giữ vị trí con trỏ
                 int newPos = cursorPos + (txtTienKhachTra.Text.Length - text.Length);
                 if (newPos < 0) newPos = 0;
                 if (newPos > txtTienKhachTra.Text.Length) newPos = txtTienKhachTra.Text.Length;
@@ -280,13 +272,11 @@ namespace BTL_LTTQ.GUI
             }
             catch
             {
-                // Nếu không parse được, giữ nguyên text
             }
         }
         
         private void TxtTienKhachTra_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Chỉ cho phép nhập số và phím điều khiển
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true;
@@ -300,7 +290,6 @@ namespace BTL_LTTQ.GUI
                 DataRowView drv = (DataRowView)cboKhachHang.SelectedItem;
                 txtMaKH.Text = drv["MaKH"].ToString();
                 
-                // Đánh dấu đang cập nhật từ ComboBox để tránh vòng lặp
                 _isUpdatingFromComboBox = true;
                 txtSDT.Text = drv["SoDienThoai"].ToString();
                 _isUpdatingFromComboBox = false;
@@ -351,7 +340,6 @@ namespace BTL_LTTQ.GUI
                 return;
             }
             
-            // Kiểm tra tiền khách trả
             decimal tongTienHang = 0;
             foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
             
@@ -665,12 +653,10 @@ namespace BTL_LTTQ.GUI
                     {
                         int rowIndex = dgvChiTiet.CurrentRow.Index;
                         
-                        // Remove from DataTable
                         if (_dtChiTiet != null && rowIndex < _dtChiTiet.Rows.Count)
                         {
                             _dtChiTiet.Rows.RemoveAt(rowIndex);
                             
-                            // Recalculate total
                             CalculateTotal();
                             
                             MessageBox.Show("Đã xóa sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -700,15 +686,12 @@ namespace BTL_LTTQ.GUI
 
         private void TxtSDT_TextChanged(object sender, EventArgs e)
         {
-            // Bỏ qua nếu đang cập nhật từ ComboBox để tránh vòng lặp
             if (_isUpdatingFromComboBox) return;
             
-            // Chỉ tìm kiếm khi txtSDT có thể nhập (không phải ReadOnly)
             if (txtSDT.ReadOnly) return;
             
             string sdt = txtSDT.Text.Trim();
             
-            // Chỉ tìm khi có ít nhất 7 số (số điện thoại hợp lệ)
             if (sdt.Length >= 7)
             {
                 try
@@ -716,14 +699,11 @@ namespace BTL_LTTQ.GUI
                     DataRow khachHang = _bll.GetKhachHangByPhone(sdt);
                     if (khachHang != null)
                     {
-                        // Tìm và chọn khách hàng trong ComboBox
                         int maKH = Convert.ToInt32(khachHang["MaKH"]);
                         
-                        // Tạm thời tắt event để tránh vòng lặp
                         cboKhachHang.SelectedIndexChanged -= CboKhachHang_SelectedIndexChanged;
                         _isUpdatingFromComboBox = true;
                         
-                        // Tìm và chọn khách hàng
                         for (int i = 0; i < cboKhachHang.Items.Count; i++)
                         {
                             DataRowView drv = (DataRowView)cboKhachHang.Items[i];
@@ -734,20 +714,17 @@ namespace BTL_LTTQ.GUI
                             }
                         }
                         
-                        // Điền thông tin
                         txtMaKH.Text = maKH.ToString();
                         txtDiaChi.Text = khachHang["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(khachHang["DiaChi"].ToString())
                             ? khachHang["DiaChi"].ToString()
                             : "Khách tại quầy";
                         
-                        // Bật lại event
                         _isUpdatingFromComboBox = false;
                         cboKhachHang.SelectedIndexChanged += CboKhachHang_SelectedIndexChanged;
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Không hiển thị lỗi để tránh làm phiền người dùng
                     System.Diagnostics.Debug.WriteLine("Lỗi tìm khách hàng: " + ex.Message);
                     _isUpdatingFromComboBox = false;
                 }

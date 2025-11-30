@@ -12,7 +12,7 @@ namespace BTL_LTTQ.GUI
         private SalesBLL _bll = new SalesBLL();
         private DataTable _dtGioHang;
         private BTL_LTTQ.DTO.LoginResult _currentUser;
-        private DataTable _dtSanPham; // Store all products for filtering
+        private DataTable _dtSanPham;
 
         public frmBanHang(BTL_LTTQ.DTO.LoginResult currentUser = null)
         {
@@ -37,10 +37,7 @@ namespace BTL_LTTQ.GUI
             _dtGioHang.Columns.Add("ThanhTien", typeof(decimal));
 
             dgvGioHang.DataSource = _dtGioHang;
-            
-            // Set HeaderText tiếng Việt có dấu
             SetGridViewHeaders();
-            
             CalculateTotal();
         }
         
@@ -84,8 +81,6 @@ namespace BTL_LTTQ.GUI
         private void LoadData()
         {
             _dtSanPham = _bll.GetSanPhamBanHang();
-            
-            // Đảm bảo HeaderText được set lại sau khi load
             SetGridViewHeaders();
         }
 
@@ -124,7 +119,6 @@ namespace BTL_LTTQ.GUI
                 Cursor = Cursors.Hand
             };
 
-            // Product Image Placeholder
             PictureBox picProduct = new PictureBox
             {
                 Width = 160,
@@ -135,19 +129,17 @@ namespace BTL_LTTQ.GUI
                 Image = LoadProductImage(product)
             };
 
-            // Product Name
             Label lblName = new Label
             {
                 Width = 160,
                 Location = new Point(10, 135),
                 Height = 35,
-                Text = $"[{product["MaCTSP"]}] {product["TenHienThi"]}",  // ← Hiển thị MaCTSP để debug
+                Text = $"[{product["MaCTSP"]}] {product["TenHienThi"]}",
                 Font = new Font("Segoe UI", 8F, FontStyle.Bold),
                 ForeColor = Color.White,
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-            // Product Price
             Label lblPrice = new Label
             {
                 Width = 160,
@@ -163,13 +155,11 @@ namespace BTL_LTTQ.GUI
             card.Controls.Add(lblName);
             card.Controls.Add(lblPrice);
 
-            // Click event for entire card
             card.Click += (s, e) => ProductCard_Click(product);
             picProduct.Click += (s, e) => ProductCard_Click(product);
             lblName.Click += (s, e) => ProductCard_Click(product);
             lblPrice.Click += (s, e) => ProductCard_Click(product);
 
-            // Hover effect
             card.MouseEnter += (s, e) => card.BackColor = Color.FromArgb(252, 125, 116);
             card.MouseLeave += (s, e) => card.BackColor = Color.FromArgb(231, 111, 81);
 
@@ -180,24 +170,19 @@ namespace BTL_LTTQ.GUI
         {
             try
             {
-                // Lấy đường dẫn ảnh từ database
                 string imagePath = product["HinhAnhChung"] != DBNull.Value 
                     ? product["HinhAnhChung"].ToString() 
                     : "";
                 
                 if (string.IsNullOrWhiteSpace(imagePath))
                 {
-                    // Nếu không có ảnh trong database, dùng placeholder
                     return GeneratePlaceholderImage(product["TenHienThi"].ToString());
                 }
                 
-                // Chuyển đổi relative path thành full path
                 string fullPath = GetFullImagePath(imagePath);
                 
-                // Kiểm tra file có tồn tại không
                 if (System.IO.File.Exists(fullPath))
                 {
-                    // Load image vào memory để tránh file lock
                     using (var fileStream = new System.IO.FileStream(fullPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
                     {
                         var memoryStream = new System.IO.MemoryStream();
@@ -208,11 +193,9 @@ namespace BTL_LTTQ.GUI
             }
             catch (Exception ex)
             {
-                // Nếu có lỗi, không hiển thị message để tránh làm phiền người dùng
                 System.Diagnostics.Debug.WriteLine($"Error loading image: {ex.Message}");
             }
             
-            // Fallback to placeholder if anything goes wrong
             return GeneratePlaceholderImage(product["TenHienThi"].ToString());
         }
         
@@ -221,11 +204,9 @@ namespace BTL_LTTQ.GUI
             if (string.IsNullOrWhiteSpace(relativeOrFullPath))
                 return string.Empty;
 
-            // Nếu đã là full path, return ngay
             if (System.IO.Path.IsPathRooted(relativeOrFullPath))
                 return relativeOrFullPath;
 
-            // Convert relative -> full
             string projectRoot = System.IO.Path.GetFullPath(
                 System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\.."));
             return System.IO.Path.Combine(projectRoot, relativeOrFullPath);
@@ -233,13 +214,11 @@ namespace BTL_LTTQ.GUI
 
         private Image GeneratePlaceholderImage(string productName)
         {
-            // Create a simple placeholder image with product initial
             Bitmap bmp = new Bitmap(160, 120);
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 g.Clear(Color.FromArgb(42, 157, 143));
                 
-                // Draw product initial or icon
                 string initial = productName.Length > 0 ? productName.Substring(0, 1).ToUpper() : "?";
                 using (Font font = new Font("Segoe UI", 48F, FontStyle.Bold))
                 {
@@ -261,7 +240,6 @@ namespace BTL_LTTQ.GUI
                 return;
             }
 
-            // Show dialog to input quantity and discount
             using (Form dialog = new Form())
             {
                 dialog.Text = "Thêm vào giỏ hàng";
@@ -362,7 +340,6 @@ namespace BTL_LTTQ.GUI
             decimal tienGiam = (giaBan * quantity) * discount / 100;
             decimal thanhTien = (giaBan * quantity) - tienGiam;
 
-            // Check if product already in cart with same discount
             foreach (DataRow r in _dtGioHang.Rows)
             {
                 if ((int)r["MaCTSP"] == maCTSP && (int)r["GiamGia"] == discount)
@@ -407,16 +384,14 @@ namespace BTL_LTTQ.GUI
             {
                 _dtGioHang.Rows.Clear();
                 CalculateTotal();
-                // Reload dữ liệu sản phẩm từ database để cập nhật số lượng tồn kho
                 LoadData();
                 LoadProductCards(txtSearch.Text);
             }
         }
 
-        // Search functionality
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (txtSearch.ForeColor == Color.Gray) return; // Ignore placeholder text
+            if (txtSearch.ForeColor == Color.Gray) return;
             
             LoadProductCards(txtSearch.Text);
         }

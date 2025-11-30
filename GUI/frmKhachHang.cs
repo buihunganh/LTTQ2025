@@ -87,7 +87,6 @@ namespace BTL_LTTQ.GUI
                 return;
             }
 
-            // Validate dữ liệu
             if (string.IsNullOrWhiteSpace(txtHoTen.Text))
             {
                 MessageBox.Show("Vui lòng nhập tên khách hàng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -190,7 +189,6 @@ namespace BTL_LTTQ.GUI
                         return;
                     }
 
-                    // Title
                     int colCount = dt.Columns.Count;
                     string lastCol = GetExcelColumnName(colCount);
                     Excel.Range titleRange = worksheet.Range["A1", $"{lastCol}1"];
@@ -202,7 +200,6 @@ namespace BTL_LTTQ.GUI
                     titleRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     ReleaseObject(titleRange);
 
-                    // Headers
                     int headerRow = 3;
                     for (int i = 0; i < dt.Columns.Count; i++)
                     {
@@ -216,7 +213,6 @@ namespace BTL_LTTQ.GUI
                     headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     ReleaseObject(headerRange);
 
-                    // Data rows
                     int row = headerRow + 1;
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
@@ -227,7 +223,6 @@ namespace BTL_LTTQ.GUI
                             {
                                 worksheet.Cells[row, j + 1] = value.ToString();
 
-                                // Format currency columns
                                 if (dt.Columns[j].ColumnName == "TongChiTieu")
                                 {
                                     ((Excel.Range)worksheet.Cells[row, j + 1]).NumberFormat = "#,##0";
@@ -238,17 +233,14 @@ namespace BTL_LTTQ.GUI
                         row++;
                     }
 
-                    // Add borders to data range
                     Excel.Range dataRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[row - 1, colCount]];
                     dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
                     dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
                     ReleaseObject(dataRange);
 
-                    // Auto-fit columns
                     worksheet.Columns.AutoFit();
                     worksheet.UsedRange.WrapText = false;
 
-                    // Adjust column widths for better appearance
                     for (int i = 1; i <= colCount; i++)
                     {
                         Excel.Range col = (Excel.Range)worksheet.Columns[i];

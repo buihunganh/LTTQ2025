@@ -90,7 +90,6 @@ namespace BTL_LTTQ
 
                 dgvLichSu.DataSource = data;
 
-                // Tính tổng số lượng nhập từ lịch sử (SoLuong = SoLuongBanDau)
                 int tongNhap = 0;
                 int tongConLai = 0;
                 foreach (DataRow row in data.Rows)
@@ -105,10 +104,8 @@ namespace BTL_LTTQ
                     }
                 }
 
-                // Lấy số lượng tồn kho hiện tại
                 var tonKho = _bll.GetSoLuongTon(_maCTSP);
                 
-                // Hiển thị thông tin tổng hợp
                 lblTitle.Text = $"Lịch sử nhập hàng (Tổng nhập: {tongNhap:N0} | Còn lại: {tongConLai:N0} | Tồn kho: {tonKho:N0})";
             }
             catch (Exception ex)

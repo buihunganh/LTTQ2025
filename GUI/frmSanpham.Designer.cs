@@ -20,8 +20,6 @@
             this.panelRoot = new System.Windows.Forms.Panel();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.grpFilter = new System.Windows.Forms.GroupBox();
-            this.cmbFilterStatus = new System.Windows.Forms.ComboBox();
-            this.lblFilterStatus = new System.Windows.Forms.Label();
             this.cmbFilterPriceType = new System.Windows.Forms.ComboBox();
             this.lblFilterPrice = new System.Windows.Forms.Label();
             this.cmbFilterLoai = new System.Windows.Forms.ComboBox();
@@ -112,8 +110,6 @@
             this.grpFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grpFilter.BackColor = System.Drawing.Color.Transparent;
-            this.grpFilter.Controls.Add(this.cmbFilterStatus);
-            this.grpFilter.Controls.Add(this.lblFilterStatus);
             this.grpFilter.Controls.Add(this.cmbFilterPriceType);
             this.grpFilter.Controls.Add(this.lblFilterPrice);
             this.grpFilter.Controls.Add(this.cmbFilterLoai);
@@ -132,29 +128,6 @@
             this.grpFilter.TabIndex = 3;
             this.grpFilter.TabStop = false;
             this.grpFilter.Text = "Lọc sản phẩm";
-            // 
-            // cmbFilterStatus
-            // 
-            this.cmbFilterStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(57)))), ((int)(((byte)(82)))));
-            this.cmbFilterStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFilterStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbFilterStatus.ForeColor = System.Drawing.Color.White;
-            this.cmbFilterStatus.FormattingEnabled = true;
-            this.cmbFilterStatus.Location = new System.Drawing.Point(737, 52);
-            this.cmbFilterStatus.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cmbFilterStatus.Name = "cmbFilterStatus";
-            this.cmbFilterStatus.Size = new System.Drawing.Size(151, 28);
-            this.cmbFilterStatus.TabIndex = 10;
-            // 
-            // lblFilterStatus
-            // 
-            this.lblFilterStatus.AutoSize = true;
-            this.lblFilterStatus.ForeColor = System.Drawing.Color.Gainsboro;
-            this.lblFilterStatus.Location = new System.Drawing.Point(741, 32);
-            this.lblFilterStatus.Name = "lblFilterStatus";
-            this.lblFilterStatus.Size = new System.Drawing.Size(78, 20);
-            this.lblFilterStatus.TabIndex = 9;
-            this.lblFilterStatus.Text = "Trạng thái:";
             // 
             // cmbFilterPriceType
             // 
@@ -717,8 +690,6 @@
         private System.Windows.Forms.Label lblFilterLoai;
         private System.Windows.Forms.ComboBox cmbFilterPriceType;
         private System.Windows.Forms.Label lblFilterPrice;
-        private System.Windows.Forms.ComboBox cmbFilterStatus;
-        private System.Windows.Forms.Label lblFilterStatus;
         private System.Windows.Forms.DataGridView dgvProducts;
     }
 }
