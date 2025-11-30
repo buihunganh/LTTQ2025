@@ -18,7 +18,7 @@ namespace BTL_LTTQ.BLL
                                JOIN SanPham sp ON ct.MaSP = sp.MaSP
                                JOIN SizeGiay sz ON ct.MaSize = sz.MaSize
                                JOIN MauSac ms ON ct.MaMau = ms.MaMau
-                               WHERE ct.TrangThai = 1 AND ct.SoLuongTon > 0";
+                               WHERE ct.TrangThai = 1";  // Bỏ filter SoLuongTon > 0 để hiện tất cả
                 return dal.ExecuteQuery(sql);
             }
         }

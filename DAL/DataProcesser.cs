@@ -97,9 +97,7 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        /// <summary>
-        /// Đổi mật khẩu cho nhân viên
-        /// </summary>
+        
         public bool ChangePassword(int employeeId, string oldPassword, string newPassword)
         {
             const string sql = @"UPDATE NhanVien SET MatKhau = @newPassword
@@ -116,9 +114,7 @@ namespace BTL_LTTQ.DAL
             return rowsAffected > 0;
         }
 
-        /// <summary>
-        /// Lấy thông tin profile đầy đủ của nhân viên
-        /// </summary>
+        
         public EmployeeProfile GetEmployeeProfile(int employeeId)
         {
             const string sql = @"SELECT MaNV, TaiKhoan, HoTen, SoDienThoai, Email, DiaChi, NgayVaoLam, AnhDaiDien, ISNULL(IsAdmin, 0) AS IsAdmin
@@ -149,9 +145,7 @@ namespace BTL_LTTQ.DAL
             }
         }
 
-        /// <summary>
-        /// Cập nhật thông tin profile của nhân viên
-        /// </summary>
+        
         public bool UpdateEmployeeProfile(int employeeId, string fullName, string phone, string email, string address, string avatarPath)
         {
             const string sql = @"UPDATE NhanVien SET HoTen = @fullName, SoDienThoai = @phone, Email = @email, 
@@ -269,7 +263,6 @@ namespace BTL_LTTQ.DAL
                         cmdCT.Parameters.AddWithValue("@ThanhTien", r["ThanhTien"]);
                         cmdCT.ExecuteNonQuery();
 
-                        // Cập nhật số lượng tồn kho VÀ giá nhập mới nhất
                         string sqlUpd = @"UPDATE ChiTietSanPham 
                                           SET SoLuongTon = ISNULL(SoLuongTon, 0) + @SL, 
                                               GiaNhap = @GiaNhap 
@@ -348,7 +341,6 @@ namespace BTL_LTTQ.DAL
                              AND (@TenKH = '' OR kh.HoTen LIKE N'%' + @TenKH + '%')
                            ORDER BY hd.NgayLap DESC";
 
-            // Chuyển đổi ngày để lấy trọn vẹn khoảng thời gian (00:00:00 đến 23:59:59)
             string fromDate = tuNgay.ToString("yyyy-MM-dd 00:00:00");
             string toDate = denNgay.ToString("yyyy-MM-dd 23:59:59");
 
@@ -375,7 +367,6 @@ namespace BTL_LTTQ.DAL
                         adapter.Fill(dtChiTiet);
                     }
 
-                    // Cộng lại số lượng vào kho
                     foreach (DataRow row in dtChiTiet.Rows)
                     {
                         string sqlUpdate = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
@@ -385,13 +376,11 @@ namespace BTL_LTTQ.DAL
                         cmdUpdate.ExecuteNonQuery();
                     }
 
-                    // Xóa chi tiết hóa đơn
                     string sqlDeleteCT = "DELETE FROM ChiTietHoaDon WHERE MaHD = @MaHD";
                     SqlCommand cmdDeleteCT = new SqlCommand(sqlDeleteCT, connection, transaction);
                     cmdDeleteCT.Parameters.AddWithValue("@MaHD", maHD);
                     cmdDeleteCT.ExecuteNonQuery();
 
-                    // Xóa hóa đơn
                     string sqlDeleteHD = "DELETE FROM HoaDon WHERE MaHD = @MaHD";
                     SqlCommand cmdDeleteHD = new SqlCommand(sqlDeleteHD, connection, transaction);
                     cmdDeleteHD.Parameters.AddWithValue("@MaHD", maHD);
@@ -415,7 +404,6 @@ namespace BTL_LTTQ.DAL
             {
                 try
                 {
-                    // 1. Lấy chi tiết hóa đơn cũ để cộng lại số lượng vào kho
                     string sqlGetOld = @"SELECT MaCTSP, SoLuong FROM ChiTietHoaDon WHERE MaHD = @MaHD";
                     SqlCommand cmdGetOld = new SqlCommand(sqlGetOld, connection, transaction);
                     cmdGetOld.Parameters.AddWithValue("@MaHD", maHD);
@@ -425,7 +413,6 @@ namespace BTL_LTTQ.DAL
                         adapter.Fill(dtOld);
                     }
 
-                    // 2. Cộng lại số lượng vào kho cho các sản phẩm cũ
                     foreach (DataRow row in dtOld.Rows)
                     {
                         string sqlUpdate = "UPDATE ChiTietSanPham SET SoLuongTon = SoLuongTon + @SL WHERE MaCTSP = @MaCTSP";
@@ -435,13 +422,11 @@ namespace BTL_LTTQ.DAL
                         cmdUpdate.ExecuteNonQuery();
                     }
 
-                    // 3. Xóa chi tiết hóa đơn cũ
                     string sqlDeleteCT = "DELETE FROM ChiTietHoaDon WHERE MaHD = @MaHD";
                     SqlCommand cmdDeleteCT = new SqlCommand(sqlDeleteCT, connection, transaction);
                     cmdDeleteCT.Parameters.AddWithValue("@MaHD", maHD);
                     cmdDeleteCT.ExecuteNonQuery();
 
-                    // 4. Cập nhật thông tin hóa đơn
                     string sqlUpdateHD = @"UPDATE HoaDon 
                                            SET MaKH = @MaKH, TongTien = @TongTien, GiamGia = @GiamGia, ThanhToan = @ThanhToan
                                            WHERE MaHD = @MaHD";
@@ -453,7 +438,6 @@ namespace BTL_LTTQ.DAL
                     cmdUpdateHD.Parameters.AddWithValue("@ThanhToan", thanhToan);
                     cmdUpdateHD.ExecuteNonQuery();
 
-                    // 5. Thêm chi tiết mới và trừ số lượng trong kho
                     foreach (DataRow r in dtChiTiet.Rows)
                     {
                         string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien) 
@@ -481,7 +465,6 @@ namespace BTL_LTTQ.DAL
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    // Log lỗi để debug
                     System.Diagnostics.Debug.WriteLine($"Lỗi cập nhật hóa đơn: {ex.Message}");
                     System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                     return false;
