@@ -28,7 +28,7 @@ namespace BTL_LTTQ.BLL
                         ctsp.GiaBan,
                         ctsp.SoLuongTon,
                         ctsp.TrangThai,
-                        sp.HinhAnhChung,
+                        ctsp.HinhAnhChung,
                         lg.TenLoai
                     FROM ChiTietSanPham ctsp
                     INNER JOIN SanPham sp ON ctsp.MaSP = sp.MaSP
@@ -103,7 +103,7 @@ namespace BTL_LTTQ.BLL
                         ctsp.GiaBan,
                         ctsp.SoLuongTon,
                         ctsp.TrangThai,
-                        sp.HinhAnhChung,
+                        ctsp.HinhAnhChung,
                         lg.TenLoai
                     FROM ChiTietSanPham ctsp
                     INNER JOIN SanPham sp ON ctsp.MaSP = sp.MaSP
@@ -229,7 +229,7 @@ namespace BTL_LTTQ.BLL
                         ctsp.GiaBan,
                         ctsp.SoLuongTon,
                         ctsp.TrangThai,
-                        sp.HinhAnhChung,
+                        ctsp.HinhAnhChung,
                         lg.TenLoai
                     FROM ChiTietSanPham ctsp
                     INNER JOIN SanPham sp ON ctsp.MaSP = sp.MaSP
@@ -247,12 +247,12 @@ namespace BTL_LTTQ.BLL
                     {
                         new SqlParameter("@brandName", SqlDbType.NVarChar) { Value = brandName.Trim() }
                     };
-                    
+
                     System.Diagnostics.Debug.WriteLine($"GetProductsByBrand SQL - brandName: '{brandName.Trim()}'");
-                    
+
                     var table = db.ExecuteQuery(sql, CommandType.Text, parameters);
                     var result = ConvertToProductList(table);
-                    
+
                     System.Diagnostics.Debug.WriteLine($"GetProductsByBrand returned {result.Count} products");
                     return result;
                 }
@@ -320,8 +320,8 @@ namespace BTL_LTTQ.BLL
                         throw new Exception($"Mã SKU '{product.MaSKU}' đã tồn tại trong hệ thống!");
 
                     const string insertSql = @"
-                        INSERT INTO ChiTietSanPham (MaSP, MaSize, MaMau, MaSKU, GiaNhap, GiaBan, SoLuongTon, TrangThai)
-                        VALUES (@MaSP, @MaSize, @MaMau, @MaSKU, @GiaNhap, @GiaBan, @SoLuongTon, @TrangThai)";
+                        INSERT INTO ChiTietSanPham (MaSP, MaSize, MaMau, MaSKU, GiaNhap, GiaBan, SoLuongTon, HinhAnhChung, TrangThai)
+                        VALUES (@MaSP, @MaSize, @MaMau, @MaSKU, @GiaNhap, @GiaBan, @SoLuongTon, @HinhAnhChung, @TrangThai)";
 
                     var parameters = new[]
                     {
@@ -332,6 +332,7 @@ namespace BTL_LTTQ.BLL
                         new SqlParameter("@GiaNhap", SqlDbType.Decimal) { Value = product.GiaNhap },
                         new SqlParameter("@GiaBan", SqlDbType.Decimal) { Value = product.GiaBan },
                         new SqlParameter("@SoLuongTon", SqlDbType.Int) { Value = product.SoLuongTon },
+                        new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)product.HinhAnhChung ?? DBNull.Value },
                         new SqlParameter("@TrangThai", SqlDbType.Bit) { Value = product.TrangThai }
                     };
 
@@ -368,7 +369,7 @@ namespace BTL_LTTQ.BLL
                     const string sql = @"
                         UPDATE ChiTietSanPham 
                         SET MaSP = @MaSP, MaSize = @MaSize, MaMau = @MaMau, MaSKU = @MaSKU,
-                            GiaNhap = @GiaNhap, GiaBan = @GiaBan, SoLuongTon = @SoLuongTon, TrangThai = @TrangThai
+                            GiaNhap = @GiaNhap, GiaBan = @GiaBan, SoLuongTon = @SoLuongTon, HinhAnhChung = @HinhAnhChung, TrangThai = @TrangThai
                         WHERE MaCTSP = @MaCTSP";
 
                     var parameters = new[]
@@ -381,6 +382,7 @@ namespace BTL_LTTQ.BLL
                         new SqlParameter("@GiaNhap", SqlDbType.Decimal) { Value = product.GiaNhap },
                         new SqlParameter("@GiaBan", SqlDbType.Decimal) { Value = product.GiaBan },
                         new SqlParameter("@SoLuongTon", SqlDbType.Int) { Value = product.SoLuongTon },
+                        new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)product.HinhAnhChung ?? DBNull.Value },
                         new SqlParameter("@TrangThai", SqlDbType.Bit) { Value = product.TrangThai }
                     };
 
@@ -393,20 +395,20 @@ namespace BTL_LTTQ.BLL
             }
         }
 
-        public bool UpdateProductImage(int maSP, string hinhAnhChung)
+        public bool UpdateProductImage(int maCTSP, string hinhAnhChung)
         {
             try
             {
-                const string sql = "UPDATE SanPham SET HinhAnhChung = @HinhAnhChung WHERE MaSP = @MaSP";
-                
+                const string sql = "UPDATE ChiTietSanPham SET HinhAnhChung = @HinhAnhChung WHERE MaCTSP = @MaCTSP";
+
                 using (var db = new DataProcesser())
                 {
                     var parameters = new[]
                     {
                         new SqlParameter("@HinhAnhChung", SqlDbType.NVarChar) { Value = (object)hinhAnhChung ?? DBNull.Value },
-                        new SqlParameter("@MaSP", SqlDbType.Int) { Value = maSP }
+                        new SqlParameter("@MaCTSP", SqlDbType.Int) { Value = maCTSP }
                     };
-                    
+
                     return db.ExecuteNonQuery(sql, CommandType.Text, parameters) > 0;
                 }
             }
@@ -421,7 +423,7 @@ namespace BTL_LTTQ.BLL
             try
             {
                 System.Diagnostics.Debug.WriteLine($"=== DeleteProduct called for MaCTSP: {maCTSP} ===");
-                
+
                 // Kiểm tra sản phẩm có đang được sử dụng trong hóa đơn không
                 const string checkSql = @"
                     SELECT COUNT(*) 
@@ -435,7 +437,7 @@ namespace BTL_LTTQ.BLL
                     var count = db.ExecuteScalar(checkSql, CommandType.Text, checkParam);
                     int invoiceCount = Convert.ToInt32(count);
                     System.Diagnostics.Debug.WriteLine($"Product in active invoices: {invoiceCount}");
-                    
+
                     if (invoiceCount > 0)
                     {
                         throw new Exception("Không thể xóa sản phẩm này vì đã có trong hóa đơn!");
@@ -449,15 +451,15 @@ namespace BTL_LTTQ.BLL
                         WHERE ctsp.MaCTSP = @MaCTSP";
                     var getInfoParam = new SqlParameter("@MaCTSP", SqlDbType.Int) { Value = maCTSP };
                     var infoTable = db.ExecuteQuery(getInfoSql, CommandType.Text, getInfoParam);
-                    
+
                     if (infoTable.Rows.Count == 0)
                     {
                         throw new Exception("Không tìm thấy sản phẩm!");
                     }
-                    
+
                     int maSP = Convert.ToInt32(infoTable.Rows[0]["MaSP"]);
-                    string imagePath = infoTable.Rows[0]["HinhAnhChung"] != DBNull.Value 
-                        ? infoTable.Rows[0]["HinhAnhChung"].ToString() 
+                    string imagePath = infoTable.Rows[0]["HinhAnhChung"] != DBNull.Value
+                        ? infoTable.Rows[0]["HinhAnhChung"].ToString()
                         : string.Empty;
                     System.Diagnostics.Debug.WriteLine($"MaSP: {maSP}, Image path: '{imagePath}'");
 
@@ -467,7 +469,7 @@ namespace BTL_LTTQ.BLL
                     System.Diagnostics.Debug.WriteLine($"Executing DELETE from ChiTietSanPham: {deleteCTSPSql}");
                     int rowsAffected = db.ExecuteNonQuery(deleteCTSPSql, CommandType.Text, deleteCTSPParam);
                     System.Diagnostics.Debug.WriteLine($"Rows affected in ChiTietSanPham: {rowsAffected}");
-                    
+
                     if (rowsAffected == 0)
                     {
                         System.Diagnostics.Debug.WriteLine("No rows deleted from ChiTietSanPham!");
@@ -494,7 +496,7 @@ namespace BTL_LTTQ.BLL
                     {
                         System.Diagnostics.Debug.WriteLine("Other variants exist, keeping SanPham record");
                     }
-                    
+
                     System.Diagnostics.Debug.WriteLine("=== DeleteProduct completed successfully ===");
                     return (true, imagePath);
                 }
