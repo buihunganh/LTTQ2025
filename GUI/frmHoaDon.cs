@@ -21,6 +21,7 @@ namespace BTL_LTTQ.GUI
         private string _sdt = "";
         private string _diaChi = "";
         private decimal _tongTienSo = 0;
+        private decimal _giamGiaPhanTram = 0;
 
         private DataTable _dtChiTiet;
         private int _idHoaDonVuaLuu = 0;
@@ -71,19 +72,24 @@ namespace BTL_LTTQ.GUI
                 _diaChi = r["DiaChi"].ToString();
                 _tongTienSo = r["ThanhToan"] != DBNull.Value ? Convert.ToDecimal(r["ThanhToan"]) : 0;
                 _idHoaDonVuaLuu = maHD;
+                
+                decimal tongTienHang = r["TongTien"] != DBNull.Value ? Convert.ToDecimal(r["TongTien"]) : 0;
+                decimal giamGiaTien = r["GiamGia"] != DBNull.Value ? Convert.ToDecimal(r["GiamGia"]) : 0;
+                if (tongTienHang > 0)
+                {
+                    _giamGiaPhanTram = (giamGiaTien / tongTienHang) * 100;
+                }
             }
 
             _dtChiTiet = dtChiTiet;
             LoadInitData(isViewOnly: true);
             
-            // Hiển thị tiền khách trả và tiền thừa nếu có
             if (dtChung.Rows.Count > 0)
             {
                 DataRow r = dtChung.Rows[0];
                 if (r["TienKhachTra"] != DBNull.Value)
                 {
-                    decimal tienKhachTra = Convert.ToDecimal(r["TienKhachTra"]);
-                    txtTienKhachTra.Text = tienKhachTra.ToString("N0");
+                    txtTienKhachTra.Text = Convert.ToDecimal(r["TienKhachTra"]).ToString("N0");
                 }
                 if (r["TienThua"] != DBNull.Value)
                 {
@@ -107,8 +113,6 @@ namespace BTL_LTTQ.GUI
             }
         }
 
-
-
         private void LoadInitData(bool isViewOnly)
         {
             txtMaHD.Text = _maHDString;
@@ -131,11 +135,26 @@ namespace BTL_LTTQ.GUI
                     txtDiaChi.Text = _diaChi;
                     txtSDT.ReadOnly = true;
                     txtDiaChi.ReadOnly = true;
+                    
+                    DataTable dtKH = _bll.GetKhachHang();
+                    foreach (DataRow r in dtKH.Rows)
+                    {
+                        if (Convert.ToInt32(r["MaKH"]) == _maKH)
+                        {
+                            string hangThanhVien = r["HangThanhVien"] != DBNull.Value ? r["HangThanhVien"].ToString() : "";
+                            txtHangThanhVien.Text = hangThanhVien;
+                            break;
+                        }
+                    }
+                    
+                    txtHangThanhVien.ReadOnly = true;
+                    txtGiamGiaBill.ReadOnly = true;
                     lblTongTien.Text = _tongTienSo.ToString("N0") + " VNĐ";
                     
-                    // Hiển thị tiền khách trả và tiền thừa nhưng chỉ đọc
                     txtTienKhachTra.ReadOnly = true;
                     txtTienKhachTra.BackColor = Color.FromArgb(240, 240, 240);
+                    
+                    txtGiamGiaBill.Text = _giamGiaPhanTram.ToString("F0");
 
                     btnLuu.Visible = false;
                     btnIn.Enabled = true;
@@ -151,6 +170,8 @@ namespace BTL_LTTQ.GUI
                     cboKhachHang.SelectedIndex = -1;
                     txtSDT.ReadOnly = false;
                     txtDiaChi.ReadOnly = false;
+                    txtHangThanhVien.ReadOnly = true;
+                    txtGiamGiaBill.ReadOnly = false;
                 }
             }
             catch { }
@@ -193,14 +214,41 @@ namespace BTL_LTTQ.GUI
             catch { }
         }
 
+        private decimal GetGiamGiaByHang(string hangThanhVien)
+        {
+            if (string.IsNullOrEmpty(hangThanhVien)) return 0;
+            
+            string hang = hangThanhVien.ToLower().Trim();
+            if (hang.Contains("kim cương") || hang.Contains("kim cuong")) return 7;
+            if (hang.Contains("vàng") || hang.Contains("vang")) return 5;
+            if (hang.Contains("bạc") || hang.Contains("bac")) return 3;
+            return 0;
+        }
+        
         private void CalculateTotal()
         {
             decimal tongTienHang = 0;
             foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
 
-            lblTongTien.Text = tongTienHang.ToString("N0") + " VNĐ";
+            decimal giamGiaPhanTram = 0;
+            try
+            {
+                string giamGiaText = txtGiamGiaBill.Text.Trim();
+                if (!string.IsNullOrEmpty(giamGiaText))
+                {
+                    giamGiaPhanTram = Convert.ToDecimal(giamGiaText);
+                    if (giamGiaPhanTram < 0) giamGiaPhanTram = 0;
+                    if (giamGiaPhanTram > 100) giamGiaPhanTram = 100;
+                }
+            }
+            catch { }
             
-            // Tính tiền thừa nếu đã nhập tiền khách trả
+            decimal giamGiaTien = tongTienHang * giamGiaPhanTram / 100;
+            decimal tongTienSauGiam = tongTienHang - giamGiaTien;
+            
+            _tongTienSo = tongTienSauGiam;
+            lblTongTien.Text = tongTienSauGiam.ToString("N0") + " VNĐ";
+            
             CalculateTienThua();
         }
         
@@ -208,9 +256,6 @@ namespace BTL_LTTQ.GUI
         {
             try
             {
-                decimal tongTienHang = 0;
-                foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
-                
                 string tienKhachTraText = txtTienKhachTra.Text.Replace(",", "").Replace(".", "").Trim();
                 if (string.IsNullOrWhiteSpace(tienKhachTraText))
                 {
@@ -220,23 +265,20 @@ namespace BTL_LTTQ.GUI
                 }
                 
                 decimal tienKhachTra = Convert.ToDecimal(tienKhachTraText);
-                decimal tienThua = tienKhachTra - tongTienHang;
+                decimal tienThua = tienKhachTra - _tongTienSo;
                 
                 if (tienThua < 0)
                 {
-                    // Tiền khách trả < tổng tiền => thiếu tiền
                     lblTienThuaValue.Text = Math.Abs(tienThua).ToString("N0") + " VNĐ (Thiếu)";
                     lblTienThuaValue.ForeColor = Color.Red;
                 }
                 else if (tienThua == 0)
                 {
-                    // Vừa đủ
                     lblTienThuaValue.Text = "0 VNĐ";
                     lblTienThuaValue.ForeColor = Color.Lime;
                 }
                 else
                 {
-                    // Tiền thừa
                     lblTienThuaValue.Text = tienThua.ToString("N0") + " VNĐ";
                     lblTienThuaValue.ForeColor = Color.Lime;
                 }
@@ -250,7 +292,6 @@ namespace BTL_LTTQ.GUI
         
         private void TxtTienKhachTra_TextChanged(object sender, EventArgs e)
         {
-            // Format số tiền khi nhập
             if (string.IsNullOrWhiteSpace(txtTienKhachTra.Text))
             {
                 CalculateTienThua();
@@ -270,7 +311,6 @@ namespace BTL_LTTQ.GUI
                 int cursorPos = txtTienKhachTra.SelectionStart;
                 txtTienKhachTra.Text = value.ToString("N0");
                 
-                // Giữ vị trí con trỏ
                 int newPos = cursorPos + (txtTienKhachTra.Text.Length - text.Length);
                 if (newPos < 0) newPos = 0;
                 if (newPos > txtTienKhachTra.Text.Length) newPos = txtTienKhachTra.Text.Length;
@@ -278,15 +318,11 @@ namespace BTL_LTTQ.GUI
                 
                 CalculateTienThua();
             }
-            catch
-            {
-                // Nếu không parse được, giữ nguyên text
-            }
+            catch { }
         }
         
         private void TxtTienKhachTra_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Chỉ cho phép nhập số và phím điều khiển
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true;
@@ -300,7 +336,6 @@ namespace BTL_LTTQ.GUI
                 DataRowView drv = (DataRowView)cboKhachHang.SelectedItem;
                 txtMaKH.Text = drv["MaKH"].ToString();
                 
-                // Đánh dấu đang cập nhật từ ComboBox để tránh vòng lặp
                 _isUpdatingFromComboBox = true;
                 txtSDT.Text = drv["SoDienThoai"].ToString();
                 _isUpdatingFromComboBox = false;
@@ -308,6 +343,14 @@ namespace BTL_LTTQ.GUI
                 txtDiaChi.Text = drv["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(drv["DiaChi"].ToString())
                     ? drv["DiaChi"].ToString()
                     : "Khách tại quầy";
+                
+                string hangThanhVien = drv["HangThanhVien"] != DBNull.Value ? drv["HangThanhVien"].ToString() : "";
+                txtHangThanhVien.Text = hangThanhVien;
+                
+                decimal giamGiaPhanTram = GetGiamGiaByHang(hangThanhVien);
+                txtGiamGiaBill.Text = giamGiaPhanTram.ToString("F0");
+                
+                CalculateTotal();
             }
         }
 
@@ -351,9 +394,7 @@ namespace BTL_LTTQ.GUI
                 return;
             }
             
-            // Kiểm tra tiền khách trả
-            decimal tongTienHang = 0;
-            foreach (DataRow r in _dtChiTiet.Rows) tongTienHang += Convert.ToDecimal(r["ThanhTien"]);
+            CalculateTotal();
             
             string tienKhachTraText = txtTienKhachTra.Text.Replace(",", "").Replace(".", "").Trim();
             if (string.IsNullOrWhiteSpace(tienKhachTraText))
@@ -364,9 +405,9 @@ namespace BTL_LTTQ.GUI
             }
             
             decimal tienKhachTra = Convert.ToDecimal(tienKhachTraText);
-            if (tienKhachTra < tongTienHang)
+            if (tienKhachTra < _tongTienSo)
             {
-                decimal thieu = tongTienHang - tienKhachTra;
+                decimal thieu = _tongTienSo - tienKhachTra;
                 MessageBox.Show($"Tiền khách trả không đủ!\n\nCòn thiếu: {thieu:N0} VNĐ", 
                     "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtTienKhachTra.Focus();
@@ -380,8 +421,24 @@ namespace BTL_LTTQ.GUI
 
                 decimal tongHang = 0;
                 foreach (DataRow r in _dtChiTiet.Rows) tongHang += Convert.ToDecimal(r["ThanhTien"]);
-                decimal thanhToan = tongHang;
-                decimal tienThua = tienKhachTra - tongHang;
+                
+                decimal giamGiaPhanTramLuu = 0;
+                try
+                {
+                    string giamGiaText = txtGiamGiaBill.Text.Trim();
+                    if (!string.IsNullOrEmpty(giamGiaText))
+                    {
+                        giamGiaPhanTramLuu = Convert.ToDecimal(giamGiaText);
+                        if (giamGiaPhanTramLuu < 0) giamGiaPhanTramLuu = 0;
+                        if (giamGiaPhanTramLuu > 100) giamGiaPhanTramLuu = 100;
+                    }
+                }
+                catch { }
+                
+                decimal giamGiaTienLuu = tongHang * giamGiaPhanTramLuu / 100;
+                decimal tongTienSauGiamLuu = tongHang - giamGiaTienLuu;
+                decimal thanhToan = tongTienSauGiamLuu;
+                decimal tienThua = tienKhachTra - tongTienSauGiamLuu;
 
                 if (_isEditMode && _idHoaDonVuaLuu > 0)
                 {
@@ -432,7 +489,7 @@ namespace BTL_LTTQ.GUI
                     string newDiaChi = txtDiaChi.Text.Trim();
                     _bll.UpdateKhachHangInfo(maKH, newSDT, newDiaChi);
 
-                    bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, 0, thanhToan, tienKhachTra, tienThua, dtChiTietMoi);
+                    bool success = _bll.CapNhatHoaDon(_idHoaDonVuaLuu, maKH, tongHang, giamGiaTienLuu, thanhToan, tienKhachTra, tienThua, dtChiTietMoi);
                     if (success)
                     {
                         MessageBox.Show("Cập nhật hóa đơn thành công!");
@@ -445,6 +502,8 @@ namespace BTL_LTTQ.GUI
                         btnIn.Enabled = true;
                         txtSDT.ReadOnly = true;
                         txtDiaChi.ReadOnly = true;
+                        txtHangThanhVien.ReadOnly = true;
+                        txtGiamGiaBill.ReadOnly = true;
                         cboKhachHang.Enabled = false;
                         dgvChiTiet.ReadOnly = true;
                         btnThemKhach.Visible = false;
@@ -456,7 +515,7 @@ namespace BTL_LTTQ.GUI
                 }
                 else
                 {
-                    _idHoaDonVuaLuu = _bll.ThanhToan(_maHDString, maKH, maNV, tongHang, 0, thanhToan, tienKhachTra, tienThua, _dtChiTiet);
+                    _idHoaDonVuaLuu = _bll.ThanhToan(_maHDString, maKH, maNV, tongHang, giamGiaTienLuu, thanhToan, tienKhachTra, tienThua, _dtChiTiet);
 
                     if (_idHoaDonVuaLuu > 0)
                     {
@@ -591,6 +650,8 @@ namespace BTL_LTTQ.GUI
                 btnThemKhach.Visible = true;
                 txtSDT.ReadOnly = false;
                 txtDiaChi.ReadOnly = false;
+                txtHangThanhVien.ReadOnly = true;
+                txtGiamGiaBill.ReadOnly = false;
                 dgvChiTiet.ReadOnly = false;
                 btnSua.Visible = false;
                 btnLuu.Visible = true;
@@ -698,17 +759,25 @@ namespace BTL_LTTQ.GUI
 
         private bool _isUpdatingFromComboBox = false;
 
+        private void TxtGiamGiaBill_TextChanged(object sender, EventArgs e)
+        {
+            CalculateTotal();
+        }
+        
+        private void TxtGiamGiaBill_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+        }
+        
         private void TxtSDT_TextChanged(object sender, EventArgs e)
         {
-            // Bỏ qua nếu đang cập nhật từ ComboBox để tránh vòng lặp
             if (_isUpdatingFromComboBox) return;
-            
-            // Chỉ tìm kiếm khi txtSDT có thể nhập (không phải ReadOnly)
             if (txtSDT.ReadOnly) return;
             
             string sdt = txtSDT.Text.Trim();
-            
-            // Chỉ tìm khi có ít nhất 7 số (số điện thoại hợp lệ)
             if (sdt.Length >= 7)
             {
                 try
@@ -716,14 +785,11 @@ namespace BTL_LTTQ.GUI
                     DataRow khachHang = _bll.GetKhachHangByPhone(sdt);
                     if (khachHang != null)
                     {
-                        // Tìm và chọn khách hàng trong ComboBox
                         int maKH = Convert.ToInt32(khachHang["MaKH"]);
                         
-                        // Tạm thời tắt event để tránh vòng lặp
                         cboKhachHang.SelectedIndexChanged -= CboKhachHang_SelectedIndexChanged;
                         _isUpdatingFromComboBox = true;
                         
-                        // Tìm và chọn khách hàng
                         for (int i = 0; i < cboKhachHang.Items.Count; i++)
                         {
                             DataRowView drv = (DataRowView)cboKhachHang.Items[i];
@@ -734,21 +800,24 @@ namespace BTL_LTTQ.GUI
                             }
                         }
                         
-                        // Điền thông tin
                         txtMaKH.Text = maKH.ToString();
                         txtDiaChi.Text = khachHang["DiaChi"] != DBNull.Value && !string.IsNullOrEmpty(khachHang["DiaChi"].ToString())
                             ? khachHang["DiaChi"].ToString()
                             : "Khách tại quầy";
                         
-                        // Bật lại event
+                        string hangThanhVien = khachHang["HangThanhVien"] != DBNull.Value ? khachHang["HangThanhVien"].ToString() : "";
+                        txtHangThanhVien.Text = hangThanhVien;
+                        
+                        decimal giamGiaPhanTram = GetGiamGiaByHang(hangThanhVien);
+                        txtGiamGiaBill.Text = giamGiaPhanTram.ToString("F0");
+                        
                         _isUpdatingFromComboBox = false;
                         cboKhachHang.SelectedIndexChanged += CboKhachHang_SelectedIndexChanged;
+                        CalculateTotal();
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    // Không hiển thị lỗi để tránh làm phiền người dùng
-                    System.Diagnostics.Debug.WriteLine("Lỗi tìm khách hàng: " + ex.Message);
                     _isUpdatingFromComboBox = false;
                 }
             }

@@ -227,7 +227,6 @@ namespace BTL_LTTQ.GUI
                             {
                                 worksheet.Cells[row, j + 1] = value.ToString();
 
-                                // Format currency columns
                                 if (dt.Columns[j].ColumnName == "TongChiTieu")
                                 {
                                     ((Excel.Range)worksheet.Cells[row, j + 1]).NumberFormat = "#,##0";
@@ -238,7 +237,6 @@ namespace BTL_LTTQ.GUI
                         row++;
                     }
 
-                    // Add borders to data range
                     Excel.Range dataRange = worksheet.Range[worksheet.Cells[headerRow, 1], worksheet.Cells[row - 1, colCount]];
                     dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
                     dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
@@ -248,7 +246,6 @@ namespace BTL_LTTQ.GUI
                     worksheet.Columns.AutoFit();
                     worksheet.UsedRange.WrapText = false;
 
-                    // Adjust column widths for better appearance
                     for (int i = 1; i <= colCount; i++)
                     {
                         Excel.Range col = (Excel.Range)worksheet.Columns[i];

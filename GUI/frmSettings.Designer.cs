@@ -73,6 +73,7 @@
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelMain.SuspendLayout();
             this.panelContent.SuspendLayout();
             this.panelRight.SuspendLayout();
@@ -268,6 +269,7 @@
             // 
             this.panelProfileSection.AutoScroll = true;
             this.panelProfileSection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(56)))), ((int)(((byte)(82)))));
+            this.panelProfileSection.Controls.Add(this.label1);
             this.panelProfileSection.Controls.Add(this.picAvatar);
             this.panelProfileSection.Controls.Add(this.btnUploadAvatar);
             this.panelProfileSection.Controls.Add(this.btnSaveProfile);
@@ -510,6 +512,17 @@
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Cài đặt";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.Gainsboro;
+            this.label1.Location = new System.Drawing.Point(30, 477);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(120, 23);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Ngày vào làm";
+            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -572,5 +585,6 @@
         private System.Windows.Forms.Label lblNewPassword;
         private System.Windows.Forms.TextBox txtOldPassword;
         private System.Windows.Forms.Label lblOldPassword;
+        private System.Windows.Forms.Label label1;
     }
 }

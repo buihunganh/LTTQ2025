@@ -35,6 +35,7 @@ namespace BTL_LTTQ.BLL
                     INNER JOIN SizeGiay sz ON ctsp.MaSize = sz.MaSize
                     INNER JOIN MauSac ms ON ctsp.MaMau = ms.MaMau
                     INNER JOIN LoaiGiay lg ON sp.MaLoai = lg.MaLoai
+                    LEFT JOIN ThuongHieu th ON sp.MaThuongHieu = th.MaThuongHieu
                     WHERE ctsp.TrangThai = 1 AND sp.TrangThai = 1
                     ORDER BY sp.TenGiay, sz.KichCo";
 
@@ -114,6 +115,7 @@ namespace BTL_LTTQ.BLL
                     INNER JOIN SizeGiay sz ON ctsp.MaSize = sz.MaSize
                     INNER JOIN MauSac ms ON ctsp.MaMau = ms.MaMau
                     INNER JOIN LoaiGiay lg ON sp.MaLoai = lg.MaLoai
+                    LEFT JOIN ThuongHieu th ON sp.MaThuongHieu = th.MaThuongHieu
                     {wherePart}
                     ORDER BY sp.TenGiay, sz.KichCo";
 
@@ -550,6 +552,21 @@ namespace BTL_LTTQ.BLL
             }
         }
 
+        private int GetMaThuongHieuByTen(string tenThuongHieu)
+        {
+            if (string.IsNullOrWhiteSpace(tenThuongHieu))
+                return 1;
+            
+            string ten = tenThuongHieu.Trim().ToLower();
+            if (ten.Contains("nike")) return 1;
+            if (ten.Contains("adidas")) return 2;
+            if (ten.Contains("puma")) return 3;
+            if (ten.Contains("converse")) return 4;
+            if (ten.Contains("vans")) return 5;
+            if (ten.Contains("balenciaga")) return 6;
+            return 1;
+        }
+
         public int EnsureBaseProduct(string tenGiay, int maLoai, string moTa)
         {
             if (string.IsNullOrWhiteSpace(tenGiay))
@@ -576,6 +593,9 @@ namespace BTL_LTTQ.BLL
                         return Convert.ToInt32(maSpObj);
                 }
 
+                string tenThuongHieu = tenGiay.Trim().Split(' ').FirstOrDefault() ?? "";
+                int maThuongHieu = GetMaThuongHieuByTen(tenThuongHieu);
+
                 const string insertSql = @"
                         INSERT INTO SanPham (TenGiay, MaLoai, MaThuongHieu, MoTa, TrangThai)
                         VALUES (@TenGiay, @MaLoai, @MaThuongHieu, @MoTa, 1);
@@ -585,7 +605,7 @@ namespace BTL_LTTQ.BLL
                 {
                         new SqlParameter("@TenGiay", SqlDbType.NVarChar, 200) { Value = tenGiay },
                         new SqlParameter("@MaLoai", SqlDbType.Int) { Value = maLoai },
-                        new SqlParameter("@MaThuongHieu", SqlDbType.Int) { Value = 1 }, // tạm mặc định 1
+                        new SqlParameter("@MaThuongHieu", SqlDbType.Int) { Value = maThuongHieu },
                         new SqlParameter("@MoTa", SqlDbType.NVarChar) { Value = (object)moTa ?? DBNull.Value }
                     };
 

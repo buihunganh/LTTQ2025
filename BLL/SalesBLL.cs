@@ -43,7 +43,7 @@ namespace BTL_LTTQ.BLL
         {
             using (var dal = new DataProcesser())
             {
-                return dal.ExecuteQuery("SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi FROM KhachHang WHERE TrangThai = 1");
+                return dal.ExecuteQuery("SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi, ISNULL(HangThanhVien, '') AS HangThanhVien FROM KhachHang WHERE TrangThai = 1");
             }
         }
 
@@ -51,7 +51,7 @@ namespace BTL_LTTQ.BLL
         {
             using (var dal = new DataProcesser())
             {
-                string sql = @"SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi 
+                string sql = @"SELECT MaKH, HoTen, SoDienThoai, ISNULL(DiaChi, '') AS DiaChi, ISNULL(HangThanhVien, '') AS HangThanhVien 
                                FROM KhachHang 
                                WHERE SoDienThoai = @SoDienThoai AND TrangThai = 1";
                 var result = dal.ExecuteQuery(sql, System.Data.CommandType.Text,
