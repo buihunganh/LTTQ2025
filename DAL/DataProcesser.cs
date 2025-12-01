@@ -195,8 +195,9 @@ namespace BTL_LTTQ.DAL
 
         public int ThemKhachHangNhanh(string hoTen, string sdt)
         {
-            string sql = @"INSERT INTO KhachHang(HoTen, SoDienThoai, DiemTichLuy, TrangThai) 
-                           VALUES (@Ten, @SDT, 0, 1); SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            
+            string sql = @"INSERT INTO KhachHang(HoTen, SoDienThoai, DiemTichLuy, TongChiTieu, HangThanhVien, TrangThai) 
+                           VALUES (@Ten, @SDT, 0, 0, N'Thành viên', 1); SELECT CAST(SCOPE_IDENTITY() AS INT);";
             using (var connection = CreateConnection())
             using (var command = new SqlCommand(sql, connection))
             {
@@ -374,7 +375,7 @@ namespace BTL_LTTQ.DAL
                             cmdUpdateLo.ExecuteNonQuery();
                         }
 
-                        // Tính giá vốn trung bình (weighted average) từ các lô đã trừ
+                        // Tính giá vốn trung bình từ các lô đã trừ
                         decimal giaVonTrungBinh = soLuongDaTru > 0 ? tongGiaVon / soLuongDaTru : 0;
 
                         // Lưu chi tiết hóa đơn với giá vốn theo FIFO
@@ -483,13 +484,13 @@ namespace BTL_LTTQ.DAL
                         adapter.Fill(dtChiTiet);
                     }
 
-                    // Hoàn trả hàng vào kho (tạo lô hàng hoàn trả)
+                    // Hoàn trả hàng vào kho 
                     foreach (DataRow row in dtChiTiet.Rows)
                     {
                         int maCTSP = Convert.ToInt32(row["MaCTSP"]);
                         int soLuong = Convert.ToInt32(row["SoLuong"]);
                         
-                        // Lấy giá vốn từ ChiTietHoaDon (đã lưu khi bán)
+                        // Lấy giá vốn từ ChiTietHoaDon 
                         string sqlGetGiaVon = "SELECT GiaVon FROM ChiTietHoaDon WHERE MaHD = @MaHD AND MaCTSP = @MaCTSP";
                         SqlCommand cmdGetGiaVon = new SqlCommand(sqlGetGiaVon, connection, transaction);
                         cmdGetGiaVon.Parameters.AddWithValue("@MaHD", maHD);
@@ -633,7 +634,7 @@ namespace BTL_LTTQ.DAL
                     cmdUpdateHD.Parameters.AddWithValue("@TienThua", tienThua);
                     cmdUpdateHD.ExecuteNonQuery();
 
-                    // Bán hàng mới theo FIFO
+                    // Bán hàng theo FIFO
                     foreach (DataRow r in dtChiTiet.Rows)
                     {
                         int maCTSP = Convert.ToInt32(r["MaCTSP"]);
@@ -641,7 +642,7 @@ namespace BTL_LTTQ.DAL
                         decimal tongGiaVon = 0;
                         int soLuongDaTru = 0;
 
-                        // FIFO: Trừ từ lô hàng cũ nhất trước
+                        // Trừ từ lô hàng cũ nhất trước
                         string sqlGetLoHang = @"SELECT TOP 1 MaLoHang, SoLuongConLai, GiaNhap 
                                                 FROM LoHang 
                                                 WHERE MaCTSP = @MaCTSP 
@@ -677,7 +678,7 @@ namespace BTL_LTTQ.DAL
                             soLuongDaTru += soLuongTruTrongLo;
                             soLuongConLaiCanBan -= soLuongTruTrongLo;
 
-                            // Cập nhật số lượng còn lại trong lô hàng
+                            // Cập nhật 
                             string sqlUpdateLo = @"UPDATE LoHang 
                                                    SET SoLuongConLai = SoLuongConLai - @SL,
                                                        TrangThai = CASE WHEN (SoLuongConLai - @SL) <= 0 THEN 0 ELSE 1 END
@@ -688,10 +689,10 @@ namespace BTL_LTTQ.DAL
                             cmdUpdateLo.ExecuteNonQuery();
                         }
 
-                        // Tính giá vốn trung bình (weighted average) từ các lô đã trừ
+                        // Tính giá vốn trung bình từ các lô đã trừ
                         decimal giaVonTrungBinh = soLuongDaTru > 0 ? tongGiaVon / soLuongDaTru : 0;
 
-                        // Lưu chi tiết hóa đơn với giá vốn theo FIFO
+                        
                         string sqlCT = @"INSERT INTO ChiTietHoaDon(MaHD, MaCTSP, SoLuong, DonGia, GiamGia, ThanhTien, GiaVon) 
                                          VALUES (@MaHD, @MaCTSP, @SoLuong, @DonGia, @GiamGia, @ThanhTien, @GiaVon)";
 
