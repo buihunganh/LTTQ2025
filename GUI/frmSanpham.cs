@@ -952,8 +952,28 @@ namespace BTL_LTTQ
                     }
 
                     if (maSize.HasValue && maSize.Value > 0)
+                    {
                         filteredProducts = filteredProducts.Where(p => p.MaSize == maSize.Value);
-
+                    }
+                    if (maLoai.HasValue && maLoai.Value > 0)
+                    {
+                        string tenLoaiFilter = null;
+                        var loaiTable = _productService.GetLoaiGiay();
+                        if (loaiTable != null && loaiTable.Rows.Count > 0)
+                        {
+                            var loaiRow = loaiTable.AsEnumerable()
+                                .FirstOrDefault(r => Convert.ToInt32(r["MaLoai"]) == maLoai.Value);
+                            if (loaiRow != null)
+                            {
+                                tenLoaiFilter = loaiRow["TenLoai"].ToString();
+                            }
+                        }
+                        
+                        if (!string.IsNullOrWhiteSpace(tenLoaiFilter))
+                        {
+                            filteredProducts = filteredProducts.Where(p => p.TenLoai == tenLoaiFilter);
+                        }
+                    }
                     var priceSort = cmbFilterPriceType.Text.Trim();
                     if (priceSort == "Giá tăng dần")
                         filteredProducts = filteredProducts.OrderBy(p => p.GiaBan);
@@ -965,6 +985,7 @@ namespace BTL_LTTQ
                 else
                 {
                     products = _productService.SearchProducts(searchText, maSize, maLoai, null, null);
+
                     var priceSort = cmbFilterPriceType.Text.Trim();
                     if (priceSort == "Giá tăng dần")
                         products = products.OrderBy(p => p.GiaBan).ToList();
