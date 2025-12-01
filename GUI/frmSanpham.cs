@@ -912,13 +912,13 @@ namespace BTL_LTTQ
                 if (string.IsNullOrWhiteSpace(selectedBrand) || selectedBrand == "Tất cả")
                 {
                     _currentSelectedBrand = null;
-                    LoadProducts();
                 }
                 else
                 {
                     _currentSelectedBrand = selectedBrand;
-                    LoadProductsByBrandPrefix(selectedBrand);
                 }
+                
+                ApplyFilters();
             }
             catch (Exception ex)
             {
@@ -939,7 +939,10 @@ namespace BTL_LTTQ
                 List<ChiTietSanPhamDTO> products;
                 if (!string.IsNullOrWhiteSpace(_currentSelectedBrand) && _currentSelectedBrand != "Tất cả" && _currentSelectedBrand != "-1")
                 {
-                    products = _productService.GetProductsByBrand(_currentSelectedBrand);
+                    var allProducts = _productService.GetAllProducts();
+                    products = allProducts
+                        .Where(p => p.TenGiay?.StartsWith(_currentSelectedBrand, StringComparison.OrdinalIgnoreCase) == true)
+                        .ToList();
                     var filteredProducts = products.AsQueryable();
 
                     if (!string.IsNullOrWhiteSpace(searchText))

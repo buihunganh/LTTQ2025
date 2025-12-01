@@ -21,6 +21,60 @@ namespace BTL_LTTQ.GUI
         private void frmKhachHang_Load(object sender, EventArgs e)
         {
             if (cmbLocHang.Items.Count > 0) cmbLocHang.SelectedIndex = 0;
+            LoadBangHangThanhVien();
+        }
+
+        private void LoadBangHangThanhVien()
+        {
+            tblBangHang.Controls.Clear();
+            tblBangHang.RowStyles.Clear();
+            tblBangHang.ColumnStyles.Clear();
+
+            tblBangHang.ColumnCount = 3;
+            tblBangHang.RowCount = 5;
+            tblBangHang.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+            tblBangHang.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tblBangHang.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            tblBangHang.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblBangHang.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tblBangHang.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tblBangHang.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tblBangHang.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+
+            AddLabelToTable(0, 0, "Hạng", true, true);
+            AddLabelToTable(0, 1, "Tổng chi tiêu", true, true);
+            AddLabelToTable(0, 2, "Giảm giá", true, true);
+
+            AddLabelToTable(1, 0, "Kim cương", false, false);
+            AddLabelToTable(1, 1, ">= 20,000,000", false, false);
+            AddLabelToTable(1, 2, "7%", false, false);
+
+            AddLabelToTable(2, 0, "Vàng", false, false);
+            AddLabelToTable(2, 1, ">= 10,000,000", false, false);
+            AddLabelToTable(2, 2, "5%", false, false);
+
+            AddLabelToTable(3, 0, "Bạc", false, false);
+            AddLabelToTable(3, 1, ">= 5,000,000", false, false);
+            AddLabelToTable(3, 2, "3%", false, false);
+
+            AddLabelToTable(4, 0, "Thành viên", false, false);
+            AddLabelToTable(4, 1, "< 5,000,000", false, false);
+            AddLabelToTable(4, 2, "0%", false, false);
+        }
+
+        private void AddLabelToTable(int row, int col, string text, bool isHeader, bool isBold)
+        {
+            Label lbl = new Label
+            {
+                Text = text,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = isHeader ? Color.White : Color.Gainsboro,
+                BackColor = isHeader ? Color.FromArgb(58, 60, 92) : Color.Transparent,
+                Font = new Font("Segoe UI", isBold ? 9F : 8.5F, isBold ? FontStyle.Bold : FontStyle.Regular),
+                Padding = new Padding(3)
+            };
+            tblBangHang.Controls.Add(lbl, col, row);
         }
 
         private void InitFilter()
@@ -32,7 +86,6 @@ namespace BTL_LTTQ.GUI
             cmbLocHang.Items.Add("Bạc");
             cmbLocHang.Items.Add("Vàng");
             cmbLocHang.Items.Add("Kim cương");
-
         }
 
         private void LoadData(string keyword = "")
@@ -388,11 +441,6 @@ namespace BTL_LTTQ.GUI
             dialog.Controls.Add(grid);
             dialog.Controls.Add(lblSummary);
             dialog.ShowDialog(this);
-        }
-
-        private void txtChiTieu_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void txtSDT_KeyPress(object sender, KeyPressEventArgs e)

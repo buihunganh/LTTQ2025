@@ -28,6 +28,8 @@
             this.btnLamMoi = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
             this.btnLuu = new System.Windows.Forms.Button();
+            this.grpBangHang = new System.Windows.Forms.GroupBox();
+            this.tblBangHang = new System.Windows.Forms.TableLayoutPanel();
             this.panelInfo = new System.Windows.Forms.Panel();
             this.btnLichSu = new System.Windows.Forms.Button();
             this.txtHang = new System.Windows.Forms.TextBox();
@@ -44,6 +46,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvKhachHang)).BeginInit();
             this.grpFilter.SuspendLayout();
             this.panelButtons.SuspendLayout();
+            this.grpBangHang.SuspendLayout();
             this.panelInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,6 +56,7 @@
             this.panelRoot.Controls.Add(this.dgvKhachHang);
             this.panelRoot.Controls.Add(this.grpFilter);
             this.panelRoot.Controls.Add(this.panelButtons);
+            this.panelRoot.Controls.Add(this.grpBangHang);
             this.panelRoot.Controls.Add(this.panelInfo);
             this.panelRoot.Controls.Add(this.lblTitle);
             this.panelRoot.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -176,7 +180,7 @@
             this.panelButtons.Location = new System.Drawing.Point(1051, 80);
             this.panelButtons.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(200, 601);
+            this.panelButtons.Size = new System.Drawing.Size(200, 270);
             this.panelButtons.TabIndex = 2;
             // 
             // btnXuatFile
@@ -242,6 +246,41 @@
             this.btnLuu.Text = "💾 Lưu";
             this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
+            // 
+            // grpBangHang
+            // 
+            this.grpBangHang.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpBangHang.Controls.Add(this.tblBangHang);
+            this.grpBangHang.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.grpBangHang.ForeColor = System.Drawing.Color.Gainsboro;
+            this.grpBangHang.Location = new System.Drawing.Point(1051, 360);
+            this.grpBangHang.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpBangHang.Name = "grpBangHang";
+            this.grpBangHang.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.grpBangHang.Size = new System.Drawing.Size(200, 310);
+            this.grpBangHang.TabIndex = 5;
+            this.grpBangHang.TabStop = false;
+            this.grpBangHang.Text = "Tiêu chí hạng thành viên";
+            // 
+            // tblBangHang
+            // 
+            this.tblBangHang.ColumnCount = 3;
+            this.tblBangHang.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tblBangHang.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tblBangHang.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tblBangHang.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblBangHang.Location = new System.Drawing.Point(8, 22);
+            this.tblBangHang.Margin = new System.Windows.Forms.Padding(0);
+            this.tblBangHang.Name = "tblBangHang";
+            this.tblBangHang.RowCount = 5;
+            this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblBangHang.Size = new System.Drawing.Size(184, 280);
+            this.tblBangHang.TabIndex = 0;
             // 
             // panelInfo
             // 
@@ -313,7 +352,6 @@
             this.txtChiTieu.ReadOnly = true;
             this.txtChiTieu.Size = new System.Drawing.Size(301, 22);
             this.txtChiTieu.TabIndex = 5;
-            this.txtChiTieu.TextChanged += new System.EventHandler(this.txtChiTieu_TextChanged);
             // 
             // lblChiTieu
             // 
@@ -411,6 +449,7 @@
             this.grpFilter.ResumeLayout(false);
             this.grpFilter.PerformLayout();
             this.panelButtons.ResumeLayout(false);
+            this.grpBangHang.ResumeLayout(false);
             this.panelInfo.ResumeLayout(false);
             this.panelInfo.PerformLayout();
             this.ResumeLayout(false);
@@ -443,5 +482,7 @@
         private System.Windows.Forms.Label lblHang;
         private System.Windows.Forms.ComboBox cmbLocHang;
         private System.Windows.Forms.Label lblLocHang;
+        private System.Windows.Forms.GroupBox grpBangHang;
+        private System.Windows.Forms.TableLayoutPanel tblBangHang;
     }
 }

@@ -307,7 +307,7 @@ namespace BTL_LTTQ.DAL
                 try
                 {
                     string sqlHD = @"INSERT INTO HoaDon(MaHoaDon, NgayLap, MaNV, MaKH, MaKM, TongTien, GiamGia, ThanhToan, TienKhachTra, TienThua, PhuongThucThanhToan, TrangThai) 
-                                     VALUES (@MaCode, GETDATE(), @MaNV, @MaKH, 1, @TongTien, 0, @ThanhToan, @TienKhachTra, @TienThua, N'Tiền mặt', N'Hoàn thành');
+                                     VALUES (@MaCode, GETDATE(), @MaNV, @MaKH, 1, @TongTien, @GiamGia, @ThanhToan, @TienKhachTra, @TienThua, N'Tiền mặt', N'Hoàn thành');
                                      SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                     SqlCommand cmdHD = new SqlCommand(sqlHD, connection, transaction);
@@ -315,6 +315,7 @@ namespace BTL_LTTQ.DAL
                     cmdHD.Parameters.AddWithValue("@MaNV", maNV);
                     cmdHD.Parameters.AddWithValue("@MaKH", maKH);
                     cmdHD.Parameters.AddWithValue("@TongTien", tongTien);
+                    cmdHD.Parameters.AddWithValue("@GiamGia", giamGiaTong);
                     cmdHD.Parameters.AddWithValue("@ThanhToan", thanhToan);
                     cmdHD.Parameters.AddWithValue("@TienKhachTra", tienKhachTra);
                     cmdHD.Parameters.AddWithValue("@TienThua", tienThua);
@@ -435,7 +436,7 @@ namespace BTL_LTTQ.DAL
             string sql = @"SELECT hd.MaHD, hd.MaHoaDon, hd.NgayLap, 
                                   ISNULL(nv.HoTen, N'Không rõ') AS TenNhanVien, 
                                   ISNULL(kh.HoTen, N'Khách lẻ') AS TenKhachHang, 
-                                  hd.TongTien, hd.TrangThai
+                                  hd.ThanhToan AS TongTien, hd.TrangThai
                            FROM HoaDon hd
                            LEFT JOIN NhanVien nv ON hd.MaNV = nv.MaNV
                            LEFT JOIN KhachHang kh ON hd.MaKH = kh.MaKH
