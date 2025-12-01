@@ -89,6 +89,7 @@
             this.dgvChiTietNhap.Size = new System.Drawing.Size(672, 565);
             this.dgvChiTietNhap.TabIndex = 0;
             this.dgvChiTietNhap.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChiTietNhap_CellContentClick);
+            this.dgvChiTietNhap.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvChiTietNhap_CellDoubleClick);
             // 
             // panelInput
             // 

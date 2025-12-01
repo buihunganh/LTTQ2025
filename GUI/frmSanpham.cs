@@ -141,13 +141,6 @@ namespace BTL_LTTQ
                     cmbColor.ValueMember = "MaMau";
                 }
 
-                if (cmbFilterStatus.Items.Count == 0)
-                {
-                    cmbFilterStatus.Items.Add("Tất cả");
-                    cmbFilterStatus.Items.Add("Đang kinh doanh");
-                    cmbFilterStatus.Items.Add("Ngừng kinh doanh");
-                    cmbFilterStatus.SelectedIndex = 0;
-                }
             }
             catch (Exception ex)
             {
@@ -960,15 +953,6 @@ namespace BTL_LTTQ
 
                     if (maSize.HasValue && maSize.Value > 0)
                         filteredProducts = filteredProducts.Where(p => p.MaSize == maSize.Value);
-
-                    if (cmbFilterStatus.SelectedIndex > 0)
-                    {
-                        var selectedStatus = cmbFilterStatus.Text?.Trim();
-                        if (selectedStatus == "Đang kinh doanh")
-                            filteredProducts = filteredProducts.Where(p => p.TrangThai == true);
-                        else if (selectedStatus == "Ngừng kinh doanh")
-                            filteredProducts = filteredProducts.Where(p => p.TrangThai == false);
-                    }
 
                     var priceSort = cmbFilterPriceType.Text.Trim();
                     if (priceSort == "Giá tăng dần")

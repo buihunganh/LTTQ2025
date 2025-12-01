@@ -252,6 +252,33 @@ namespace BTL_LTTQ.GUI
 
         }
 
+        private void dgvChiTietNhap_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= _dtChiTietNhap.Rows.Count)
+                return;
+
+            try
+            {
+                string tenSP = _dtChiTietNhap.Rows[e.RowIndex]["TenSP"].ToString();
+                DialogResult result = MessageBox.Show(
+                    $"Bạn có chắc muốn xóa sản phẩm '{tenSP}' khỏi danh sách nhập hàng?",
+                    "Xác nhận xóa",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    _dtChiTietNhap.Rows.RemoveAt(e.RowIndex);
+                    TinhTongTien();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi xóa sản phẩm: " + ex.Message, "Lỗi", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void label1_Click(object sender, EventArgs e)
         {
 
