@@ -181,9 +181,9 @@ namespace BTL_LTTQ
             this.lblTopCustomers.ForeColor = System.Drawing.Color.White;
             this.lblTopCustomers.Location = new System.Drawing.Point(13, 146);
             this.lblTopCustomers.Name = "lblTopCustomers";
-            this.lblTopCustomers.Size = new System.Drawing.Size(163, 23);
+            this.lblTopCustomers.Size = new System.Drawing.Size(136, 23);
             this.lblTopCustomers.TabIndex = 3;
-            this.lblTopCustomers.Text = "Top khách hàng (5)";
+            this.lblTopCustomers.Text = "Top khách hàng";
             // 
             // dgvTopCustomers
             // 
@@ -212,9 +212,9 @@ namespace BTL_LTTQ
             this.lblTopProducts.ForeColor = System.Drawing.Color.White;
             this.lblTopProducts.Location = new System.Drawing.Point(13, 10);
             this.lblTopProducts.Name = "lblTopProducts";
-            this.lblTopProducts.Size = new System.Drawing.Size(183, 23);
+            this.lblTopProducts.Size = new System.Drawing.Size(161, 23);
             this.lblTopProducts.TabIndex = 1;
-            this.lblTopProducts.Text = "Top sản phẩm bán (5)";
+            this.lblTopProducts.Text = "Top sản phẩm bán ";
             // 
             // dgvTopProducts
             // 

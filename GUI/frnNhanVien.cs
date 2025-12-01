@@ -119,7 +119,6 @@ namespace BTL_LTTQ.GUI
             cmbLocTrangThai.FlatStyle = FlatStyle.Flat;
             if (lblLoc != null) lblLoc.ForeColor = Color.Gainsboro;
 
-            StyleButton(btnThem, false);
             StyleButton(btnLuu, false);
             StyleButton(btnXoa, true);
             StyleButton(btnLamMoi, false);

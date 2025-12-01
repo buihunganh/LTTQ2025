@@ -55,6 +55,7 @@
             this.lblOldPassword = new System.Windows.Forms.Label();
             this.panelLeft = new System.Windows.Forms.Panel();
             this.panelProfileSection = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.picAvatar = new System.Windows.Forms.PictureBox();
             this.btnUploadAvatar = new System.Windows.Forms.Button();
             this.btnSaveProfile = new System.Windows.Forms.Button();
@@ -73,7 +74,6 @@
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblSubtitle = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.panelMain.SuspendLayout();
             this.panelContent.SuspendLayout();
             this.panelRight.SuspendLayout();
@@ -290,6 +290,17 @@
             this.panelProfileSection.Padding = new System.Windows.Forms.Padding(24);
             this.panelProfileSection.Size = new System.Drawing.Size(572, 762);
             this.panelProfileSection.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label1.ForeColor = System.Drawing.Color.Gainsboro;
+            this.label1.Location = new System.Drawing.Point(30, 477);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(120, 23);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Ngày vào làm";
             // 
             // picAvatar
             // 
@@ -511,17 +522,6 @@
             this.lblTitle.Size = new System.Drawing.Size(143, 50);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Cài đặt";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.label1.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label1.Location = new System.Drawing.Point(30, 477);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(120, 23);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "Ngày vào làm";
             // 
             // frmSettings
             // 

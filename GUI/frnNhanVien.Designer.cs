@@ -29,7 +29,6 @@
             this.btnLamMoi = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
             this.btnLuu = new System.Windows.Forms.Button();
-            this.btnThem = new System.Windows.Forms.Button();
             this.panelProductInfo = new System.Windows.Forms.Panel();
             this.chkIsAdmin = new System.Windows.Forms.CheckBox();
             this.chkTrangThai = new System.Windows.Forms.CheckBox();
@@ -160,7 +159,6 @@
             this.panelButtons.Controls.Add(this.btnLamMoi);
             this.panelButtons.Controls.Add(this.btnXoa);
             this.panelButtons.Controls.Add(this.btnLuu);
-            this.panelButtons.Controls.Add(this.btnThem);
             this.panelButtons.Location = new System.Drawing.Point(1088, 65);
             this.panelButtons.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panelButtons.Name = "panelButtons";
@@ -230,22 +228,6 @@
             this.btnLuu.Text = "💾 Lưu";
             this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
-            // 
-            // btnThem
-            // 
-            this.btnThem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(58)))), ((int)(((byte)(61)))), ((int)(((byte)(90)))));
-            this.btnThem.FlatAppearance.BorderSize = 0;
-            this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnThem.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnThem.ForeColor = System.Drawing.Color.White;
-            this.btnThem.Location = new System.Drawing.Point(11, 48);
-            this.btnThem.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnThem.Name = "btnThem";
-            this.btnThem.Size = new System.Drawing.Size(179, 49);
-            this.btnThem.TabIndex = 0;
-            this.btnThem.Text = "➕ Thêm";
-            this.btnThem.UseVisualStyleBackColor = false;
-            this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
             // panelProductInfo
             // 
@@ -469,7 +451,6 @@
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Panel panelProductInfo;
         private System.Windows.Forms.Panel panelButtons;
-        private System.Windows.Forms.Button btnThem;
         private System.Windows.Forms.Button btnLuu;
         private System.Windows.Forms.Button btnXoa;
         private System.Windows.Forms.Button btnLamMoi;

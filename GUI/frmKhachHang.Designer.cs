@@ -257,7 +257,7 @@
             this.grpBangHang.Location = new System.Drawing.Point(1051, 360);
             this.grpBangHang.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpBangHang.Name = "grpBangHang";
-            this.grpBangHang.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.grpBangHang.Padding = new System.Windows.Forms.Padding(8);
             this.grpBangHang.Size = new System.Drawing.Size(200, 310);
             this.grpBangHang.TabIndex = 5;
             this.grpBangHang.TabStop = false;
@@ -270,7 +270,7 @@
             this.tblBangHang.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblBangHang.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.tblBangHang.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblBangHang.Location = new System.Drawing.Point(8, 22);
+            this.tblBangHang.Location = new System.Drawing.Point(8, 28);
             this.tblBangHang.Margin = new System.Windows.Forms.Padding(0);
             this.tblBangHang.Name = "tblBangHang";
             this.tblBangHang.RowCount = 5;
@@ -279,7 +279,7 @@
             this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblBangHang.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tblBangHang.Size = new System.Drawing.Size(184, 280);
+            this.tblBangHang.Size = new System.Drawing.Size(184, 274);
             this.tblBangHang.TabIndex = 0;
             // 
             // panelInfo
